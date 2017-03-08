@@ -21,14 +21,20 @@ var del = require('del');
 //var distDebug = '../dist/debug/';
 // var distRelease = '../dist/release/';
 
+// JS, собираемые в файл модуля
 var js = [
     '../src/config.js',
     '../src/*.js'
     ];
     
+// Файлы, копируемые в каталог сборки
+var copyToRootFiles = [
+    '../src/update.bash'
+    ];
+    
 var distDebug = '../dist/debug';
 var distRelease = '../dist/release';
-var debug = true;
+var debugMode = true;
 
 
 gulp.task('build-debug', function(cb){
@@ -43,13 +49,26 @@ gulp.task('build-release', function(cb){
 
 
 
-// Concatenate and minify JavaScript
-gulp.task('build', ['clean'], function() {
-	return gulp.src(js)
+gulp.task('build-js', function(cb){
+    return gulp.src(js)
 		.pipe($.concat('app.js'))
-		.pipe(gulp.dest(debug ? distDebug : distRelease))
+		.pipe(gulp.dest(debugMode ? distDebug : distRelease))
 		//.pipe($.uglify({preserveComments:'license', mangle: false}))
 		//.pipe(gulp.dest(distRelease+'app'));
+});
+
+gulp.task('copy-files', function(cb){
+    return gulp.src(copyToRootFiles)
+		.pipe(gulp.dest(debugMode ? distDebug : distRelease))
+});
+
+// Concatenate and minify JavaScript
+gulp.task('build', ['clean'], function(cb) {
+	runSequence(
+		'build-js',
+		'copy-files',
+		//'rebuildStatic',
+		cb);
 });
 
 
@@ -85,7 +104,7 @@ gulp.task('build-watch-debug', function (cb) {
 });
 
 gulp.task('clean', function(cb){
-	del([debug ? distDebug : distRelease],
+	del([debugMode ? distDebug : distRelease],
 		{dot: true, force: true},
 		function (err, paths) {
 			return cb();

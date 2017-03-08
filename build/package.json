@@ -9,7 +9,7 @@
   },
   "scripts":{
       "build-debug": "gulp build-debug",
-      "build-release": "gulp build-relesee",
+      "build-release": "gulp build-release",
       "build-watch-debug": "gulp build-watch-debug"
   },
   "private": true,
