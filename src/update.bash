@@ -15,4 +15,4 @@ cp -f $tmpDir/dist/release/update.bash $destDir/update.bash
 
 rm -rf $tmpDir
 
-echo echo-1
+echo echo-2
