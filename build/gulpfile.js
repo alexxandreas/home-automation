@@ -51,7 +51,7 @@ gulp.task('build-release', function(cb){
 
 gulp.task('build-js', function(cb){
     return gulp.src(js)
-		.pipe($.concat('app.js'))
+		.pipe($.concat('index.js'))
 		.pipe(gulp.dest(debugMode ? distDebug : distRelease))
 		//.pipe($.uglify({preserveComments:'license', mangle: false}))
 		//.pipe(gulp.dest(distRelease+'app'));
