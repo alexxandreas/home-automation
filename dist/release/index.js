@@ -2,7 +2,8 @@ var config = {
     a: 10,
     b: 20,
     c: 30,
-    d: 40
+    d: 40,
+    e: 50
 };
 (function(){
 
