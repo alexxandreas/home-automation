@@ -69,7 +69,7 @@ module = (function(){
     	}
     };
     	
-    WebServer.prototype.getMimeType = function(file){
+    WebServer.prototype.getMimeType = function(path){
         var ext = path.split("/").pop().split(".").pop();
         
         return types[ext] || 'application/octet-stream';
