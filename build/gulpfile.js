@@ -29,7 +29,8 @@ var js = [
     
 // Файлы, копируемые в каталог сборки
 var copyToRootFiles = [
-    '../src/update.bash'
+    //'../src/update.bash'
+    '../src/**'
     ];
     
 var distDebug = '../dist/debug';
@@ -65,7 +66,7 @@ gulp.task('copy-files', function(cb){
 // Concatenate and minify JavaScript
 gulp.task('build', ['clean'], function(cb) {
 	runSequence(
-		'build-js',
+		//..'build-js',
 		'copy-files',
 		//'rebuildStatic',
 		cb);

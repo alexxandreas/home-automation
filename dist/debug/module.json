@@ -1,0 +1,23 @@
+{
+    "dependencies": [],
+    "singleton": true,
+    "category": "developers_stuff",
+    "author": "Z-Wave.Me",
+    "homepage": "http://razberry.z-wave.me",
+    "icon": "icon.png",
+    "moduleName":"MyHomeAutomation",
+    "version": "1.0.0",
+    "maturity": "stable",
+    "repository": {
+            "type": "git",
+            "source": "https://github.com/Z-Wave-Me/home-automation"
+    },
+    "defaults": {
+        "title": "Домашняя автоматизация",
+	    "description": "Домашняя автоматизация"
+    },
+    "schema": {
+    },
+    "options": {
+    }
+}
