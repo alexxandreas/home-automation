@@ -10,7 +10,7 @@ module = (function(){
         this.log(JSON.stringify(config));
     }
   
-    inherits(TestModule, MHA.modules.AbstractModule.module);
+    inherits(TestModule, MHA.modules.AbstractModule);
     
     return new TestModule();
     

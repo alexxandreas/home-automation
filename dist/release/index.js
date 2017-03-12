@@ -4,7 +4,7 @@
 
 /*
 	log: function(message)
-	modules: {name -> {config:{}, module:MODULE}}
+	modules: {name -> MODULE}
 	
 
 
@@ -31,6 +31,7 @@ MyHomeAutomation.prototype.init = function (config) {
     MyHomeAutomation.super_.prototype.init.call(this, config);
 	
 	//this.logPrefix = 'MyHomeAutomation ';
+	this.modules = {};
 	
 	
 	this.fsRoot = 'modules/MyHomeAutomation/';
@@ -87,7 +88,8 @@ MyHomeAutomation.prototype.loadModules = function(){
 			eval(moduleStr);
 			//executeFile('modules/' + moduleObj.name + 'js');
 			if (!module) throw new Error('module ' + moduleObj.name + ' not loaded!');
-			moduleObj.module = module;
+			//moduleObj.module = module;
+			this.modules[moduleObj.name] = module;
 		} catch (err){
 			this.log('MyHomeAutomation: ' + err.toString());
 			this.unloadModules();
@@ -108,7 +110,8 @@ MyHomeAutomation.prototype.unloadModules = function(){
 	this.log('MyHomeAutomation: unloading modules...');
 	for (var i = this.modulesConfig.modules.length-1; i >= 0; i--){
 		var moduleObj = this.modulesConfig.modules[i];
-		if (!moduleObj.module) continue;
+		var module = this.modules[moduleObj.name];
+		if (!module) continue;
 		this.log('MyHomeAutomation: unloading module' + moduleObj.name + '...');
 		try {
 			// как-то выгрузить модуль	
@@ -118,8 +121,6 @@ MyHomeAutomation.prototype.unloadModules = function(){
 
 	}
 }
-
-MyHomeAutomation.prototype.modules = {};
 
 MyHomeAutomation.prototype.stop = function () {
 	this.log('MyHomeAutomation: stop');
