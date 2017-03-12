@@ -18,16 +18,49 @@ module = (function(){
         WebServer.super_.prototype.stop.apply(this, arguments);
     }
     
+    /**
+     * route - строка, из которой потом сформируется RegExp 
+     * заменяется :\w+ на (.+)
+     * 
+     * "/static/:path"              /static/assets/images/icon.png -> ["assets/images/icon.png"]
+     * "/gal/:tag/:page\\?q=:ww"     /gal/1/2?q=w -> ["1", "2", "w"]
+     * 
+     */
+    WebServer.prototype.addRoute = function(route, handler, scope){
+        this.routes.push({
+            pattern: new RegExp('^'+route.replace(/:\w+/g, '(\\w+)')+'$'),
+            callback: scope ? handler.bind(scope) : handler
+        });
+               
+        //this.routes[this.trimSlash(route)] = scope ? handler.bind(scope) : handler;
+    };
     
     WebServer.prototype.startWebServer = function (){
     	this.routes = [];
+    	
+    	
+    	
     	
     	//var self = this;
         // define global handler for HTTP requests
         mha = (function(url, request) {
             this.log('request: ' + url);
-        	var idx = url.indexOf('?');
+        	//var idx = url.indexOf('?');
         	
+        	var i = this.routes.length;
+            while( i-- ){
+               var args = path.match(this.routes[i].pattern);
+               if( args ){
+                    return this.routes[i].callback(args.slice(1));
+               }
+            }
+        	
+        	this.log('route not found');
+		    return {
+    		    status: 404
+    		}
+    		
+        	/*
             var path = this.trimSlash(url.substring(0, idx >= 0 ? idx : undefined));
             var params = {};
             if (idx >= 0){
@@ -40,36 +73,43 @@ module = (function(){
     		if (this.routes[path]){
     			return this.routes[path](params);
     		} else {
-    		    this.log('404');
+    		    this.log('route not found');
     		    return {
         		    status: 404
         		}
-    		}
+    		}*/
+    		
     		
         }).bind(this);
         ws.allowExternalAccess("mha", controller.auth.ROLE.ANONYMOUS); // login required
     	
     	this.addDefaultRoutes();
+    	this.addModuleRoutes(this);
     };
+    
+    WebServer.prototype.addModuleRoutes = function(module){
+        this.addRoute('modules/:' + module.name + '/htdocs/:path', this.sendStatic);
+    }
     
     WebServer.prototype.addDefaultRoutes = function(){
     	this.addRoute('/', rootHandler, this);
     	this.addRoute('/index.html', rootHandler, this);
     	
-    	this.addRoute('/static/', staticHandler, this);
+    	//this.addRoute('/static/:path', staticHandler, this);
     	
     	function rootHandler(params){
-    		this.log(' get index: ' + JSON.stringify(params));
+    		this.log('get index: ' + JSON.stringify(params));
     		return this.sendFile('modules/WebServer/htdocs/index.html');
-    		
     	}
     	
-    	function staticHandler(params){
-    		this.log(' get static: ' + JSON.stringify(params));
-    	}
+    // 	function staticHandler(params){
+    // 		this.log('get static: ' + JSON.stringify(params));
+    // 	}
     };
     	
-    	
+    WebServer.prototype.sendStatic = function(moduleName, path){
+        return this.sendFile('modules/' + moduleName + '/htdocs/' + path);
+    }	
 
     WebServer.prototype.getMimeType = function(path){
         var ext = path.split("/").pop().split(".").pop();
@@ -112,9 +152,6 @@ module = (function(){
         
     };
     	
-    WebServer.prototype.addRoute = function(route, handler, scope){
-    	this.routes[this.trimSlash(route)] = scope ? handler.bind(scope) : handler;
-    };
     
     WebServer.prototype.trimSlash = function(str){
     	while (str.length && str[0] == '/') str = str.substring(1);
