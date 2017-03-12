@@ -145,7 +145,7 @@ MyHomeAutomation.prototype.startWebServer = function (){
         	url
         	.substring(idx+1)
         	.split('&')
-        	forEach((a) => { idx = a.indexOf('='); params[a.substring(0, idx)] = a.substring(idx+1)})
+        	forEach(function(a) { idx = a.indexOf('='); params[a.substring(0, idx)] = a.substring(idx+1)})
         }	
         
 		if (this.routes[path]){
