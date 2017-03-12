@@ -8,7 +8,7 @@ if [ ! -d $tmpDir ]; then
     echo "Temp directory doesn't exist. Start git clone"
     git clone $gitRepo $tmpDir
 else
-    echo "Temp directory doesn't exist. Start git pull"
+    echo "Temp directory exist. Start git pull"
     git -C $tmpDir pull
 fi
 

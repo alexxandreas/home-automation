@@ -1,6 +1,6 @@
 (function () {
     "use strict";
-    angular.module('GraphicsApp')
+    angular.module('WebApp')
         .controller('ToolbarCtrl', ToolbarCtrl);
 
     ToolbarCtrl.$inject = [
@@ -12,7 +12,16 @@
         $scope,
         ChartDataSrv
     ) {
-        $scope.deviceTypes = [
+        $scope.buttons = [{
+            title: '1dfasdf'
+        }, {
+            title: '2vth`sga'
+        }, {
+            title: '3aljfa;siof'
+        }]
+        
+        
+        /*$scope.deviceTypes = [
             {
                 type: 'button',
                 title: 'Кнопка',
@@ -71,7 +80,7 @@
 
         $scope.reloadData = function(){
             ChartDataSrv.loadData();
-        }
+        }*/
     }
 
 }());

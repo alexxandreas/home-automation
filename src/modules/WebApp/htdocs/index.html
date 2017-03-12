@@ -43,31 +43,46 @@
 
 <div class='body' layout="column" layout-align="start stretch">
 
+	<md-toolbar ng-controller="ToolbarCtrl">
+
+    	<!--<div class="md-toolbar-tools">-->
+     <!-- 	<h2 md-truncate flex>My App's Title</h2>-->
+
+      	<md-button ng-repeat="button in buttons">
+        	{{button.title}}
+      	</md-button>
+    	<!--</div>-->
+
+  	</md-toolbar>
+  	<md-content>
+    	Hello!
+  	</md-content>
+	  
 	<!--<md-toolbar class="md-menu-toolbar"  >-->
-		<md-menu-bar ng-controller="ToolbarCtrl">
-			<md-menu
-				ng-repeat="deviceType in deviceTypes">
-				<button ng-click="$mdOpenMenu()">
-					{{deviceType.title}}
-				</button>
-				<md-menu-content width="1">
+		<!--<md-menu-bar ng-controller="ToolbarCtrl">-->
+		<!--	<md-menu-->
+		<!--		ng-repeat="deviceType in deviceTypes">-->
+		<!--		<button ng-click="$mdOpenMenu()">-->
+		<!--			{{deviceType.title}}-->
+		<!--		</button>-->
+		<!--		<md-menu-content width="1">-->
 
-					<md-menu-item type="checkbox" ng-model="device.selected" ng-repeat="device in deviceType.devices" >
-						<md-button  ng-click="onDeviceClicked();" md-prevent-menu-close="md-prevent-menu-close">
-							{{device.title}}
-						</md-button>
-					</md-menu-item>
+		<!--			<md-menu-item type="checkbox" ng-model="device.selected" ng-repeat="device in deviceType.devices" >-->
+		<!--				<md-button  ng-click="onDeviceClicked();" md-prevent-menu-close="md-prevent-menu-close">-->
+		<!--					{{device.title}}-->
+		<!--				</md-button>-->
+		<!--			</md-menu-item>-->
 
-				</md-menu-content>
-			</md-menu>
-			<md-button  ng-click="reloadData();">
-				Обновить
-			</md-button>
-		</md-menu-bar>
+		<!--		</md-menu-content>-->
+		<!--	</md-menu>-->
+		<!--	<md-button  ng-click="reloadData();">-->
+		<!--		Обновить-->
+		<!--	</md-button>-->
+		<!--</md-menu-bar>-->
 	<!--</md-toolbar>-->
 
 
-	<chart-dir class="chart" flex></chart-dir>
+	<!--<chart-dir class="chart" flex></chart-dir>-->
 
 
 </div>
