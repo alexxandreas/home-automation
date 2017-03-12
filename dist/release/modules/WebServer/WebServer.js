@@ -98,8 +98,6 @@ module = (function(){
     	this.addRoute('/', rootHandler, this);
     	this.addRoute('/index.html', rootHandler, this);
     	
-    	//this.addRoute('/static/:path', staticHandler, this);
-    	
     	function rootHandler(params){
     		this.log('get index: ' + JSON.stringify(params));
     		return this.sendFile('modules/WebServer/htdocs/index.html');
