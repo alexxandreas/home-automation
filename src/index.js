@@ -52,8 +52,11 @@ MyHomeAutomation.prototype.loadModules = function(){
 
 	try {
 		var config = null;
-		function exportConfig(_config){config = _config;}
-		executeFile('modules/MyHomeAutomation/config.js');
+		// function exportConfig(_config){config = _config;}
+		var configStr = fs.load('modules/MyHomeAutomation/config.js');
+		this.log('config loaded: ' + configStr);
+		//executeFile('modules/MyHomeAutomation/config.js');
+		ecal(configStr);
 		if (!config) throw new Error('config not loaded!');
 		this.modulesConfig = config;
 		this.log('config loaded: ' + JSON.stringify(config));
