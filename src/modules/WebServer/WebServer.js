@@ -49,7 +49,7 @@ module = (function(){
         	
         	var i = this.routes.length;
             while( i-- ){
-               var args = path.match(this.routes[i].pattern);
+               var args = url.match(this.routes[i].pattern);
                if( args ){
                     return this.routes[i].callback(args.slice(1));
                }
