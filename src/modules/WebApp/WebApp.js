@@ -18,7 +18,7 @@ module = (function(){
     	
     	function rootHandler(params){
     		this.log('get index: ' + JSON.stringify(params));
-    		return this._sendFile('modules/WebApp/htdocs/index.html');
+    		return ws._sendFile('modules/WebApp/htdocs/index.html');
     	}
     };
     

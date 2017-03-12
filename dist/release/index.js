@@ -51,7 +51,7 @@ MyHomeAutomation.prototype.loadModules = function(){
 		eval(configStr);
 		if (!config) throw new Error('config not loaded!');
 		this.modulesConfig = config;
-		this.log('config loaded: ' + JSON.stringify(config));
+		//this.log('config loaded: ' + JSON.stringify(config));
 	} catch (err){
 		this.log(err.toString() + '\n' + err.stack);
 		return;

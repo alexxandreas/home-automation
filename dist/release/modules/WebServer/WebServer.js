@@ -81,13 +81,13 @@ module = (function(){
     	
     // 	function rootHandler(params){
     // 		this.log('get index: ' + JSON.stringify(params));
-    // 		return this._sendFile('modules/WebServer/htdocs/index.html');
+    // 		return this.sendFile('modules/WebServer/htdocs/index.html');
     // 	}
     	
     // };
     	
     WebServer.prototype._sendStatic = function(moduleName, path){
-        return this._sendFile('modules/' + moduleName + '/htdocs/' + path);
+        return this.sendFile('modules/' + moduleName + '/htdocs/' + path);
     }	
 
     WebServer.prototype._getMimeType = function(path){
@@ -95,10 +95,10 @@ module = (function(){
         return this._mimeTypes[ext] || 'application/octet-stream';
     }
     	
-    WebServer.prototype._sendFile = function(path){
+    WebServer.prototype.sendFile = function(path){
         var root = MHA.fsRoot; //  'modules/MyHomeAutomation/';
         
-        this.log('_sendFile: ' + root + path);
+        this.log('sendFile: ' + root + path);
 
         try {
         
@@ -117,7 +117,7 @@ module = (function(){
             return result;
         
         } catch(err) {
-            this.log('_sendFile Error: ' + err.toString() + "\n" + err.stack);
+            this.log('sendFile Error: ' + err.toString() + "\n" + err.stack);
             
             return {
                 status: 500,
