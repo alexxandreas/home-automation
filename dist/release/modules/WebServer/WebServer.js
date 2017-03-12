@@ -27,11 +27,12 @@ module = (function(){
      * 
      */
     WebServer.prototype.addRoute = function(route, handler, scope){
-        this.routes.push({
+        var obj = {
             pattern: new RegExp('^'+route.replace(/:\w+/g, '(\\w+)')+'$'),
             callback: scope ? handler.bind(scope) : handler
-        });
-               
+        } 
+        this.routes.push(obj);
+        this.log('addRoute: ' + obj.pattern);
         //this.routes[this.trimSlash(route)] = scope ? handler.bind(scope) : handler;
     };
     
