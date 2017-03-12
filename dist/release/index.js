@@ -164,9 +164,14 @@ MyHomeAutomation.prototype.addDefaultRoutes = function(){
 	
 	this.addRoute('/static/', staticHandler, this);
 	
-	function rootHandler(params){}
+	function rootHandler(params){
+		this.log(' get index: ' + JSON.stringify(params));
+		
+	}
 	
-	function staticHandler(params){}
+	function staticHandler(params){
+		this.log(' get static: ' + JSON.stringify(params));
+	}
 }
 	
 	
