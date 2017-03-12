@@ -18,6 +18,10 @@
             title: '3aljfa;siof'
         }]
         
+        $scope.activePanel = null;
+        $scope.openPanel = function(panel){
+            $scope.activePanel = panel;
+        }
         
         /*$scope.deviceTypes = [
             {
