@@ -85,9 +85,11 @@ MyHomeAutomation.prototype.unloadModules = function(){
 		this.log('unloading module ' + moduleObj.name + '...');
 		try {
 			// как-то выгрузить модуль	
+			if (module.stop instanceof Function)
+				module.stop.call(module);
 			delete this.modules[moduleObj.name];
 		} catch (err){
-			
+			this.log(err.toString() + '\n' + err.stack);
 		}
 
 	}
@@ -96,24 +98,7 @@ MyHomeAutomation.prototype.unloadModules = function(){
 MyHomeAutomation.prototype.stop = function () {
 	this.log('stop');
 	
-	//this.stopWebServer();
 	this.unloadModules();
-	
-	//this.myZWay.eventBus.emit('MHA.stop');
-	
-    //var wrapper = this;
-    //this.saveData();
-	
-    // вызываем деструктор пользователя, если он определен
-	/*if (this.destroy instanceof Function){
-		wrapper.log('stop: destructor');
-		this.destroy();
-	}*/
-	
-	// if (this.module && (this.module.destroy instanceof Function)){
-	// 	this.log('MyHomeAutomation: call destructor');
-	// 	this.module.destroy.call(this.module);
-	// }
 	
     MyHomeAutomation.super_.prototype.stop.call(this);
 	this.log('stop completed');
