@@ -4,7 +4,7 @@
 
 /*
 	log: function(message)
-	modules: {name -> module}
+	modules: {name -> {config:{}, module:MODULE}}
 	
 
 
@@ -12,6 +12,9 @@
 */
 function MyHomeAutomation (id, controller) {
     // Call superconstructor first (AutomationModule)
+    this.log = function(data){
+    	return MyHomeAutomation.prototype.log('MyHomeAutomation ' + data);
+    };
     MyHomeAutomation.super_.call(this, id, controller);
 }
 
@@ -27,7 +30,14 @@ MyHomeAutomation.prototype.init = function (config) {
     // Call superclass' init (this will process config argument and so on)
     MyHomeAutomation.super_.prototype.init.call(this, config);
 	
+	//this.logPrefix = 'MyHomeAutomation ';
+	
+	
+	this.fsRoot = 'modules/MyHomeAutomation/';
+	
 	this.log('MyHomeAutomation: start');
+	
+	
 	
 	this.controller.MHA = this;
 	
@@ -53,8 +63,9 @@ MyHomeAutomation.prototype.loadModules = function(){
 	try {
 		var config = null;
 		// function exportConfig(_config){config = _config;}
-		var configStr = fs.load('modules/MyHomeAutomation/config.js');
-		this.log('config loaded: ' + configStr);
+		// var configStr = fs.load('modules/MyHomeAutomation/config.js');
+		var configStr = fs.load(this.fsRoot + 'config.js');
+		//this.log('config loaded: ' + configStr);
 		//executeFile('modules/MyHomeAutomation/config.js');
 		eval(configStr);
 		if (!config) throw new Error('config not loaded!');
@@ -67,11 +78,14 @@ MyHomeAutomation.prototype.loadModules = function(){
 	
 	for (var i = 0; i < this.modulesConfig.modules.length; i++){
 		var moduleObj = this.modulesConfig.modules[i];
-		this.log('MyHomeAutomation: loading module' + moduleObj.name + '...');
+		this.log('MyHomeAutomation: loading module ' + moduleObj.name + '...');
 		try {
+			var MHA = this;
 			var module;
 			var config = moduleObj.config;
-			executeFile('modules/' + moduleObj.name + 'js');
+			var moduleStr = fs.load(this.fsRoot + 'modules/' + moduleObj.name + '.js');
+			eval(moduleStr);
+			//executeFile('modules/' + moduleObj.name + 'js');
 			if (!module) throw new Error('module ' + moduleObj.name + ' not loaded!');
 			moduleObj.module = module;
 		} catch (err){
@@ -91,6 +105,7 @@ MyHomeAutomation.prototype.loadModules = function(){
 }
 
 MyHomeAutomation.prototype.unloadModules = function(){
+	this.log('MyHomeAutomation: unloading modules...');
 	for (var i = this.modulesConfig.modules.length-1; i >= 0; i--){
 		var moduleObj = this.modulesConfig.modules[i];
 		if (!moduleObj.module) continue;
@@ -147,6 +162,8 @@ MyHomeAutomation.prototype.log = function (data) {
 	//console.log('[MyHomeAutomation_'+this.id + (this.module && this.module.name ? ' ('+this.module.name+')' : '') + '] ' + data);
 	console.log('[MHA] ' + data);
 };
+
+//MyHomeAutomation.prototype.log = MyHomeAutomation.prototype.log
 
 MyHomeAutomation.prototype.startWebServer = function (){
 	this.routes = [];

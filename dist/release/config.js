@@ -1,5 +1,7 @@
 config = {
    modules: [{
+       name: 'AbstractModule'
+   },{
        name: 'TestModule', 
        // module: сюда запишется ссылка на экземпляр модуля
        config:{
