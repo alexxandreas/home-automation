@@ -165,7 +165,7 @@ MyHomeAutomation.prototype.saveData = function (key, value) {
 MyHomeAutomation.prototype.prefixLog = function (prefix, data) {
 	//console.log('[MyHomeAutomation_'+this.id + (this.module && this.module.name ? ' ('+this.module.name+')' : '') + '] ' + data);
 	if (!data) {
-		console.log('[MHA] ' + prefix + ' no data');
+		console.log('[MHA] ' + prefix + data);
 		return;
 	}
 	data.split('\n').forEach(function(line){

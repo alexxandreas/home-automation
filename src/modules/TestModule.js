@@ -12,7 +12,7 @@ module = (function(){
   
     inherits(TestModule, MHA.modules.AbstractModule);
     
-    return new TestModule();
+    return new TestModule(config);
     
 })()
 

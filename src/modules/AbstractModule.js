@@ -1,6 +1,7 @@
 module = (function(){
     
     function AbstractModule(config) {
+        this.name = 'AbstractModule';
         //TestModule.super_.call(this, wrapper);
         //MyHomeAutomation.super_.prototype.init.call(this, config);
         // Call superconstructor first (ModuleBase)
