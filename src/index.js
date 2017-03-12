@@ -99,7 +99,7 @@ MyHomeAutomation.prototype.stop = function () {
 	//this.stopWebServer();
 	this.unloadModules();
 	
-	this.myZWay.eventBus.emit('MHA.stop');
+	//this.myZWay.eventBus.emit('MHA.stop');
 	
     //var wrapper = this;
     //this.saveData();
