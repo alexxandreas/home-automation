@@ -22,8 +22,10 @@ module = (function(){
     WebServer.prototype.startWebServer = function (){
     	this.routes = [];
     	
+    	//var self = this;
         // define global handler for HTTP requests
-        mha = function(url, request) {
+        mha = (function(url, request) {
+            this.log('request: ' + url);
         	var idx = url.indexOf('?');
         	
             var path = this.trimSlash(url.substring(0, idx >= 0 ? idx : undefined));
@@ -37,9 +39,14 @@ module = (function(){
             
     		if (this.routes[path]){
     			return this.routes[path](params);
+    		} else {
+    		    this.log('404');
+    		    return {
+        		    status: 404
+        		}
     		}
     		
-        };
+        }).bind(this);
         ws.allowExternalAccess("mha", controller.auth.ROLE.ANONYMOUS); // login required
     	
     	this.addDefaultRoutes();
