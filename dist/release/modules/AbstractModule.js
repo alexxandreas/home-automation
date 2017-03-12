@@ -13,7 +13,7 @@ module = (function(){
 
     
     AbstractModule.prototype.log = function(data){
-        return MHA.prototype.log(this.name || 'UnnamedModule', data);
+        return MHA.prototype.prefixLog(this.name || 'UnnamedModule', data);
     }
     
     return AbstractModule;

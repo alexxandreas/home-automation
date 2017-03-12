@@ -7,7 +7,7 @@ module = (function(){
         this.name = 'TestModule';
         this.log('construcror');
         
-        this.log(JSON.stringify(config));
+        this.log(JSON.stringify(config, '', 4));
     }
   
     inherits(TestModule, MHA.modules.AbstractModule);
