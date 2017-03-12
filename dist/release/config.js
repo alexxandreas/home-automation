@@ -1,4 +1,4 @@
-config = {
+exportConfig({
    modules: [{
        name: 'TestModule', 
        // module: сюда запишется ссылка на экземпляр модуля
@@ -7,5 +7,5 @@ config = {
            param2: 'bbb'
        }
    }]
-};
+});
 

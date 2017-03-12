@@ -1,5 +1,15 @@
  /*** MyHomeAutomation ZAutomation module ****************************************/
  
+ 
+
+/*
+	log: function(message)
+	modules: {name -> module}
+	
+
+
+
+*/
 function MyHomeAutomation (id, controller) {
     // Call superconstructor first (AutomationModule)
     MyHomeAutomation.super_.call(this, id, controller);
@@ -42,6 +52,7 @@ MyHomeAutomation.prototype.loadModules = function(){
 
 	try {
 		var config = null;
+		function exportConfig(_config){config = _config;}
 		executeFile('modules/MyHomeAutomation/config.js');
 		if (!config) throw new Error('config not loaded!');
 		this.modulesConfig = config;
