@@ -106,6 +106,8 @@ module = (function(){
             
             var data = fs.load(root + path);
             
+            data = decodeURIComponent(escape(data));
+            
             var result = {
                 status: 200,
                 headers: {

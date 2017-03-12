@@ -1,5 +1,5 @@
 angular
-	.module('GraphicsApp', [
+	.module('WebApp', [
 		'ngMaterial'
 	])
 	/*.config(function($mdIconProvider) {
