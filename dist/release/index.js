@@ -12,9 +12,10 @@
 */
 function MyHomeAutomation (id, controller) {
     // Call superconstructor first (AutomationModule)
-    this.log = function(data){
-    	return MyHomeAutomation.prototype.log('MyHomeAutomation ' + data);
-    };
+    this.log = MyHomeAutomation.prototype.log.bind(this, 'MyHomeAutomation');
+    // this.log = function(data){
+    	// return MyHomeAutomation.prototype.log('MyHomeAutomation ' + data);
+    // };
     MyHomeAutomation.super_.call(this, id, controller);
 }
 
@@ -36,7 +37,7 @@ MyHomeAutomation.prototype.init = function (config) {
 	
 	this.fsRoot = 'modules/MyHomeAutomation/';
 	
-	this.log('MyHomeAutomation: start');
+	this.log('start');
 	
 	
 	
@@ -59,7 +60,7 @@ MyHomeAutomation.prototype.init = function (config) {
 };
 
 MyHomeAutomation.prototype.loadModules = function(){
-	this.log('MyHomeAutomation: reading modules config...');
+	this.log('reading modules config...');
 
 	try {
 		var config = null;
@@ -73,13 +74,13 @@ MyHomeAutomation.prototype.loadModules = function(){
 		this.modulesConfig = config;
 		this.log('config loaded: ' + JSON.stringify(config));
 	} catch (err){
-		this.log('MyHomeAutomation: ' + err.toString());
+		this.log(err.toString() + '\n' + err.stack);
 		return;
 	}
 	
 	for (var i = 0; i < this.modulesConfig.modules.length; i++){
 		var moduleObj = this.modulesConfig.modules[i];
-		this.log('MyHomeAutomation: loading module ' + moduleObj.name + '...');
+		this.log('loading module ' + moduleObj.name + '...');
 		try {
 			var MHA = this;
 			var module;
@@ -91,7 +92,8 @@ MyHomeAutomation.prototype.loadModules = function(){
 			//moduleObj.module = module;
 			this.modules[moduleObj.name] = module;
 		} catch (err){
-			this.log('MyHomeAutomation: ' + err.toString());
+			//var msg = (err.toString()  || '').split(\n);
+			this.log(err.toString() + '\n' + err.stack);
 			this.unloadModules();
 			return;
 		}
@@ -101,18 +103,18 @@ MyHomeAutomation.prototype.loadModules = function(){
 	
 	
 	
-	this.log('MyHomeAutomation: eval');
-	this.log('MyHomeAutomation: eval');
+	//this.log('MyHomeAutomation: eval');
+	//this.log('MyHomeAutomation: eval');
 	
 }
 
 MyHomeAutomation.prototype.unloadModules = function(){
-	this.log('MyHomeAutomation: unloading modules...');
+	this.log('unloading modules...');
 	for (var i = this.modulesConfig.modules.length-1; i >= 0; i--){
 		var moduleObj = this.modulesConfig.modules[i];
 		var module = this.modules[moduleObj.name];
 		if (!module) continue;
-		this.log('MyHomeAutomation: unloading module' + moduleObj.name + '...');
+		this.log('unloading module' + moduleObj.name + '...');
 		try {
 			// как-то выгрузить модуль	
 		} catch (err){
@@ -123,7 +125,7 @@ MyHomeAutomation.prototype.unloadModules = function(){
 }
 
 MyHomeAutomation.prototype.stop = function () {
-	this.log('MyHomeAutomation: stop');
+	this.log('stop');
 	
 	//this.stopWebServer();
 	this.unloadModules();
@@ -145,7 +147,7 @@ MyHomeAutomation.prototype.stop = function () {
 	// }
 	
     MyHomeAutomation.super_.prototype.stop.call(this);
-	this.log('MyHomeAutomation: stop completed');
+	this.log('stop completed');
 };
 
 
@@ -159,9 +161,16 @@ MyHomeAutomation.prototype.saveData = function (key, value) {
 	saveObject(objName, value);
 };
 
-MyHomeAutomation.prototype.log = function (data) {
+MyHomeAutomation.prototype.log = function (prefix, data) {
 	//console.log('[MyHomeAutomation_'+this.id + (this.module && this.module.name ? ' ('+this.module.name+')' : '') + '] ' + data);
-	console.log('[MHA] ' + data);
+	if (!data) {
+		console.log('[MHA] ' + prefix + ' no data');
+		return;
+	}
+	data.split('\n').forEach(function(line){
+		console.log('[MHA] ' + prefix + ' ' + line);	
+	})
+	
 };
 
 //MyHomeAutomation.prototype.log = MyHomeAutomation.prototype.log

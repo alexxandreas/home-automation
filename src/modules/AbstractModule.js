@@ -11,8 +11,9 @@ module = (function(){
   //inherits(TestModule, superClass);
   //Bathroom.prototype.initClass = initClass;
 
+    
     AbstractModule.prototype.log = function(data){
-        return MHA.prototype.log(this.name || 'UnnamedModule ' + data);
+        return MHA.prototype.log(this.name || 'UnnamedModule', data);
     }
     
     return AbstractModule;
