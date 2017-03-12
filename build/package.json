@@ -9,7 +9,7 @@
   },
   "scripts":{
       "build-debug": "gulp build-debug",
-      "build-release": "gulp build-release && git add ../. && git commit -m '-' && git push",
+      "build-release": "gulp build-release && git add ../. && git commit -a -m '-' && git push",
       "build-watch-debug": "gulp build-watch-debug"
   },
   "private": true,
