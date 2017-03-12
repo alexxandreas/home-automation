@@ -1,0 +1,102 @@
+<html>
+<head>
+<title>Z-Way console</title>
+<script type="text/javascript" src="jquery-1.6.4.js"></script>
+<script>
+
+
+function keyUp(event){
+  if (event.which==77 && event.ctrlKey) run();
+}
+
+
+function write(str){
+	var outnode = document.getElementById("JSoutput");
+	if (str != undefined) {
+		outnode.value = JSON.stringify(str, null, '  ');;
+	}
+	
+	var tnode = document.getElementById("JStiming");
+    tnode.innerHTML = ""+(new Date().getTime()-d)/1000;
+}
+
+
+function run(){
+	d = new Date().getTime();
+	var tnode = document.getElementById("JStiming");
+    tnode.innerHTML = "running...";
+	
+    var code = document.getElementById("JSprogram").value;
+	remoteRun(code);   
+}
+
+
+function remoteRun(data) {
+	$.ajax({
+		//url: "http://alexandreas.ru:8083/debug/eval/" + data,
+		url: "/debug/eval/" + data,
+		success: ajaxLoad,
+		error:  ajaxError,
+		type: 'GET',
+		//data: {},
+		//dataType: 'json',
+		context: document.body
+	});
+}
+
+function ajaxLoad(data, status) {
+	//console.log(data, status);
+	write(data);
+	
+	//setTimeout("loadData()", 1000);
+};
+
+function ajaxError(jqXHR, status) {
+	write (status);
+};
+
+
+</script>
+<style>
+	td {background:white; vertical-align:top; border:1px solid black; padding:2px 10px}
+	pre {margin:0}
+	table {border-collapse:collapse; table-layout:fixed}
+	body {background:lightblue; font-family:Arial}
+	textarea {font-family:Lucida console}
+</style>
+</head>
+<body><!-- onpaste="return false;"-->
+<table width="100%">
+	<tr>
+		<td><b>Type JavaScript</b> 
+		</td>
+		<td>
+		
+		<input type="button" value="Run (Ctrl-m)" onclick="run()"/> &nbsp; &nbsp;
+		<b>Output</b> &nbsp; &nbsp; 
+		Timing: <span id="JStiming"></span> s
+		</td>
+	</tr>
+	<tr>
+		<td width="50%" style="padding:1px">
+		<textarea id="JSprogram" style="height:5in; width:100%; font-family: monospace; font-size: 16; font-weight: bold;" onkeyup="keyUp(event)">
+		(function(){
+
+		})()
+		</textarea>
+		</td>
+		
+		<td width="50%" style="padding:1px">
+		<textarea id="JSoutput" style="height:5in; width:100%; font-family: monospace; font-size: 16; font-weight: bold;">
+		</textarea>
+		</td>
+	</tr>
+</table>
+
+<p>
+Код может возвращать текст или JS-объект. Сериализовать JS-объект не нужно!
+</p>
+
+
+</body>
+</html>

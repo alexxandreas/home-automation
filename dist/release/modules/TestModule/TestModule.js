@@ -12,6 +12,10 @@ module = (function(){
   
     inherits(TestModule, MHA.modules.AbstractModule);
     
+    TestModule.prototype.stop = function(){
+        TestModule.super_.prototype.stop.apply(this, arguments);
+    }
+    
     return new TestModule(config);
     
 })()
