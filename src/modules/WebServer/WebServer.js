@@ -40,7 +40,7 @@ module = (function(){
     		}
     		
         };
-        ws.allowExternalAccess("mha", this.controller.auth.ROLE.ANONYMOUS); // login required
+        ws.allowExternalAccess("mha", controller.auth.ROLE.ANONYMOUS); // login required
     	
     	this.addDefaultRoutes();
     };
