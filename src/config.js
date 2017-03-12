@@ -4,6 +4,8 @@ config = {
    },{
        name: 'WebServer'
    },{
+       name: 'WebApp'
+   },{
        name: 'TestModule', 
        // module: сюда запишется ссылка на экземпляр модуля
        config:{
