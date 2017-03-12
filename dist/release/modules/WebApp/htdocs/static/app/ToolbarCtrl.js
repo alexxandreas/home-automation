@@ -4,13 +4,11 @@
         .controller('ToolbarCtrl', ToolbarCtrl);
 
     ToolbarCtrl.$inject = [
-        '$scope',
-        'ChartDataSrv'
+        '$scope'
     ];
 
     function ToolbarCtrl(
-        $scope,
-        ChartDataSrv
+        $scope
     ) {
         $scope.buttons = [{
             title: '1dfasdf'
