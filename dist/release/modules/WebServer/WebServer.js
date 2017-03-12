@@ -124,7 +124,7 @@ module = (function(){
     };
     	
     WebServer.prototype.addRoute = function(route, handler, scope){
-    	this.routes[trimSlash(route)] = scope ? handler.bind(scope) : handler;
+    	this.routes[this.trimSlash(route)] = scope ? handler.bind(scope) : handler;
     };
     
     WebServer.prototype.trimSlash = function(str){
