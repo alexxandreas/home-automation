@@ -14,7 +14,7 @@ module = (function(){
     
     AbstractModule.prototype.log = function(data){
         return MHA.prefixLog(this.name || 'UnnamedModule', data);
-    }
+    };
     
     return AbstractModule;
     
