@@ -9,7 +9,7 @@ angular
 	.config(function($mdIconProvider) {
 		//$mdIconProvider.defaultFontSet('md', 'material-icons');
 		//$mdIconProvider.fontSet('md', 'material-icons');
-		$mdIconProvider.defaultIconSet('/static/core-icons.svg', 24);
+		$mdIconProvider.defaultIconSet('static/core-icons.svg', 24);
 		//$mdIconProvider.fontSet('md', 'Material Icons')
 		//	.defaultFontSet( 'md' );
 		//$mdIconProvider.iconSet('social', 'img/icons/sets/social-icons.svg', 24);
