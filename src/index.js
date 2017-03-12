@@ -21,19 +21,20 @@ MyHomeAutomation.prototype.init = function (config) {
 	
 	this.controller.MHA = this;
 	
-
+	this.loadModules();
 	
-	this.startWebServer();
+	//this.startWebServer();
 
-	this.log('MyHomeAutomation: eval');
+	//this.log('MyHomeAutomation: eval');
 		
-	try {	
+	/*try {	
 		var MHA = this;
 		eval(this.config.customCode);
 		this.log('MyHomeAutomation: running...');
 	} catch (err){
 		this.log('MyHomeAutomation: init error\n' + err.toString() + (err.stack ? '\n'+err.stack : ''));
-	}
+	}*/
+	
 };
 
 MyHomeAutomation.prototype.loadModules = function(){
@@ -44,6 +45,7 @@ MyHomeAutomation.prototype.loadModules = function(){
 		executeFile('config.js');
 		if (!config) throw new Error('config not loaded!');
 		this.modulesConfig = config;
+		this.log('config loaded: ' + JSON.stringify(config));
 	} catch (err){
 		this.log('MyHomeAutomation: ' + err.toString());
 		return;
