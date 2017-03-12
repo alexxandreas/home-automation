@@ -43,23 +43,37 @@
 
 <div class='body' layout="column" layout-align="start stretch">
 
-	<md-toolbar ng-controller="ToolbarCtrl"
-		class="md-toolbar-tools"
-		layout="row">
+	<md-nav-bar 
+      md-selected-nav-item="activePanel"
+      nav-bar-aria-label="navigation links">
+		
+      <md-nav-item ng-repeat="panel in buttons"
+      md-nav-click="openPanel(panel)" name="panel.title">
+        {{panel.title}}
+      </md-nav-item>
+      
+    </md-nav-bar>
+    
+    
+    <div class="ext-content">
+      External content for `<span>{{activePanel.title}}</span>`.
+    </div>
 
-    	<!--<div class="md-toolbar-tools">-->
-     <!-- 	<h2 md-truncate flex>My App's Title</h2>-->
 
-      	<md-button ng-repeat="item in buttons"
-      	ng-click="openPanel(item)">
-        	{{item.title}}
-      	</md-button>
-    	<!--</div>-->
+	<!--<md-toolbar ng-controller="ToolbarCtrl"-->
+	<!--	class="md-toolbar-tools"-->
+	<!--	layout="row">-->
+		
+ <!--     	<md-button ng-repeat="item in buttons"-->
+ <!--     	ng-click="openPanel(item)">-->
+ <!--       	{{item.title}}-->
+ <!--     	</md-button>-->
 
-  	</md-toolbar>
-  	<md-content>
-    	Hello!
-  	</md-content>
+
+ <!-- 	</md-toolbar>-->
+ <!-- 	<md-content>-->
+ <!--   	Hello!-->
+ <!-- 	</md-content>-->
 	  
 	<!--<md-toolbar class="md-menu-toolbar"  >-->
 		<!--<md-menu-bar ng-controller="ToolbarCtrl">-->
