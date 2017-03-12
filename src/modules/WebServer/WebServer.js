@@ -89,7 +89,7 @@ module = (function(){
     };
     
     WebServer.prototype.addModuleRoutes = function(module){
-        this.addRoute('/modules/:' + module.name + '/htdocs/:path', this.sendStatic);
+        this.addRoute('/modules/:' + module.name + '/htdocs/:path', this.sendStatic, this);
     }
     
     WebServer.prototype.addDefaultRoutes = function(){
