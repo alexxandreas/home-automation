@@ -117,6 +117,7 @@ MyHomeAutomation.prototype.unloadModules = function(){
 		this.log('unloading module ' + moduleObj.name + '...');
 		try {
 			// как-то выгрузить модуль	
+			delete this.modules[moduleObj.name];
 		} catch (err){
 			
 		}
