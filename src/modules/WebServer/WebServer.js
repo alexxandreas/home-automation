@@ -88,7 +88,7 @@ module = (function(){
 
         try {
         
-            var ext = fileName.split(".").pop();
+            var ext = path.split(".").pop();
     
             if(img.indexOf(ext) > -1){
                 contentType = "image/(png|jpeg|gif)";
