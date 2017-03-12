@@ -21,5 +21,5 @@ rm -f $destDir/update.bash.bak
 mv $destDir/update.bash $destDir/update.bash.bak
 cp -f $tmpDir/dist/release/update.bash $destDir/update.bash
 
-#rm -rf $tmpDir
+#rm -rf $tmpDir 
 
