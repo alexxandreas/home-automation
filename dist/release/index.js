@@ -51,7 +51,7 @@ MyHomeAutomation.prototype.loadModules = function(){
 	
 	for (var i = 0; i < this.modulesConfig.modules.length; i++){
 		var moduleObj = this.modulesConfig.modules[i];
-		this.log('MyHomeAutomation: loading module' + moduleObj.name + '...';
+		this.log('MyHomeAutomation: loading module' + moduleObj.name + '...');
 		try {
 			var module;
 			var config = moduleObj.config;
@@ -78,7 +78,7 @@ MyHomeAutomation.prototype.unloadModules = function(){
 	for (var i = this.modulesConfig.modules.length-1; i >= 0; i--){
 		var moduleObj = this.modulesConfig.modules[i];
 		if (!moduleObj.module) continue;
-		this.log('MyHomeAutomation: unloading module' + moduleObj.name + '...';
+		this.log('MyHomeAutomation: unloading module' + moduleObj.name + '...');
 		try {
 			// как-то выгрузить модуль	
 		} catch (err){
