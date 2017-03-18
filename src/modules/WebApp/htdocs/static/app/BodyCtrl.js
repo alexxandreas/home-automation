@@ -30,7 +30,7 @@
         
     
     
-        $scope.loadPanels = (){
+        $scope.loadPanels = function(){
             $http.get('/mha/modules/WebApp/api/panels').then(function(response){
                 var a = response;
                 
