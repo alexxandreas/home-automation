@@ -47,7 +47,8 @@ var libsCss = [
 // JS клиентского приложения
 var appJs = [
 	'../src/modules/*/htdocs/**/_*.js',
-	'../src/modules/*/htdocs/**/*.js'	
+	'../src/modules/*/htdocs/**/*.js',
+	'!../src/modules/*/htdocs/**/-*.js'	
 ];
 
 var appCss = [
