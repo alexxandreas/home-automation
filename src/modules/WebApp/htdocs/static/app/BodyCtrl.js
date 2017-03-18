@@ -5,12 +5,12 @@
 
     BodyCtrl.$inject = [
         '$scope',
-        '$rootScope'
+        '$http'
     ];
 
     function BodyCtrl(
         $scope,
-        $rootScope
+        $http
     ) {
         $scope.panels = [{
             title: '1dfasdf'
@@ -27,6 +27,16 @@
         }
         
     
+    
+        function loadPanels(){
+            $http.get('/mha/modules/WebApp/api/panel').then(function(response){
+                var a = response;
+                
+            }, function(response){
+                //$q.reject(response);
+            });
+            
+        }
     }
 
 }());

@@ -128,16 +128,28 @@ module = (function(){
         } catch(err) {
             this.log('sendFile Error: ' + err.toString() + "\n" + err.stack);
             
-            return {
-                status: 500,
-                headers: {
-                    "Content-Type": "text/plain",
-                    "Connection": "keep-alive"
-                },
-                body: err.toString() + "\n" + err.stack
-            }
+            return this.sendError(500, err.toString() + "\n" + err.stack);
+            // return {
+            //     status: 500,
+            //     headers: {
+            //         "Content-Type": "text/plain",
+            //         "Connection": "keep-alive"
+            //     },
+            //     body: err.toString() + "\n" + err.stack
+            // }
         }
         
+    };
+    
+    WebServer.prototype.sendError = function(status, body){
+        return {
+            status: status,
+            headers: {
+                "Content-Type": "text/plain",
+                "Connection": "keep-alive"
+            },
+            body: body
+        }
     };
     	
     
