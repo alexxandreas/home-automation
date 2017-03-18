@@ -206,7 +206,7 @@ module = (function(){
     // key - ключ из this.deviceNames
     DeviceStorage.prototype._pushDevice = function(key, vDev){
         this.devices[key] = vDev;
-        
+        this.log('pushing ' + key + ' ' + vDev.id);
         vDev.MHA = {
             key: key,
             deviceType: vDev.deviceType,
