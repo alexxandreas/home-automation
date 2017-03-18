@@ -27,6 +27,20 @@ var js = [
     '../src/*.js'
     ];
     
+// либы, используемые на фронте
+var libsJs = [
+	'./node_modules/angular/angular.js',
+	'./node_modules/angular-animate/angular-animate.js',
+	'./node_modules/angular-aria/angular-aria.js',
+	'./node_modules/angular-material/angular-material.js'
+	];
+	
+// css-sы, используемые на фронте
+var libsCss = [
+	'./node_modules/angular-material/angular-material.css'
+	]
+    
+    
 // Файлы, копируемые в каталог сборки
 var copyToRootFiles = [
     //'../src/update.bash'
@@ -53,9 +67,22 @@ gulp.task('build-release', function(cb){
 gulp.task('build-js', function(cb){
     return gulp.src(js)
 		.pipe($.concat('index.js'))
-		.pipe(gulp.dest(debugMode ? distDebug : distRelease))
+		.pipe(gulp.dest(debugMode ? distDebug : distRelease));
 		//.pipe($.uglify({preserveComments:'license', mangle: false}))
 		//.pipe(gulp.dest(distRelease+'app'));
+});
+
+gulp.task('build-libs-js', function(cb){
+	return gulp.src(libsJs)
+	.pipe($.concat('libs.js'))
+	//.pipe(gulp.dest(debugMode ? distDebug : distRelease));
+	.pipe(gulp.dest((debugMode ? distDebug : distRelease) + '/htdocs'));
+});
+
+gulp.task('build-libs-css', function(cb){
+	return gulp.src(libsCss)
+	.pipe($.concat('libs.css'))
+	.pipe(gulp.dest((debugMode ? distDebug : distRelease) + '/htdocs'));
 });
 
 gulp.task('copy-files', function(cb){
@@ -67,6 +94,8 @@ gulp.task('copy-files', function(cb){
 gulp.task('build', ['clean'], function(cb) {
 	runSequence(
 		//..'build-js',
+		'build-libs-js',
+		'build-libs-css',
 		'copy-files',
 		//'rebuildStatic',
 		cb);

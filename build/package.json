@@ -7,12 +7,18 @@
     "run-sequence": "^1.0.1",
     "del": "^1.1.0"
   },
-  "scripts":{
-      "build-debug": "gulp build-debug",
-      "build-release": "gulp build-release && git add ../. && git commit -a -m '-' && git push",
-      "build-watch-debug": "gulp build-watch-debug"
+  "scripts": {
+    "build-debug": "gulp build-debug",
+    "build-release": "gulp build-release",
+    "build-release-git": "gulp build-release && git add ../. && git commit -a -m '-' && git push",
+    "build-watch-debug": "gulp build-watch-debug"
   },
   "private": true,
   "license": "proprietary",
-  "dependencies": {}
+  "dependencies": {
+    "angular": "^1.5.11",
+    "angular-animate": "^1.5.11",
+    "angular-aria": "^1.5.11",
+    "angular-material": "^1.1.3"
+  }
 }

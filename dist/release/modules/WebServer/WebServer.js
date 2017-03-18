@@ -71,8 +71,15 @@ module = (function(){
     
     WebServer.prototype._addModulesRoutes = function(){
         this.addRoute('/modules/:module/htdocs/:path', function(args){
-            return this._sendStatic(args[0], args[1]);
+            return this.sendFile('modules/' + args[0] + '/htdocs/' + args[1]);
+            //return this._sendStatic(args[0], args[1]);
         }, this);
+        
+        this.addRoute('/htdocs/:path', function(args){
+            return this.sendFile('htdocs/' + args[0]);
+            //return this._sendStatic(args[0], args[1]);
+        }, this);
+        
     };
     
     // WebServer.prototype.addDefaultRoutes = function(){
@@ -86,9 +93,9 @@ module = (function(){
     	
     // };
     	
-    WebServer.prototype._sendStatic = function(moduleName, path){
-        return this.sendFile('modules/' + moduleName + '/htdocs/' + path);
-    }	
+    // WebServer.prototype._sendStatic = function(moduleName, path){
+    //     return this.sendFile('modules/' + moduleName + '/htdocs/' + path);
+    // }	
 
     WebServer.prototype._getMimeType = function(path){
         var ext = path.split("/").pop().split(".").pop();
