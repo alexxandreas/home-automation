@@ -56,7 +56,8 @@
       nav-bar-aria-label="navigation links">
 		
       <md-nav-item ng-repeat="panel in panels"
-      md-nav-click="openPanel(panel)" name="panel.title">
+      md-nav-click="openPanel(panel)" 
+      name="panel.title" md-nav-href="panel.title">
         {{panel.title}}
       </md-nav-item>
       

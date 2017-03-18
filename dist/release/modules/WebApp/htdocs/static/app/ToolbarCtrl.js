@@ -4,11 +4,13 @@
         .controller('ToolbarCtrl', ToolbarCtrl);
 
     ToolbarCtrl.$inject = [
-        '$scope'
+        '$scope',
+        '$rootScope'
     ];
 
     function ToolbarCtrl(
-        $scope
+        $scope,
+        $rootScope
     ) {
         $scope.panels = [{
             title: '1dfasdf'
@@ -18,10 +20,15 @@
             title: '3aljfa;siof'
         }]
         
-        $scope.activePanel = null;
+        $scope.activePanel = $scope.panels[0];
+        
         $scope.openPanel = function(panel){
             $scope.activePanel = panel;
         }
+        
+        $rootScope.$on('$routeChangeSuccess', function(event, current) {
+         $scope.currentLink = getCurrentLinkFromRoute(current);
+       });
         
         /*$scope.deviceTypes = [
             {
