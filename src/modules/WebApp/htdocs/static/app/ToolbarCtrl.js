@@ -26,9 +26,7 @@
             $scope.activePanel = panel;
         }
         
-        $rootScope.$on('$routeChangeSuccess', function(event, current) {
-         $scope.currentLink = getCurrentLinkFromRoute(current);
-       });
+        
         
         /*$scope.deviceTypes = [
             {

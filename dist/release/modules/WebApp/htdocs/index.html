@@ -48,9 +48,10 @@
 </head>
 <body ng-app="WebApp">
 
-<div class='body' layout="column" layout-align="start stretch">
+<div ng-controller="BodyCtrl"
+class='body' layout="column" layout-align="start stretch">
 
-	<div ng-controller="ToolbarCtrl" layout="column">
+	
 	<!--md-selected-nav-item="activePanel"-->
 	<md-nav-bar 
       nav-bar-aria-label="navigation links">
@@ -62,7 +63,7 @@
       </md-nav-item>
       
     </md-nav-bar>
-    </div>
+    
     
     <div class="ext-content" flex>
       External content for `<span>{{activePanel.title}}</span>`.
