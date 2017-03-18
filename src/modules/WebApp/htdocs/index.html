@@ -50,7 +50,8 @@
 
 <div class='body' layout="column" layout-align="start stretch">
 
-	<md-nav-bar ng-controller="ToolbarCtrl"
+	<div ng-controller="ToolbarCtrl" layout="column">
+	<md-nav-bar 
       md-selected-nav-item="activePanel"
       nav-bar-aria-label="navigation links">
 		
@@ -60,7 +61,7 @@
       </md-nav-item>
       
     </md-nav-bar>
-    
+    </div>
     
     <div class="ext-content">
       External content for `<span>{{activePanel.title}}</span>`.
