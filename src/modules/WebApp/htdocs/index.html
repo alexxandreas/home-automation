@@ -50,11 +50,11 @@
 
 <div class='body' layout="column" layout-align="start stretch">
 
-	<md-nav-bar 
+	<md-nav-bar ng-controller="ToolbarCtrl"
       md-selected-nav-item="activePanel"
       nav-bar-aria-label="navigation links">
 		
-      <md-nav-item ng-repeat="panel in buttons"
+      <md-nav-item ng-repeat="panel in panels"
       md-nav-click="openPanel(panel)" name="panel.title">
         {{panel.title}}
       </md-nav-item>

@@ -75,6 +75,7 @@ gulp.task('build-js', function(cb){
 gulp.task('build-libs-js', function(cb){
 	return gulp.src(libsJs)
 	.pipe($.concat('libs.js'))
+	.pipe($.uglify({preserveComments:'license', mangle: false}))
 	//.pipe(gulp.dest(debugMode ? distDebug : distRelease));
 	.pipe(gulp.dest((debugMode ? distDebug : distRelease) + '/htdocs'));
 });

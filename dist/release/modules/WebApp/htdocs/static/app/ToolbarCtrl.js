@@ -10,7 +10,7 @@
     function ToolbarCtrl(
         $scope
     ) {
-        $scope.buttons = [{
+        $scope.pabels = [{
             title: '1dfasdf'
         }, {
             title: '2vth`sga'
