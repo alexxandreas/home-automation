@@ -51,22 +51,25 @@
 <div class='body' layout="column" layout-align="start stretch">
 
 	<div ng-controller="ToolbarCtrl" layout="column">
+	<!--md-selected-nav-item="activePanel"-->
 	<md-nav-bar 
-      md-selected-nav-item="activePanel"
       nav-bar-aria-label="navigation links">
 		
       <md-nav-item ng-repeat="panel in panels"
-      md-nav-click="openPanel(panel)" 
-      name="{{panel.title}}" >
+	      md-nav-click="openPanel(panel)" 
+	      name="{{panel.title}}" >
         {{panel.title}}
       </md-nav-item>
       
     </md-nav-bar>
     </div>
     
-    <div class="ext-content">
+    <div class="ext-content" flex>
       External content for `<span>{{activePanel.title}}</span>`.
     </div>
+    
+    
+    
 
 
 	<!--<md-toolbar ng-controller="ToolbarCtrl"-->
