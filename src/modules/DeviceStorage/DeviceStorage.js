@@ -161,7 +161,7 @@ module = (function(){
                   return devName.indexOf(part.toLowerCase()) >= 0;
               }
               })){ devices.push(vDev); }
-            });
+            }, this);
             return devices;
         }
 

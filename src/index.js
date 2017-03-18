@@ -48,6 +48,7 @@ MyHomeAutomation.prototype.loadModules = function(){
 	try {
 		var config = null;
 		var configStr = fs.load(this.fsRoot + 'config.js');
+		configStr = decodeURIComponent(escape(configStr));
 		eval(configStr);
 		if (!config) throw new Error('config not loaded!');
 		this.modulesConfig = config;
@@ -65,6 +66,7 @@ MyHomeAutomation.prototype.loadModules = function(){
 			var module;
 			var config = moduleObj.config;
 			var moduleStr = fs.load(this.fsRoot + 'modules/' + moduleObj.name + '/' + moduleObj.name + '.js');
+			moduleStr = decodeURIComponent(escape(moduleStr));
 			eval(moduleStr);
 			if (!module) throw new Error('module ' + moduleObj.name + ' not loaded!');
 			this.modules[moduleObj.name] = module;
