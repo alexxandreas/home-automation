@@ -117,16 +117,17 @@ module = (function(){
             Object.keys(this.deviceNames).forEach(function(key){
               var vDevs = getDevicesByName(this.deviceNames[key]);
               if (vDevs.length == 0){
-                this.log('Error: initDevices(' + key + '): не найдено ни одного устройства');
+                this.log('Error: initDevices(' + key + '): not found');
                 //return null;
               } else if (vDevs.length > 1){
                 var text = vDevs.map(function(vDev){
                   return vDev.id + '(' + vDev.get('metrics:title') + ')'
                 }).join(', ');
-                this.log('Error: initDevices(' + key + '): найдено ' + vDevs.length + 'шт: ' + text);
+                this.log('Error: initDevices(' + key + '): found ' + vDevs.length + 'devices: ' + text);
                 //return null;
+              } else {
+                this._pushDevice(key, vDevs[0]);
               }
-              this._pushDevice(key, vDevs[0]);
             //   this.devices[key] = vDevs[0];
               //return vDevs[0];
             }, this);
@@ -206,7 +207,7 @@ module = (function(){
     // key - ключ из this.deviceNames
     DeviceStorage.prototype._pushDevice = function(key, vDev){
         this.devices[key] = vDev;
-        this.log('pushing ' + key + ' ' + vDev.id);
+        //this.log('pushing ' + key + ' ' + vDev.id);
         vDev.MHA = {
             key: key,
             deviceType: vDev.deviceType,
