@@ -1,9 +1,10 @@
 <div layout="column" layout-align="start stretch"
     ng-controller=DeviceStorageCtrl>
     DeviceStorage
-    <div ng-repeat="(key, device) in devices">
-        <span>{{key}}</span>&nbsp;
+    <div ng-repeat="device in devices">
+        <span>{{device.key}}</span>&nbsp;
         <span>{{device.id}}</span>&nbsp;
+        <span>{{device.title}}</span>&nbsp;
         <span>{{device.level}}</span>&nbsp;
         <span>{{device.lastLevelChange}}</span>&nbsp;
     </div>

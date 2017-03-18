@@ -22,13 +22,20 @@
         reload();
         
         
+        var reloadTimeout;
         function reload(){
             DeviceStorageSrv.reload().then(function(data){
                 $scope.devices = data;
             }).finally(function(){
-                $timeout(reload, 1000);
+                reloadTimeout = $timeout(reload, 1000);
             })
         }
+        
+        $scope.$on("$destroy", function() {
+            if (reloadTimeout) {
+                $timeout.cancel(reloadTimeout);
+            }
+        });
         
     }
 
