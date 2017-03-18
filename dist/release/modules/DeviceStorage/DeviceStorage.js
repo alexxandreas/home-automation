@@ -146,7 +146,7 @@ module = (function(){
         возвращает массив подходящих vDev
         */
         function getDevicesByName(parts){
-            this.log('getDevicesByName ' + JSON.stringify(parts));
+            //this.log('getDevicesByName ' + JSON.stringify(parts));
             var devices=[];
             controller.devices.forEach(function(vDev){
               var devName = vDev.get('metrics:title') || '';
@@ -193,7 +193,7 @@ module = (function(){
             };
             Object.keys(conf).forEach(function(num){
                 var sceneId = "ZWayVDev_zway_Remote_" + realId + "-0-0-" + num + "-S";
-                var vDev = this.getVDev(sceneId);
+                var vDev = this.getVDev.call(this,sceneId);
                 if (!vDev){
                   //this.log('Error: getFGD211Scenes(' + key + '): сцена ' + sceneId + ' не найдена');
                   this.log('Error: сцена "' + conf[num] + '" (' + num + ') для ' + key + ' не найдена');
