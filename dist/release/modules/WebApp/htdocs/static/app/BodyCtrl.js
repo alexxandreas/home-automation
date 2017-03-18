@@ -12,6 +12,8 @@
         $scope,
         $http
     ) {
+        $scope.loadPanels();
+        
         $scope.panels = [{
             title: '1dfasdf'
         }, {
@@ -28,8 +30,8 @@
         
     
     
-        function loadPanels(){
-            $http.get('/mha/modules/WebApp/api/panel').then(function(response){
+        $scope.loadPanels = (){
+            $http.get('/mha/modules/WebApp/api/panels').then(function(response){
                 var a = response;
                 
             }, function(response){
