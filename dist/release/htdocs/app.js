@@ -58,7 +58,7 @@ angular
         reload();
         
         
-        reload = function(){
+        function reload(){
             DeviceStorageSrv.reload().then(function(data){
                 $scope.devices = data;
             }).finally(function(){
@@ -66,21 +66,6 @@ angular
             })
         }
         
-        
-        loadDevices();
-       
-        $scope.openPanel = function(panel){
-            $scope.activePanel = panel;
-        }
-        
-        function loadPanels(){
-            $http.get('/mha/modules/WebApp/api/panels').then(function(response){
-                $scope.panels = response.data;
-            }, function(response){
-                //$q.reject(response);
-            });
-            
-        }
     }
 
 }());
