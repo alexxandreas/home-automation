@@ -151,7 +151,7 @@ module = (function(){
             controller.devices.forEach(function(vDev){
               var devName = vDev.get('metrics:title') || '';
               devName = devName.toLowerCase();
-              this.log(devName);
+              //this.log(devName);
               if (parts.every(function(part){
               if (part instanceof Array){
                   return part.some(function(subPart){
