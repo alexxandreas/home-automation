@@ -193,7 +193,7 @@ module = (function(){
             };
             Object.keys(conf).forEach(function(num){
                 var sceneId = "ZWayVDev_zway_Remote_" + realId + "-0-0-" + num + "-S";
-                var vDev = this.getVDev.call(this,sceneId);
+                var vDev = this.getVDev(sceneId);
                 if (!vDev){
                   //this.log('Error: getFGD211Scenes(' + key + '): сцена ' + sceneId + ' не найдена');
                   this.log('Error: сцена "' + conf[num] + '" (' + num + ') для ' + key + ' не найдена');
@@ -289,7 +289,7 @@ module = (function(){
 
     // возвращает vDev по его id
     DeviceStorage.prototype.getVDev = function(id){
-        var vDev = this.controller.devices.get(id);
+        var vDev = controller.devices.get(id);
         return vDev;
     };
 
