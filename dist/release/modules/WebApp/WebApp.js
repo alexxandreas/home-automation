@@ -8,10 +8,10 @@ module = (function(){
         this.panels = [];
         this._initRoutes();
         
-        this.addPanel({
-            title:'panel1',
-            template: '/views/DeviceStorage/htdocs/DeviceStorage.html'
-        });
+        // this.addPanel({
+        //     title:'panel1',
+        //     template: '/views/DeviceStorage/htdocs/DeviceStorage.html'
+        // });
         
         
         

@@ -10,7 +10,8 @@ module = (function(){
         this.log('construcror');
 
         this._initDevices();
-        this._initRoutes();
+        this._initFrontend();
+        
     }
 
     inherits(DeviceStorage, MHA.modules.AbstractModule);
@@ -115,7 +116,7 @@ module = (function(){
 
         function initDevices(){
             Object.keys(this.deviceNames).forEach(function(key){
-              var vDevs = getDevicesByName(this.deviceNames[key]);
+              var vDevs = getDevicesByName.call(this,this.deviceNames[key]);
               if (vDevs.length == 0){
                 this.log('Error: initDevices(' + key + '): not found');
                 //return null;
@@ -145,10 +146,12 @@ module = (function(){
         возвращает массив подходящих vDev
         */
         function getDevicesByName(parts){
+            this.log('getDevicesByName ' + JSON.stringify(parts));
             var devices=[];
             controller.devices.forEach(function(vDev){
               var devName = vDev.get('metrics:title') || '';
               devName = devName.toLowerCase();
+              this.log(devName);
               if (parts.every(function(part){
               if (part instanceof Array){
                   return part.some(function(subPart){
@@ -302,7 +305,7 @@ module = (function(){
     };
 
 
-    DeviceStorage.prototype._initRoutes = function(){
+    DeviceStorage.prototype._initFrontend = function(){
         var ws = MHA.modules.WebServer;
         
     	ws.addRoute('/modules/'+this.name+'/api/:method', function(args){
@@ -326,6 +329,11 @@ module = (function(){
     	    
     	    return ws.sendError(404, method + ' not found');
     	}, this);
+    	
+    	MHA.modules.WebApp.addPanel({
+            title:'DeviceStorage',
+            template: '/views/DeviceStorage/htdocs/DeviceStorage.html'
+        });
     };
     
     
