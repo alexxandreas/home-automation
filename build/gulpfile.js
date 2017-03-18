@@ -107,7 +107,7 @@ gulp.task('build-app-js', function(cb){
 	return gulp.src(appJs)
 	.pipe(print())
 	.pipe(concat('app.js'))
-	.pipe(uglify({preserveComments:'license', mangle: false}))
+	//.pipe(uglify({preserveComments:'license', mangle: false}))
 	.pipe(gulp.dest((debugMode ? distDebug : distRelease) + '/htdocs'));
 });
 
