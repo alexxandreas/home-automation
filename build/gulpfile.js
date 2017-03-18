@@ -88,16 +88,12 @@ gulp.task('build-js', function(cb){
     return gulp.src(js)
 		.pipe(concat('index.js'))
 		.pipe(gulp.dest(debugMode ? distDebug : distRelease));
-		//.pipe($.uglify({preserveComments:'license', mangle: false}))
-		//.pipe(gulp.dest(distRelease+'app'));
 });
 
 gulp.task('build-libs-js', function(cb){
 	return gulp.src(libsJs)
 	.pipe(concat('libs.js'))
-	// .pipe($.uglify({preserveComments:'license', mangle: false}))
 	.pipe(uglify({preserveComments:'license', mangle: false}))
-	//.pipe(gulp.dest(debugMode ? distDebug : distRelease));
 	.pipe(gulp.dest((debugMode ? distDebug : distRelease) + '/htdocs'));
 });
 
@@ -111,9 +107,7 @@ gulp.task('build-app-js', function(cb){
 	return gulp.src(appJs)
 	.pipe(print())
 	.pipe(concat('app.js'))
-	// .pipe($.uglify({preserveComments:'license', mangle: false}))
 	.pipe(uglify({preserveComments:'license', mangle: false}))
-	//.pipe(gulp.dest(debugMode ? distDebug : distRelease));
 	.pipe(gulp.dest((debugMode ? distDebug : distRelease) + '/htdocs'));
 });
 
@@ -121,9 +115,6 @@ gulp.task('build-app-css', function(cb){
 	return gulp.src(appCss)
 	.pipe(print())
 	.pipe(concat('app.css'))
-	// .pipe($.uglify({preserveComments:'license', mangle: false}))
-	//.pipe(uglify({preserveComments:'license', mangle: false}))
-	//.pipe(gulp.dest(debugMode ? distDebug : distRelease));
 	.pipe(gulp.dest((debugMode ? distDebug : distRelease) + '/htdocs'));
 });
 
