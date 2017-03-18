@@ -37,6 +37,87 @@ angular
 (function () {
     "use strict";
     angular.module('WebApp')
+        .controller('DeviceStorageCtrl', DeviceStorageCtrl);
+
+    DeviceStorageCtrl.$inject = [
+        '$scope',
+        '$http',
+        '$timeout',
+        'DeviceStorageSrv'
+    ];
+
+    function DeviceStorageCtrl(
+        $scope,
+        $http,
+        $timeout,
+        DeviceStorageSrv
+    ) {
+        
+        $scope.devices = {};
+        //$interval(reload, 1000);
+        reload();
+        
+        
+        reload = function(){
+            DeviceStorageSrv.reload().then(function(data){
+                $scope.devices = data;
+            }).finally(function(){
+                $timeout(reload, 1000);
+            })
+        }
+        
+        
+        loadDevices();
+       
+        $scope.openPanel = function(panel){
+            $scope.activePanel = panel;
+        }
+        
+        function loadPanels(){
+            $http.get('/mha/modules/WebApp/api/panels').then(function(response){
+                $scope.panels = response.data;
+            }, function(response){
+                //$q.reject(response);
+            });
+            
+        }
+    }
+
+}());
+(function () {
+    "use strict";
+    angular.module('WebApp')
+        .factory('DeviceStorageSrv', DeviceStorageSrv);
+
+
+    // инициализируем сервис
+    //angular.module('WebApp').run(['DeviceStorageSrv', function(ApiSrv) {  }]);
+    
+    DeviceStorageSrv.$inject = [
+        '$http',
+    ];
+    
+    function DeviceStorageSrv(
+        $http
+    ) {
+        
+        
+        function reload(){
+            return $http.get('/mha/modules/DeviceStorage/api/state').then(function(response){
+                return response.data;
+            });
+        }
+        
+        var me = {
+            reload: reload
+        };
+        
+        return me;
+    }
+}());
+(function () {
+    "use strict";
+    angular.module('WebApp')
         .controller('BodyCtrl', BodyCtrl);
 
     BodyCtrl.$inject = [
@@ -49,23 +130,11 @@ angular
         $http
     ) {
         loadPanels();
-        
-        // $scope.panels = [{
-        //     title: '1dfasdf'
-        // }, {
-        //     title: '2vth`sga'
-        // }, {
-        //     title: '3aljfa;siof'
-        // }]
-        
-        //$scope.activePanel = $scope.panels[0];
-        
+       
         $scope.openPanel = function(panel){
             $scope.activePanel = panel;
         }
         
-    
-    
         function loadPanels(){
             $http.get('/mha/modules/WebApp/api/panels').then(function(response){
                 $scope.panels = response.data;

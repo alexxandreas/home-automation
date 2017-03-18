@@ -36,27 +36,13 @@ module = (function(){
     	ws.addRoute('/modules/'+this.name+'/api/:method', function(args){
     	    var method = args[0];
     	    if (method == 'panels') 
-    	        return this._getPanels();
+    	        return ws.sendJSON(this.panels);
     	    
     	    return ws.sendError(404, method + ' not found');
     	    
     	}, this);
     };
     
-    
-    WebApp.prototype._getPanels = function(){
-        
-        
-        var result = {
-            status: 200,
-            headers: {
-                "Content-Type": 'application/json',
-		        "Connection": "keep-alive"
-            },
-            body: this.panels
-        };
-        return result;
-    };
     
     WebApp.prototype.addPanel = function(panel){
         this.panels.push(panel);

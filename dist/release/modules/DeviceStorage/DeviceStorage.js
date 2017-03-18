@@ -10,6 +10,7 @@ module = (function(){
         this.log('construcror');
 
         this._initDevices();
+        this._initRoutes();
     }
 
     inherits(DeviceStorage, MHA.modules.AbstractModule);
@@ -265,6 +266,7 @@ module = (function(){
         };
         controller.devices.on(vDev.id, 'change:metrics:level', vDev.MHA._baseLevelChangeHandler);
         
+        this.log('device ' + key + ' added');
         function getLevel(){
             return vDev.get("metrics:level");
         }
@@ -299,14 +301,42 @@ module = (function(){
     };
 
 
+    DeviceStorage.prototype._initRoutes = function(){
+        var ws = MHA.modules.WebServer;
+        
+    	ws.addRoute('/modules/'+this.name+'/api/:method', function(args){
+    	    var method = args[0];
+    	    if (method == 'state') {
+    	        
+    	        var data = Object.keys(this.devices).map(function(key){
+                    var vDev = this.devices[key];
+                    return {
+                        key: key,
+                        id: vDev.id,
+                        title: vDev.get('metrics:title'),
+                        level: vDev.MHA.getLevel(),
+                        lastLevelChange: vDev.MHA.lastLevelChange(true)
+                    }
+                }, this);
+    	        
+    	        return ws.sendJSON(data);
+    	    }
+    	        
+    	    
+    	    return ws.sendError(404, method + ' not found');
+    	}, this);
+    };
+    
+    
     DeviceStorage.prototype.stop = function(){
-        this.devices.forEach(function(vDev){
+        Object.keys(this.devices).forEach(function(key){
+            var vDev = this.devices[key];
             controller.devices.off(vDev.id, 'change:metrics:level', vDev.MHA._baseLevelChangeHandler);
             Object.keys(vDev.MHA).forEach(function(key){
                 delete vDev.MHA[key];
             });
             delete vDev.MHA;
-        });
+        }, this);
         
         DeviceStorage.super_.prototype.stop.apply(this, arguments);
     };

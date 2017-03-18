@@ -151,6 +151,17 @@ module = (function(){
             body: body
         }
     };
+    
+    WebServer.prototype.sendJSON = function(data){
+        return {
+            status: 200,
+            headers: {
+                "Content-Type": 'application/json',
+		        "Connection": "keep-alive"
+            },
+            body: data
+        }
+    };
     	
     
     

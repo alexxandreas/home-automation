@@ -13,23 +13,11 @@
         $http
     ) {
         loadPanels();
-        
-        // $scope.panels = [{
-        //     title: '1dfasdf'
-        // }, {
-        //     title: '2vth`sga'
-        // }, {
-        //     title: '3aljfa;siof'
-        // }]
-        
-        //$scope.activePanel = $scope.panels[0];
-        
+       
         $scope.openPanel = function(panel){
             $scope.activePanel = panel;
         }
         
-    
-    
         function loadPanels(){
             $http.get('/mha/modules/WebApp/api/panels').then(function(response){
                 $scope.panels = response.data;
