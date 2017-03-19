@@ -1,6 +1,7 @@
 angular
 	.module('WebApp', [
 		'ngMaterial',
+		'mdDataTable',
 		'Views'
 	])
 	/*.config(function($mdIconProvider) {

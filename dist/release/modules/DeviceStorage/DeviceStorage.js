@@ -122,7 +122,7 @@ module = (function(){
                 //return null;
               } else if (vDevs.length > 1){
                 var text = vDevs.map(function(vDev){
-                  return vDev.id + '(' + vDev.get('metrics:title') + ')'
+                  return vDev.id + '(' + vDev.get('metrics:title') + ')';
                 }).join(', ');
                 this.log('Error: initDevices(' + key + '): found ' + vDevs.length + 'devices: ' + text);
                 //return null;
@@ -266,7 +266,159 @@ module = (function(){
             },
             _baseLevelChangeHandler: function(){
                 vDev.MHA.getLevel(); 
-            }
+            },
+            
+            // массив модулей, которые используют девайс в текущий момент
+            // когда модуль включает девайс - он добавляется в этот массив
+            // когда выключает ('off') - удаляется из массива
+            // т.е. если массив не пуст - девайс включен
+            // initiator -> {params}
+            _usedBy: {},
+            performCommand: function(initiator, command, args){
+                if (command == 'off'){
+                    delete vDev.MHA._usedBy[initiator];
+                } else if (command == 'on'){
+                    vDev.MHA._usedBy[initiator] = {command: command};
+                } else if (command == 'exact'){
+                    vDev.MHA._usedBy[initiator] = {command: command, args: args};
+                    // "exact", { level: 44 }
+                    // "exect", { red: 12, green: 33, blue: 44 }
+                }
+                vDev.MHA._updateState();
+            },
+            
+            // вызывает обновление состояние устройства в соответствии с текущими _usedBy
+            _updateState: function(){
+                var initiators = Object.keys(vDev.MHA._usedBy);
+                
+                var command='off';
+                var args = {};
+                
+                initiators.forEach(function(initiator){
+                    var obj = vDev.MHA._usedBy[initiator];
+                    if (obj.command == 'on') // включаем безусловно
+                        command = command;
+                    else if (obj.command == 'exact' && obj.args){
+                        if (obj.args.level != undefined){ // указан level
+                            args.level = Math.max(args.level || 0, obj.args.level);
+                        } else if (obj.args.red !== undefined || obj.args.green !== undefined || obj.args.blue != undefined) {
+                            args.red = Math.max(args.red || 0, obj.args.red);
+                            args.green = Math.max(args.green || 0, obj.args.green);
+                            args.blue = Math.max(args.blue || 0, obj.args.blue);
+                        }
+                    }
+                });
+                
+                vDev.MHA._action(command, args);
+                
+            },
+            
+            _actionObj: undefined,
+            //_action: (function(action, check){
+            _action: (function(command, args){
+            	// оборачиваем логгер
+            	var log = (function(data){
+            	    return this.log(vDev.MHA.key 
+            	    + ' action(' 
+            	    + (command ? command : '') 
+            	    + (args ? ', ' + JSON.stringify(args) : '') 
+            	    + ') ' + data);
+            	}).bid(this);
+            	
+            	var isPrevAction = !!vDev.MHA._actionObj;
+            	// останавливаем предыдущее
+            	if (isPrevAction){
+            	    vDev.MHA._actionObj.timer && clearTimeout(vDev.MHA._actionObj.timer);
+            	    log('STOP PREV');
+            	}
+            	vDev.MHA._actionObj = undefined;
+	
+	
+                if (!action){ // останавливаем, если есть, и выходим
+            		return;
+            	}
+            	
+                
+                
+                var action;
+                var check;
+                
+                if (command == 'on') {
+                    action = function(){
+                        vDev.performCommand('on');
+                    };
+                    check = function(){
+                        vDev.MHA.getLevel() === 'on' || vDev.MHA.getLevel() > 0;
+                    };
+                } else if (command == 'off'){
+                    action = function(){
+                        vDev.performCommand('off');
+                    }; 
+                    check = function(){
+                        vDev.MHA.getLevel() === 'off' || vDev.MHA.getLevel() === 0;
+                    };
+                } else if (command == 'exact') {
+                    action = function(){
+                        vDev.performCommand('exact', args);
+                    };
+                    check = function(){
+                        if (args.level){
+                            return vDev.MHA.getLevel() == args.level;
+                        } else {
+                            return vDev.MHA.getLevel() !== 'off' && vDev.MHA.getLevel() !== 0;
+                        }
+                    };
+                }
+                
+                
+                if (!isPrevAction && check()){ // если проверка проходит сразу и небыло предыдущего действия - не запускаем 
+                    //log()
+                    return;
+                }
+                
+                vDev.MHA._actionObj = {
+                    startTime: Date.now()
+                };
+                
+                run();
+    
+                function run(){
+                    //if (!self.actions[name]) return;
+                    
+                    // var seconds = Math.floor((Date.now() - self.actions[name].startTime)/1000);
+                    // сколько секунд прошло с запуска
+                    var seconds = Math.floor((Date.now() - vDev.MHA._actionObj.startTime)/1000);
+                    
+                    log((seconds > 0 ? '+' + seconds + ' sec' : 'START'));
+                    // action.call(self);
+                    action();
+                    
+                    var timeout = (Math.floor(seconds / 15)+1)*1000;
+                    
+                    vDev.MHA._actionObj.timer = setTimeout(function () { 
+                        // if (check.call(self)) { // проверка прошла успешно
+                        if (check()) { // проверка прошла успешно
+                            log('OK');
+                            //self.log(name + ' OK');
+                            //delete self.actions[name];
+                            vDev.MHA._actionObj = undefined;
+                            return; 
+                        }
+                        //counter++;
+                        //if (counter > maxRestartCount){
+                        if (seconds > 60*10) {
+                            log(' ERROR');
+                            //delete self.actions[name];
+                            vDev.MHA._actionObj = undefined;
+                            return;
+                        }
+                        
+                        run();
+                    }, timeout);
+                }
+            }).bind(this)
+            
+            
         };
         controller.devices.on(vDev.id, 'change:metrics:level', vDev.MHA._baseLevelChangeHandler);
         
@@ -320,7 +472,7 @@ module = (function(){
                         title: vDev.get('metrics:title'),
                         level: vDev.MHA.getLevel(),
                         lastLevelChange: vDev.MHA.lastLevelChange(true)
-                    }
+                    };
                 }, this);
     	        
     	        return ws.sendJSON(data);
@@ -341,6 +493,7 @@ module = (function(){
         Object.keys(this.devices).forEach(function(key){
             var vDev = this.devices[key];
             controller.devices.off(vDev.id, 'change:metrics:level', vDev.MHA._baseLevelChangeHandler);
+            vDev.MHA._action(); // останавливаем action
             Object.keys(vDev.MHA).forEach(function(key){
                 delete vDev.MHA[key];
             });

@@ -1,11 +1,35 @@
 <div layout="column" layout-align="start stretch"
-    ng-controller=DeviceStorageCtrl>
-    DeviceStorage
-    <div ng-repeat="device in devices">
-        <span>{{device.key}}</span>&nbsp;
-        <span>{{device.id}}</span>&nbsp;
-        <span>{{device.title}}</span>&nbsp;
-        <span>{{device.level}}</span>&nbsp;
-        <span>{{device.lastLevelChange}}</span>&nbsp;
-    </div>
+
+    <!--<div layout="column" layout-align="start stretch"-->
+    <!--    ng-controller=DeviceStorageCtrl>-->
+    <!--    DeviceStorage-->
+    <!--    <div ng-repeat="device in devices">-->
+    <!--        <span>{{device.key}}</span>&nbsp;-->
+    <!--        <span>{{device.id}}</span>&nbsp;-->
+    <!--        <span>{{device.title}}</span>&nbsp;-->
+    <!--        <span>{{device.level}}</span>&nbsp;-->
+    <!--        <span>{{device.lastLevelChange}}</span>&nbsp;-->
+    <!--    </div>-->
+    <!--</div>-->
+
+    <mdt-table table-card="{visible: true, title: 'devices'}"
+             alternate-headers="'contextual'"
+             >
+        <mdt-header-row>
+          <mdt-column align-rule="left">Dessert (100g serving)</mdt-column>
+          <mdt-column align-rule="right">Calories</mdt-column>
+          <mdt-column align-rule="right">Fat (g)</mdt-column>
+          <mdt-column align-rule="right">Carbs (g)</mdt-column>
+          <mdt-column align-rule="right">Protein (g)</mdt-column>
+        </mdt-header-row>
+        <mdt-row 
+                 ng-repeat="device in devices"
+                 table-row-id="device.key">
+          <mdt-cell>{{device.key}}</mdt-cell>
+          <mdt-cell>{{device.id}}</mdt-cell>
+          <mdt-cell>{{device.title}}</mdt-cell>
+          <mdt-cell>{{device.level}}</mdt-cell>
+          <mdt-cell>{{device.lastLevelChange}}</mdt-cell>
+        </mdt-row>
+      </mdt-table>
 </div>
