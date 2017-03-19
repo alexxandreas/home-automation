@@ -5,7 +5,7 @@
 	<base href='/mha/modules/WebApp/htdocs/'>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
-    <title>Графики</title>
+    <title>MyHomeAutomation</title>
     
     
 	<!-- Libs -->
@@ -20,10 +20,6 @@
 	<link rel="stylesheet" href="/mha/htdocs/app.css"/>
 	
 	
-	
-	<!--<link rel="stylesheet" href="static/app/app.css"/>-->
-	<!--<script type="text/javascript" src="static/app/WebApp.js"></script>-->
-
 </head>
 <body ng-app="WebApp">
 
@@ -46,56 +42,8 @@ class='body' layout="column" layout-align="start stretch">
     <div flex style="overflow: auto;">
     	<div ng-include="activePanel.template"></div>
     </div>
-    <!--<div class="ext-content" flex>-->
-    <!--  External content for `<span>{{activePanel.title}}</span>`.-->
-     
-    <!--</div>-->
-    
-    
-    
-
-
-	<!--<md-toolbar ng-controller="ToolbarCtrl"-->
-	<!--	class="md-toolbar-tools"-->
-	<!--	layout="row">-->
-		
- <!--     	<md-button ng-repeat="item in buttons"-->
- <!--     	ng-click="openPanel(item)">-->
- <!--       	{{item.title}}-->
- <!--     	</md-button>-->
-
-
- <!-- 	</md-toolbar>-->
- <!-- 	<md-content>-->
- <!--   	Hello!-->
- <!-- 	</md-content>-->
-	  
-	<!--<md-toolbar class="md-menu-toolbar"  >-->
-		<!--<md-menu-bar ng-controller="ToolbarCtrl">-->
-		<!--	<md-menu-->
-		<!--		ng-repeat="deviceType in deviceTypes">-->
-		<!--		<button ng-click="$mdOpenMenu()">-->
-		<!--			{{deviceType.title}}-->
-		<!--		</button>-->
-		<!--		<md-menu-content width="1">-->
-
-		<!--			<md-menu-item type="checkbox" ng-model="device.selected" ng-repeat="device in deviceType.devices" >-->
-		<!--				<md-button  ng-click="onDeviceClicked();" md-prevent-menu-close="md-prevent-menu-close">-->
-		<!--					{{device.title}}-->
-		<!--				</md-button>-->
-		<!--			</md-menu-item>-->
-
-		<!--		</md-menu-content>-->
-		<!--	</md-menu>-->
-		<!--	<md-button  ng-click="reloadData();">-->
-		<!--		Обновить-->
-		<!--	</md-button>-->
-		<!--</md-menu-bar>-->
-	<!--</md-toolbar>-->
-
-
-	<!--<chart-dir class="chart" flex></chart-dir>-->
-
+   
+   
 
 </div>
 </body>
