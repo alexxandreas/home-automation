@@ -16,6 +16,7 @@
         $timeout,
         DeviceStorageSrv
     ) {
+        $scope.allDevices = {};
         
         $scope.devices = {};
         //$interval(reload, 1000);
@@ -25,7 +26,11 @@
         var reloadTimeout;
         function reload(){
             DeviceStorageSrv.reload().then(function(data){
-                $scope.devices = data;
+                data.forEach(function(dev){
+                    $scope.allDevices[dev.key] = $scope.allDevices[dev.key] || {};
+                    angular.extend($scope.allDevices[dev.key], dev);
+                });
+                $scope.devices = all;
             }).finally(function(){
                 reloadTimeout = $timeout(reload, 1000);
             })
