@@ -39,9 +39,22 @@
         $scope.getValueButtonClass = function(device){
             if (device.level === 0 || device.level.toString().toLowerCase() === 'off')
                 return 'redButon';
-            else if (device.level === '99' || device.level.toString().toLowerCase() === 'on')
+            else if (device.level === 99 || device.level.toString().toLowerCase() === 'on')
                 return 'greenButon';
             return 'yellowButon';
+        }
+        
+        $scope.formatTime = function(ms){
+            var sec = Math.round(ms/1000);
+            var min = Math.trunc(sec / 60);
+            var hour = Math.trunc(min / 60);
+            var day = Math.trunc(hour / 24);
+            var text = '';
+            if (day > 0 || text) text += day + 'd ';
+            if (hour > 0 || text) text += hour + 'h ';
+            if (min > 0 || text) text += min + 'm ';
+            if (sec > 0 || text) text += sec + 's';
+            return text;
         }
         
         $scope.$on("$destroy", function() {

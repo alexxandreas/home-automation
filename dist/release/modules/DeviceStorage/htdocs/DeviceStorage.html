@@ -22,7 +22,7 @@ class="DeviceStorage"
             <td md-cell>{{device.id}}</td>
             <td md-cell>{{device.title}}</td>
             <td md-cell><md-button ng-class="getValueButtonClass(device)">{{device.level}}</md-button></td>
-            <td md-cell>{{device.lastLevelChange}}</td>
+            <td md-cell>{{formatTime(device.lastLevelChange)}}</td>
           </tr>
         </tbody>
       </table>
