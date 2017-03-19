@@ -26,6 +26,8 @@
     
     "md-data-table": "^2.2.0",
     "angular-material-icons": "~v0.6.0",
-    "angular-sanitize": "~1.5.8"
+    "angular-sanitize": "~1.5.8",
+    "jquery": "~2.1.4",
+    "lodash": "~3.10.1"
   }
 }

@@ -41,7 +41,9 @@ var libsJs = [
 	'./node_modules/md-data-table/dist/md-data-table.js',
 	'./node_modules/md-data-table/dist/md-data-table-templates.js',
 	'./node_modules/angular-material-icons/angular-material-icons.js',
-	'./node_modules/angular-sanitize/angular-sanitize.js'
+	'./node_modules/angular-sanitize/angular-sanitize.js',
+	'./node_modules/lodash/index.js',
+	'./node_modules/jquery/dist/jquery.js'
 ];
 	
 // css-sы, используемые на фронте
