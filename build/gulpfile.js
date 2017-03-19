@@ -38,19 +38,21 @@ var libsJs = [
 	'./node_modules/angular-aria/angular-aria.js',
 	'./node_modules/angular-material/angular-material.js',
 	
-	'./node_modules/md-data-table/dist/md-data-table.js',
-	'./node_modules/md-data-table/dist/md-data-table-templates.js',
-	'./node_modules/angular-material-icons/angular-material-icons.js',
-	'./node_modules/angular-sanitize/angular-sanitize.js',
-	'./node_modules/lodash/index.js',
-	'./node_modules/jquery/dist/jquery.js'
+	// './node_modules/md-data-table/dist/md-data-table.js',
+	// './node_modules/md-data-table/dist/md-data-table-templates.js',
+	// './node_modules/angular-material-icons/angular-material-icons.js',
+	// './node_modules/angular-sanitize/angular-sanitize.js',
+	// './node_modules/lodash/index.js',
+	// './node_modules/jquery/dist/jquery.js'
+	'./node_modules/angular-material-data-table/md-data-table.js'
 ];
 	
 // css-sы, используемые на фронте
 var libsCss = [
 	'./node_modules/angular-material/angular-material.css',
-	'./node_modules/md-data-table/dist/md-data-table-style.js',
-	'./node_modules/angular-material-icons/angular-material-icons.css'
+	//'./node_modules/md-data-table/dist/md-data-table-style.js',
+	//'./node_modules/angular-material-icons/angular-material-icons.css'
+	'./node_modules/angular-material-data-table/md-data-table.css'
 ];
 	
 // JS клиентского приложения

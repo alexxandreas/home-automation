@@ -13,24 +13,49 @@ ng-controller=DeviceStorageCtrl
     <!--    </div>-->
     <!--</div>-->
 
-    <mdt-table table-card="{visible: true, title: 'devices'}"
-             alternate-headers="'contextual'"
-             >
-        <mdt-header-row>
-          <mdt-column align-rule="left">Dessert (100g serving)</mdt-column>
-          <mdt-column align-rule="right">Calories</mdt-column>
-          <mdt-column align-rule="right">Fat (g)</mdt-column>
-          <mdt-column align-rule="right">Carbs (g)</mdt-column>
-          <mdt-column align-rule="right">Protein (g)</mdt-column>
-        </mdt-header-row>
-        <mdt-row 
-                 ng-repeat="device in devices"
-                 table-row-id="device.key">
-          <mdt-cell>{{device.key}}</mdt-cell>
-          <mdt-cell>{{device.id}}</mdt-cell>
-          <mdt-cell>{{device.title}}</mdt-cell>
-          <mdt-cell>{{device.level}}</mdt-cell>
-          <mdt-cell>{{device.lastLevelChange}}</mdt-cell>
-        </mdt-row>
-      </mdt-table>
+    <!--<mdt-table table-card="{visible: true, title: 'devices'}"-->
+    <!--         alternate-headers="'contextual'"-->
+    <!--         >-->
+    <!--    <mdt-header-row>-->
+    <!--      <mdt-column align-rule="left">device (100g serving)</mdt-column>-->
+    <!--      <mdt-column align-rule="right">Calories</mdt-column>-->
+    <!--      <mdt-column align-rule="right">Fat (g)</mdt-column>-->
+    <!--      <mdt-column align-rule="right">Carbs (g)</mdt-column>-->
+    <!--      <mdt-column align-rule="right">Protein (g)</mdt-column>-->
+    <!--    </mdt-header-row>-->
+    <!--    <mdt-row -->
+    <!--             ng-repeat="device in devices"-->
+    <!--             table-row-id="device.key">-->
+    <!--      <mdt-cell>{{device.key}}</mdt-cell>-->
+    <!--      <mdt-cell>{{device.id}}</mdt-cell>-->
+    <!--      <mdt-cell>{{device.title}}</mdt-cell>-->
+    <!--      <mdt-cell>{{device.level}}</mdt-cell>-->
+    <!--      <mdt-cell>{{device.lastLevelChange}}</mdt-cell>-->
+    <!--    </mdt-row>-->
+    <!--  </mdt-table>-->
+    
+    <md-table-container>
+      <table md-table >
+        <thead md-head >
+          <tr md-row>
+            <th md-column md-order-by="nameToLower"><span>device (100g serving)</span></th>
+            <th md-column md-numeric md-order-by="calories.value"><span>Calories</span></th>
+            <th md-column md-numeric>Fat (g)</th>
+            <th md-column md-numeric>Carbs (g)</th>
+            <th md-column md-numeric>Protein (g)</th>
+
+          </tr>
+        </thead>
+        <tbody md-body>
+          <tr md-row md-select="device" md-select-id="name" md-auto-select ng-repeat="device in devices">
+            <td md-cell>{{device.key}}</td>
+            <td md-cell>{{device.id}}</td>
+            <td md-cell>{{device.title}}</td>
+            <td md-cell>{{device.level}}</td>
+            <td md-cell>{{device.lastLevelChange}}</td>
+            
+          </tr>
+        </tbody>
+      </table>
+    </md-table-container>
 </div>
