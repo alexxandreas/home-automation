@@ -76,7 +76,7 @@ var appViews = [
 var copyToRootFiles = [
     //'../src/update.bash'
     '../src/**',
-    '!../src/modules/*/htdocs/**/*.html',
+    //'!../src/modules/*/htdocs/**/*.html',
     '../src/modules/*/htdocs/index.html',
     '!../src/modules/*/htdocs/**/*.js',
     '!../src/modules/*/htdocs/**/*.css'

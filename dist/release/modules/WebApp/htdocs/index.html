@@ -1,0 +1,50 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+
+	<base href='/mha/modules/WebApp/htdocs/'>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <title>MyHomeAutomation</title>
+    
+    
+	<!-- Libs -->
+	<script type="text/javascript" src="/mha/htdocs/libs.js"></script>
+	<link rel="stylesheet" href="/mha/htdocs/libs.css"/>
+	
+	<!-- Views -->
+	<script type="text/javascript" src="/mha/htdocs/views.js"></script>
+	
+	<!-- App -->
+	<script type="text/javascript" src="/mha/htdocs/app.js"></script>
+	<link rel="stylesheet" href="/mha/htdocs/app.css"/>
+	
+	
+</head>
+<body ng-app="WebApp">
+
+<div ng-controller="BodyCtrl"
+class='body' layout="column" layout-align="start stretch">
+
+	
+	<!--md-selected-nav-item="activePanel"-->
+	<md-nav-bar 
+      nav-bar-aria-label="navigation links">
+		
+      <md-nav-item ng-repeat="panel in panels"
+	      md-nav-click="openPanel(panel)" 
+	      name="{{panel.title}}" >
+        {{panel.title}}
+      </md-nav-item>
+      
+    </md-nav-bar>
+    
+    <div flex style="overflow: auto;">
+    	<div ng-include="activePanel.template"></div>
+    </div>
+   
+   
+
+</div>
+</body>
+</html>
