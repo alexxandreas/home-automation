@@ -67,7 +67,7 @@ angular
                     $scope.allDevices[dev.key] = $scope.allDevices[dev.key] || {};
                     angular.extend($scope.allDevices[dev.key], dev);
                 });
-                $scope.devices = all;
+                $scope.devices = allDevices;
             }).finally(function(){
                 reloadTimeout = $timeout(reload, 1000);
             })
