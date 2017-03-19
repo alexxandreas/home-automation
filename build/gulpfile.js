@@ -149,6 +149,7 @@ gulp.task('build-app-views', function() {
 
 gulp.task('copy-files', function(cb){
     return gulp.src(copyToRootFiles)
+    	.pipe(print())
 		.pipe(gulp.dest(debugMode ? distDebug : distRelease))
 });
 

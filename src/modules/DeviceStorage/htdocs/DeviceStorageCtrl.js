@@ -32,9 +32,9 @@
         }
         
         $scope.getValueButtonClass = function(device){
-            if (device.value === 0 || device.value === 'off')
+            if (device.level === 0 || device.level.toLowerCase() === 'off')
                 return 'redButon';
-            else if (device.value === '99' || device.value === 'on')
+            else if (device.level === '99' || device.level.toLowerCase() === 'on')
                 return 'greenButon';
             else return 'yellowButon';
         }
