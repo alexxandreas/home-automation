@@ -68,6 +68,14 @@ angular
             })
         }
         
+        $scope.getValueButtonClass = function(device){
+            if (device.value === 0 || device.value === 'off')
+                return 'redButon';
+            else if (device.value === '99' || device.value === 'on')
+                return 'greenButon';
+            else return 'yellowButon';
+        }
+        
         $scope.$on("$destroy", function() {
             if (reloadTimeout) {
                 $timeout.cancel(reloadTimeout);

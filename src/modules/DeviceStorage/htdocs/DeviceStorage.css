@@ -2,3 +2,15 @@
     
     
 }
+
+.DeviceStorage .redButon {
+    background-color: red;
+}
+
+.DeviceStorage .yellowButon {
+    background-color: yellow;
+}
+
+.DeviceStorage .greenButon {
+    background-color: green;
+}

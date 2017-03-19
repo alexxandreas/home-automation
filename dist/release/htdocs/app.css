@@ -2,6 +2,18 @@
     
     
 }
+
+.DeviceStorage .redButon {
+    background-color: red;
+}
+
+.DeviceStorage .yellowButon {
+    background-color: yellow;
+}
+
+.DeviceStorage .greenButon {
+    background-color: green;
+}
 html, body {
 	width: 100%;
 	height: 100%;
