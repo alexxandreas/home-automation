@@ -51,9 +51,9 @@
             var day = Math.trunc(hour / 24);
             var text = '';
             if (day > 0 || text) text += day + 'd ';
-            if (hour > 0 || text) text += hour + 'h ';
-            if (min > 0 || text) text += min + 'm ';
-            if (sec > 0 || text) text += sec + 's';
+            if (hour > 0 || text) text += (hour % 24) + 'h ';
+            if (min > 0 || text) text += (min % 60) + 'm ';
+            if (sec > 0 || text) text += (sec % 60) + 's';
             return text;
         }
         
