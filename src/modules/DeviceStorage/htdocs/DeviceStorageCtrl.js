@@ -37,11 +37,11 @@
         }
         
         $scope.getValueButtonClass = function(device){
-            if (device.level === 0 || device.level.toLowerCase() === 'off')
+            if (device.level === 0 || device.level.toString().toLowerCase() === 'off')
                 return 'redButon';
-            else if (device.level === '99' || device.level.toLowerCase() === 'on')
+            else if (device.level === '99' || device.level.toString().toLowerCase() === 'on')
                 return 'greenButon';
-            else return 'yellowButon';
+            return 'yellowButon';
         }
         
         $scope.$on("$destroy", function() {
