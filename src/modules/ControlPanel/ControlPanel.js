@@ -45,25 +45,30 @@ define('ControlPanel', ['AbstractModule', 'WebServer', 'WebApp'], function(Abstr
     	ws.addRoute('/modules/'+this.name+'/api/modules/:name/start', function(args){
     	    var name = args[0];
     	       
-	        var data = name;
+            this.ml.loadModule(name);
 	        
-	        return ws.sendJSON(data);
+	        return ws.sendJSON({success:true});
     	}, this);
     	
     	ws.addRoute('/modules/'+this.name+'/api/modules/:name/stop', function(args){
     	    var name = args[0];
     	       
-	        var data = name;
+	        var res = this.ml.unloadModule(name);
+	        if (!res || !res.length) 
+	            return ws.sendJSON({success:false});
+	        else 
+	            return ws.sendJSON({success: true, deps: res});
 	        
-	        return ws.sendJSON(data);
     	}, this);
     	
     	ws.addRoute('/modules/'+this.name+'/api/modules/:name/restart', function(args){
     	    var name = args[0];
     	       
-	        var data = name;
-	        
-	        return ws.sendJSON(data);
+	        var res = this.ml.unloadModule(name, true);
+	        if (!res || !res.length) 
+	            return ws.sendJSON({success:false});
+	        else 
+	            return ws.sendJSON({success: true, deps: res});
     	}, this);
     	
     	

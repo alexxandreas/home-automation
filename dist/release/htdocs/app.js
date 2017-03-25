@@ -102,6 +102,19 @@ angular
                 });
         };
         
+        $scope.showStart = function(module){
+            return !module.loaded;
+        };
+        
+        $scope.showStop = function(module){
+            return !!module.created;
+        };
+        
+        $scope.showRestart = function(module){
+            return !!module.created;
+        };
+        
+        
         $scope.reload();
         
         
