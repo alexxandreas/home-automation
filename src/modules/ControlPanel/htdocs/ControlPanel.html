@@ -14,7 +14,12 @@ class="ControlPanel"
       <!--<md-checkbox class="md-secondary" ng-model="person.selected"></md-checkbox>-->
       <md-button ng-click="start(module);" class="material-icons">play arrow</md-button>
       <md-button ng-click="stop(module)"><i class="material-icons">stop</i></md-button>
-      <md-button ng-click="restart(module);"><i class="material-icons">replay</i></md-button>
+      <md-button ng-click="restart(module);">
+      <md-icon 
+            aria-label="{{ font.name }}"
+            class="material-icons step"
+            ng-bind="font.name">
+      </md-button>
     </md-list-item>
     
   </md-list>
