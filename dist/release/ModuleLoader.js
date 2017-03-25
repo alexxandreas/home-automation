@@ -1,6 +1,6 @@
 /* global loadObject saveData MHA fs  */
 
-MHA.ModuleLoader = (function(){
+(function(){
     
     /**
      * Инициализация:
@@ -30,12 +30,14 @@ MHA.ModuleLoader = (function(){
         //this.modulesConfig = {};
         this.loadModulesConfig();
         
-        // загружаем модули из конфига
-        Object.keys(this.modulesConfig).forEach(function(name){
-            this.loadModule(name);
-        },this);
-    
         
+        // загружаем модули из конфига
+        setTimeout((function(){
+            // загружаем модули из конфига
+            Object.keys(this.modulesConfig).forEach(function(name){
+                this.loadModule(name);
+            },this);
+        }).bind(this), 1);
     }
     
     // Загружает список модулей из ФС
@@ -259,7 +261,10 @@ MHA.ModuleLoader = (function(){
             this.unloadModule(name);
         },this);
     }
-    return ModuleLoader;
+    
+    MHA.ModuleLoader = new ModuleLoader();
+    return MHA.ModuleLoader;
+    //return ModuleLoader;
     
 })()
 

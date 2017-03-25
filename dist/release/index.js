@@ -34,13 +34,30 @@ MyHomeAutomation.prototype.init = function (config) {
 	
 	this.fsRoot = 'modules/MyHomeAutomation/';
 	
-	this.log('start');
+	//this.log('start');
 	
 	this.controller.MHA = this;
 	
-	this.loadModules();
+	this.start();
+	//this.loadModules();
 	
 	
+};
+
+MyHomeAutomation.prototype.start = function(){
+	this.log('start');
+	try {
+		var MHA = this;
+		//var module;
+		//var config = moduleObj.config;
+	
+		var moduleStr = fs.load(this.fsRoot + 'ModuleLoader.js');
+		moduleStr = decodeURIComponent(escape(moduleStr));
+		eval(moduleStr);
+	} catch (err){
+		this.log('start Error: ' + err.toString() + '\n' + err.stack);
+		return;
+	}
 };
 
 MyHomeAutomation.prototype.loadModules = function(){
@@ -102,18 +119,6 @@ MyHomeAutomation.prototype.loadModule = function(name){
 	}
 };
 
-// загрузка всех модулей из папки modules
-MyHomeAutomation.prototype.loadAllModules = function(){
-	// ... this.loadModule(name);
-	
-};
-
-// выгрузка одного модуля. формируется дерево зависимостей от него и
-// выгружаются все зависящие модули
-MyHomeAutomation.prototype.unloadModule = function(){
-	
-};
-
 
 
 
@@ -139,57 +144,12 @@ MyHomeAutomation.prototype.unloadModules = function(){
 MyHomeAutomation.prototype.stop = function () {
 	this.log('stop');
 	
-	this.unloadModules();
+	//this.unloadModules();
+	this.ModuleLoader && this.ModuleLoader.stop();
 	
     MyHomeAutomation.super_.prototype.stop.call(this);
 	this.log('stop completed');
 };
-
-
-MyHomeAutomation.prototype.define = function(name, deps, func) {
-	this.modulesGraph[name] = {
-		name: name,
-		deps: deps, 
-		func: func,
-		created: false, // был ли модуль создан, или ждет зависимостей
-		module: null // ссылка на созданный модуль
-	};
-	
-	checkDepsReady.call(this, this.modulesGraph[name]);
-	
-	
-	// проверка готовности зависимостей для одного модуля и запуск модуля
-	function checkDepsReady(name){
-		var modObj = this.modulesGraph[name];
-		if (modObj.created) return;
-		var deps = modObj.deps;
-		
-		if (deps.every(function(dep){
-			var depObj = this.modulesGraph[dep].created;
-		}, this)){
-			var depsObj = deps.map(function(dep){
-				return this.modulesGraph[dep].module;
-			}, this);
-			
-			// загрузка модуля
-			try {
-				modObj.module = modObj.func.apply(this, depsObj);
-				modObj.created = true;
-			} catch(err) {
-				this.log('Error creating module ' + modObj.name + '\n' + err.toString() + '\n' + err.stack);
-			}
-			
-			// загрузка модулей, зависящих от текущего
-			if (modObj.created){
-				Object.keys(this.modulesGraph).forEach(function(name){
-					checkDepsReady.call(this, name);
-				}, this);
-			}
-		}
-	}
-	
-};
-
 
 
 
