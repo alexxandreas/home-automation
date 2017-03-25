@@ -18,7 +18,7 @@
     ) {
         $scope.modules = {};
         
-        $scope.reload();
+        
         
         //var reloadTimeout;
         $scope.reload = function(){
@@ -64,6 +64,8 @@
                     $scope.reload();
                 });
         };
+        
+        $scope.reload();
         
         
     }

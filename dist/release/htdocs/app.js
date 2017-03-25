@@ -55,7 +55,7 @@ angular
     ) {
         $scope.modules = {};
         
-        $scope.reload();
+        
         
         //var reloadTimeout;
         $scope.reload = function(){
@@ -101,6 +101,8 @@ angular
                     $scope.reload();
                 });
         };
+        
+        $scope.reload();
         
         
     }
