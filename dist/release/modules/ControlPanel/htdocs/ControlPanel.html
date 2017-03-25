@@ -1,0 +1,20 @@
+<div layout="column" layout-align="start stretch"
+ng-controller="ControlPanelCtrl"
+class="ControlPanel"
+
+    <!--<div layout="column" layout-align="start stretch"-->
+  <md-list>
+    <md-divider></md-divider>
+    
+    <md-subheader class="md-no-sticky">Приложения</md-subheader>
+    
+    <md-list-item ng-repeat="(name, module) in modules" ng-click="goToPerson(person.name, $event)" class="noright">
+      <!--<img alt="{{ person.name }}" ng-src="{{ person.img }}" class="md-avatar" />-->
+      <p>{{ name }}</p>
+      <!--<md-checkbox class="md-secondary" ng-model="person.selected"></md-checkbox>-->
+      <md-button ng-click="module.loaded || module.created ? stop(module) : start(module);">Start/Stop</md-button>
+      <md-button ng-click="restart(module);">Restart</md-button>
+    </md-list-item>
+    
+  </md-list>
+</div>

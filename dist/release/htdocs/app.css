@@ -1,3 +1,20 @@
+.ControlPanel {
+    
+    
+}
+
+
+.ControlPanel .redButon {
+    background-color: red;
+}
+
+.ControlPanel .yellowButon {
+    background-color: yellow;
+}
+
+.ControlPanel .greenButon {
+    background-color: green;
+}
 .DeviceStorage {
     
     

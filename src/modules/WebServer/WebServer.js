@@ -48,7 +48,7 @@ define('WebServer', ['AbstractModule'], function(AbstractModule){
     	
         // define global handler for HTTP requests
         mha = (function(url, request) {
-            this.log('request: ' + url);
+            //this.log('request: ' + url);
             
         	var i = this.routes.length;
             while( i-- ){
@@ -58,7 +58,7 @@ define('WebServer', ['AbstractModule'], function(AbstractModule){
                }
             }
         	
-        	this.log('route not found');
+        	this.log('request: ' + url +' route not found');
 		    return {
     		    status: 404
     		}
@@ -106,7 +106,7 @@ define('WebServer', ['AbstractModule'], function(AbstractModule){
     WebServer.prototype.sendFile = function(path){
         var root = MHA.fsRoot; //  'modules/MyHomeAutomation/';
         
-        this.log('sendFile: ' + root + path);
+        //this.log('sendFile: ' + root + path);
 
         try {
         

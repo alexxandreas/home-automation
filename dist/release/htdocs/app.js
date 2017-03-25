@@ -38,6 +38,130 @@ angular
 (function () {
     "use strict";
     angular.module('WebApp')
+        .controller('ControlPanelCtrl', ControlPanelCtrl);
+
+    ControlPanelCtrl.$inject = [
+        '$scope',
+        '$http',
+        '$timeout',
+        'ControlPanelSrv'
+    ];
+
+    function ControlPanelCtrl(
+        $scope,
+        $http,
+        $timeout,
+        ControlPanelSrv
+    ) {
+        $scope.modules = {};
+        
+        $scope.reload();
+        
+        //var reloadTimeout;
+        $scope.reload = function(){
+            ControlPanelSrv.reload().then(function(data){
+                Object.keys(data).forEach(function(name){
+                    $scope.modules[name] = angular.extend($scope.modules[name] || {}, data[name]);
+                });
+            })
+        }
+        
+        
+        $scope.getValueButtonClass = function(device){
+            if (device.level === 0 || device.level.toString().toLowerCase() === 'off')
+                return 'redButon';
+            else if (device.level === 99 || device.level.toString().toLowerCase() === 'on')
+                return 'greenButon';
+            return 'yellowButon';
+        };
+        
+        $scope.start = function(name){
+            ControlPanelSrv
+                .start(name)
+                .then(function(data){}, function(){})
+                .finally(function(){
+                    $scope.reload();
+                });
+        };
+        
+        $scope.stop = function(name){
+            ControlPanelSrv
+                .stop(name)
+                .then(function(data){}, function(){})
+                .finally(function(){
+                    $scope.reload();
+                });
+        };
+        
+        $scope.restart = function(name){
+            ControlPanelSrv
+                .restart(name)
+                .then(function(data){}, function(){})
+                .finally(function(){
+                    $scope.reload();
+                });
+        };
+        
+        
+    }
+
+}());
+(function () {
+    "use strict";
+    angular.module('WebApp')
+        .factory('ControlPanelSrv', ControlPanelSrv);
+
+
+    // инициализируем сервис
+    //angular.module('WebApp').run(['ControlPanelSrv', function(ApiSrv) {  }]);
+    
+    ControlPanelSrv.$inject = [
+        '$http',
+    ];
+    
+    function ControlPanelSrv(
+        $http
+    ) {
+        
+        
+        function reload(){
+            return $http.get('/mha/modules/ControlPanel/api/modules').then(function(response){
+                return response.data;
+            });
+        }
+        
+        function start(name){
+            return $http.get('/mha/modules/ControlPanel/api/modules/'+name+'/start').then(function(response){
+                return response.data;
+            });
+        }
+        
+        function stop(name){
+            return $http.get('/mha/modules/ControlPanel/api/modules/'+name+'/stop').then(function(response){
+                return response.data;
+            });
+        }
+        
+        function restart(name){
+            return $http.get('/mha/modules/ControlPanel/api/modules/'+name+'/restart').then(function(response){
+                return response.data;
+            });
+        }
+        
+        
+        var me = {
+            reload: reload,
+            start: start, 
+            stop: stop,
+            restart: restart
+        };
+        
+        return me;
+    }
+}());
+(function () {
+    "use strict";
+    angular.module('WebApp')
         .controller('DeviceStorageCtrl', DeviceStorageCtrl);
 
     DeviceStorageCtrl.$inject = [
