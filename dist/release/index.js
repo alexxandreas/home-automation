@@ -30,6 +30,7 @@ MyHomeAutomation.prototype.init = function (config) {
     MyHomeAutomation.super_.prototype.init.call(this, config);
 	
 	this.modules = {};
+	this.modulesGraph = {};
 	
 	this.fsRoot = 'modules/MyHomeAutomation/';
 	
@@ -65,6 +66,7 @@ MyHomeAutomation.prototype.loadModules = function(){
 			var MHA = this;
 			var module;
 			var config = moduleObj.config;
+		
 			var moduleStr = fs.load(this.fsRoot + 'modules/' + moduleObj.name + '/' + moduleObj.name + '.js');
 			moduleStr = decodeURIComponent(escape(moduleStr));
 			eval(moduleStr);
@@ -77,6 +79,43 @@ MyHomeAutomation.prototype.loadModules = function(){
 		}
 	}
 }
+
+// загрузка одного модуля. name - имя и название файла (должны совпадать)
+MyHomeAutomation.prototype.loadModule = function(name){
+	this.log('loadModule: loading module ' + name + '...');
+	try {
+		var MHA = this;
+		//var module;
+		//var config = moduleObj.config;
+		var define = this.prototype.define.bind(this);
+		
+		// TODO проверить, есть ли файл
+		var moduleStr = fs.load(this.fsRoot + 'modules/' + name + '/' + name + '.js');
+		moduleStr = decodeURIComponent(escape(moduleStr));
+		eval(moduleStr);
+		//if (!module) throw new Error('module ' + moduleObj.name + ' not loaded!');
+		//this.modules[moduleObj.name] = module;
+	} catch (err){
+		this.log('loadModule: Error: ' + err.toString() + '\n' + err.stack);
+		//this.unloadModules();
+		return;
+	}
+};
+
+// загрузка всех модулей из папки modules
+MyHomeAutomation.prototype.loadAllModules = function(){
+	// ... this.loadModule(name);
+	
+};
+
+// выгрузка одного модуля. формируется дерево зависимостей от него и
+// выгружаются все зависящие модули
+MyHomeAutomation.prototype.unloadModule = function(){
+	
+};
+
+
+
 
 MyHomeAutomation.prototype.unloadModules = function(){
 	this.log('unloading modules...');
@@ -107,15 +146,52 @@ MyHomeAutomation.prototype.stop = function () {
 };
 
 
-MyHomeAutomation.prototype.loadData = function (key) {
-	var objName = 'MyHomeAutomation_' + key;
-	return loadObject(objName);
+MyHomeAutomation.prototype.define = function(name, deps, func) {
+	this.modulesGraph[name] = {
+		name: name,
+		deps: deps, 
+		func: func,
+		created: false, // был ли модуль создан, или ждет зависимостей
+		module: null // ссылка на созданный модуль
+	};
+	
+	checkDepsReady.call(this, this.modulesGraph[name]);
+	
+	
+	// проверка готовности зависимостей для одного модуля и запуск модуля
+	function checkDepsReady(name){
+		var modObj = this.modulesGraph[name];
+		if (modObj.created) return;
+		var deps = modObj.deps;
+		
+		if (deps.every(function(dep){
+			var depObj = this.modulesGraph[dep].created;
+		}, this)){
+			var depsObj = deps.map(function(dep){
+				return this.modulesGraph[dep].module;
+			}, this);
+			
+			// загрузка модуля
+			try {
+				modObj.module = modObj.func.apply(this, depsObj);
+				modObj.created = true;
+			} catch(err) {
+				this.log('Error creating module ' + modObj.name + '\n' + err.toString() + '\n' + err.stack);
+			}
+			
+			// загрузка модулей, зависящих от текущего
+			if (modObj.created){
+				Object.keys(this.modulesGraph).forEach(function(name){
+					checkDepsReady.call(this, name);
+				}, this);
+			}
+		}
+	}
+	
 };
 
-MyHomeAutomation.prototype.saveData = function (key, value) {
-	var objName = 'MyHomeAutomation_' + key;
-	saveObject(objName, value);
-};
+
+
 
 MyHomeAutomation.prototype.prefixLog = function (prefix, data) {
 	//console.log('[MyHomeAutomation_'+this.id + (this.module && this.module.name ? ' ('+this.module.name+')' : '') + '] ' + data);

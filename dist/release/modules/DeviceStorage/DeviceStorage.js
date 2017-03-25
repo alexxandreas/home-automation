@@ -1,10 +1,9 @@
 /*
 global config, inherits, controller, MHA
 */
-
-module = (function(){
-
-    function DeviceStorage(config) {
+define('DeviceStorage', ['AbstractModule'], function(AbstractModule){
+   
+   function DeviceStorage(config) {
         DeviceStorage.super_.call(this, config);
         this.name = 'DeviceStorage';
         this.log('construcror');
@@ -14,7 +13,7 @@ module = (function(){
         
     }
 
-    inherits(DeviceStorage, MHA.modules.AbstractModule);
+    inherits(DeviceStorage, AbstractModule);
 
 
     DeviceStorage.prototype._initDevices = function(){
@@ -93,6 +92,13 @@ module = (function(){
           'hall.rgb':               [dict.hall, dict.light, dict.rgb],          // FGRGBWM-441 (switchRGBW) (1110 1110 1110)
           'hall.w':                 [dict.hall, dict.light, dict.L12]           // FGRGBWM-441 (x.5) (1110)
         };
+        
+        
+        // массив названий комнат
+        var namesArray = Object.keys(this.deviceNames).map(function(name){ return name.split('.').shift();});
+        this.rooms = namesArray.filter(function(item, pos) {return namesArray.indexOf(item) == pos;});
+        
+        
 
         this.devices = {};
 
@@ -505,5 +511,5 @@ module = (function(){
 
     return new DeviceStorage(config);
 
-})();
+});
 
