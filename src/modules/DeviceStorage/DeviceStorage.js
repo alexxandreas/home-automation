@@ -154,11 +154,13 @@ define('DeviceStorage', ['AbstractModule', 'WebServer', 'WebApp'], function(Abst
         */
         function getDevicesByName(parts){
             this.log('getDevicesByName ' + JSON.stringify(parts));
+            var self = this;
+            
             var devices=[];
             controller.devices.forEach(function(vDev){
               var devName = vDev.get('metrics:title') || '';
               devName = devName.toLowerCase();
-              this.log(devName);
+              self.log(devName);
               if (parts.every(function(part){
               if (part instanceof Array){
                   return part.some(function(subPart){
