@@ -232,7 +232,7 @@
     ModuleLoader.prototype.loadModulesConfig = function(){
         this.modulesConfig = this.loadData('modulesConfig') || {
             'DeviceStorage': true,
-            'WebApp': true
+            'ControlPanel': true
         };
     };
     

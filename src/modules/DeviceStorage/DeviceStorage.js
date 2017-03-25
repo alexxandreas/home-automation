@@ -153,7 +153,7 @@ define('DeviceStorage', ['AbstractModule', 'WebServer', 'WebApp'], function(Abst
         возвращает массив подходящих vDev
         */
         function getDevicesByName(parts){
-            this.log('getDevicesByName ' + JSON.stringify(parts));
+            //this.log('getDevicesByName ' + JSON.stringify(parts));
             //var self = this;
             
             var devices=[];
