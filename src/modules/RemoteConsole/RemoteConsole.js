@@ -20,8 +20,14 @@ define('RemoteConsole', ['AbstractModule', 'WebServer', 'WebApp'], function(Abst
     	ws.addRoute('/modules/'+this.name+'/api/eval/:code', function(args){
 	        var code = args[0];
 	        
+	        try {
+	            var result = eval(code);
+	            return ws.sendJSON(result);
+	        } catch (err){
+	            return ws.sendJSON(err);
+	        }
 	       
-	        return ws.sendJSON(data);
+	        //return ws.sendJSON(data);
     	}, this);
     	
     	
