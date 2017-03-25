@@ -114,7 +114,9 @@ define('WebServer', ['AbstractModule'], function(AbstractModule){
             
             var data = fs.load(root + path);
             
+            try{
             data = decodeURIComponent(escape(data));
+            } catch(err) {}
             
             var result = {
                 status: 200,
@@ -127,7 +129,7 @@ define('WebServer', ['AbstractModule'], function(AbstractModule){
             return result;
         
         } catch(err) {
-            this.log('sendFile Error: ' + err.toString());
+            this.log('sendFile Error (' + path + '): ' + err.toString());
             
             return this.sendError(500, err.toString() + "\n" + err.stack);
             // return {
