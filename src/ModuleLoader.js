@@ -194,7 +194,7 @@
     ModuleLoader.prototype.getDepsTree = function(name){
         var module = this.modules[name];
         var deps = [];
-        rec.call(name);
+        rec.call(this, name);
         deps = deps.filter(function(item, pos) {
             return deps.indexOf(item) == pos;
         });
@@ -257,6 +257,7 @@
     };
     
     ModuleLoader.prototype.stop = function(){
+        this.log('stop');
         // выгружаем модули
         Object.keys(this.modules).forEach(function(name){
             this.unloadModule(name);
