@@ -208,7 +208,8 @@ angular
                 });
                 $scope.devices = $scope.allDevices;
             }).finally(function(){
-                reloadTimeout = $timeout(reload, 1000);
+                if (!$scope.$$destroyed) 
+                    reloadTimeout = $timeout(reload, 1000);
             })
         }
         
@@ -308,10 +309,10 @@ angular
         	
             //var code = document.getElementById("JSprogram").value;
             
-            $http.get('/mha/modules/RemoteConsole/api/eval/' + input).then(function(response){
-                output = JSON.stringify(response, null, '  ');
-            }, function(){
-               output = JSON.stringify(response, null, '  ');
+            $http.get('/mha/modules/RemoteConsole/api/eval/' + $scope.input).then(function(response){
+                $scope.output = JSON.stringify(response, null, '  ');
+            }, function(err){
+               $scope.output = JSON.stringify(err, null, '  ');
             }).finally(function(){
                 $scope.status = ""+(new Date().getTime()-time)/1000;
             });

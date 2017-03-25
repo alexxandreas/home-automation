@@ -32,7 +32,8 @@
                 });
                 $scope.devices = $scope.allDevices;
             }).finally(function(){
-                reloadTimeout = $timeout(reload, 1000);
+                if (!$scope.$$destroyed) 
+                    reloadTimeout = $timeout(reload, 1000);
             })
         }
         
