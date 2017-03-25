@@ -1,5 +1,6 @@
-module = (function(){
-    
+define('WebServer', ['AbstractModule'], function(AbstractModule){
+
+
     /**
      * 
      * 
@@ -17,7 +18,7 @@ module = (function(){
     }
     
   
-    inherits(WebServer, MHA.modules.AbstractModule);
+    inherits(WebServer, AbstractModule);
     
     WebServer.prototype.stop = function(){
         this._stopWebServer();
@@ -163,8 +164,6 @@ module = (function(){
         }
     };
     	
-    
-    
     WebServer.prototype._stopWebServer = function (){
     	ws.revokeExternalAccess("mha");
         mha = null;
@@ -752,5 +751,5 @@ module = (function(){
     
     return new WebServer(config);
     
-})()
+});
 

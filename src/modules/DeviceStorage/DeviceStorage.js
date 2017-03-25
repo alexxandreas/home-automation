@@ -1,7 +1,7 @@
 /*
 global config, inherits, controller, MHA
 */
-define('DeviceStorage', ['AbstractModule'], function(AbstractModule){
+define('DeviceStorage', ['AbstractModule', 'WebServer'], function(AbstractModule, WebServer){
    
    function DeviceStorage(config) {
         DeviceStorage.super_.call(this, config);
@@ -464,7 +464,7 @@ define('DeviceStorage', ['AbstractModule'], function(AbstractModule){
 
 
     DeviceStorage.prototype._initFrontend = function(){
-        var ws = MHA.modules.WebServer;
+        var ws = WebServer;
         
     	ws.addRoute('/modules/'+this.name+'/api/:method', function(args){
     	    var method = args[0];

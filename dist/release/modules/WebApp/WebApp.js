@@ -1,4 +1,4 @@
-module = (function(){
+define('WebApp', ['AbstractModule', 'WebServer'], function(AbstractModule, WebServer){
     
     function WebApp(config) {
         WebApp.super_.call(this, config);
@@ -23,7 +23,7 @@ module = (function(){
     inherits(WebApp, MHA.modules.AbstractModule);
     
     WebApp.prototype._initRoutes = function(){
-        var ws = MHA.modules.WebServer;
+        var ws = WebServer;
         
         ws.addRoute('/', rootHandler, this);
     	ws.addRoute('/index.html', rootHandler, this);
