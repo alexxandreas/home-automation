@@ -8,12 +8,12 @@ class="ControlPanel"
     
     <md-subheader class="md-no-sticky">Приложения<i class="material-icons md-dark">face</i></md-subheader>
     
-    <md-list-item ng-repeat="(name, module) in modules" ng-click="goToPerson(person.name, $event)" class="noright">
+    <md-list-item ng-repeat="(name, module) in modules" class="noright">
       <!--<img alt="{{ person.name }}" ng-src="{{ person.img }}" class="md-avatar" />-->
       <p>{{ name }}</p>
       <!--<md-checkbox class="md-secondary" ng-model="person.selected"></md-checkbox>-->
       <md-button class="md-icon-button md-primary"  ng-click="start(module);">
-        <md-icon class="material-icons">play arrow</md-icon>
+        <md-icon class="material-icons">play_arrow</md-icon>
       </md-button>
       <md-button class="md-icon-button md-accent" ng-click="stop(module)">
         <md-icon class="material-icons step">stop</md-icon>
