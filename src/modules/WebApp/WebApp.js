@@ -55,5 +55,5 @@ define('WebApp', ['AbstractModule', 'WebServer'], function(AbstractModule, WebSe
     
     return new WebApp(config);
     
-})();
+});
 
