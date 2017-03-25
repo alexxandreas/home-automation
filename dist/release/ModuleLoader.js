@@ -80,7 +80,7 @@
         try {
             this.log('loadModule ' + name);
     		//var config = moduleObj.config;
-    		var define = this.define.bind(this);
+    		var define = this._define.bind(this);
     		
     		// TODO проверить, есть ли файл
     		var moduleStr = fs.load(MHA.fsRoot + 'modules/' + name + '/' + name + '.js');
@@ -98,7 +98,7 @@
     
     
     
-    ModuleLoader.prototype.define = function(name, deps, func) {
+    ModuleLoader.prototype._define = function(name, deps, func) {
         this.log('define ' + name);
         var module = this.modules[name];
         if (!module){
@@ -108,10 +108,10 @@
 	    module.deps = deps instanceof Array ? deps : [];
 	    module.func = func;
 	    
-	    this.startModule(name);
+	    this._startModule(name);
     };
     
-    ModuleLoader.prototype.startModule = function(name){
+    ModuleLoader.prototype._startModule = function(name){
         //this.log('startModule ' + name);
         var module = this.modules[name];
         if (!module){
@@ -164,7 +164,7 @@
             return;
         }
         
-        var deps = this.getDepsTree(name);
+        var deps = this._getDepsTree(name);
         
         deps.forEach(function(depName){
             var depMod = this.modules[depName];
@@ -191,7 +191,7 @@
         return deps;
     };
     
-    ModuleLoader.prototype.getDepsTree = function(name){
+    ModuleLoader.prototype._getDepsTree = function(name){
         var module = this.modules[name];
         var deps = [];
         rec.call(this, name);

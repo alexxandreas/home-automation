@@ -38,27 +38,27 @@
             return 'yellowButon';
         };
         
-        $scope.start = function(name){
+        $scope.start = function(module){
             ControlPanelSrv
-                .start(name)
+                .start(module.name)
                 .then(function(data){}, function(){})
                 .finally(function(){
                     $scope.reload();
                 });
         };
         
-        $scope.stop = function(name){
+        $scope.stop = function(module){
             ControlPanelSrv
-                .stop(name)
+                .stop(module.name)
                 .then(function(data){}, function(){})
                 .finally(function(){
                     $scope.reload();
                 });
         };
         
-        $scope.restart = function(name){
+        $scope.restart = function(module){
             ControlPanelSrv
-                .restart(name)
+                .restart(module.name)
                 .then(function(data){}, function(){})
                 .finally(function(){
                     $scope.reload();
