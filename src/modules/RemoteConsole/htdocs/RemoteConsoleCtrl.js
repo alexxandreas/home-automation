@@ -6,15 +6,13 @@
     RemoteConsoleCtrl.$inject = [
         '$scope',
         '$http',
-        '$timeout',
-        'RemoteConsoleSrv'
+        '$timeout'
     ];
 
     function RemoteConsoleCtrl(
         $scope,
         $http,
-        $timeout,
-        RemoteConsoleSrv
+        $timeout
     ) {
         
         $scope.input = "";

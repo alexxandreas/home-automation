@@ -7,17 +7,7 @@ define('WebApp', ['AbstractModule', 'WebServer'], function(AbstractModule, WebSe
         
         this.panels = [];
         this._initRoutes();
-        
-        // this.addPanel({
-        //     title:'panel1',
-        //     template: '/views/DeviceStorage/htdocs/DeviceStorage.html'
-        // });
-        
-        
-        
-        this.addPanel({title:'panel2'});
-        this.addPanel({title:'panel3'});
-        this.addPanel({title:'panel4'});
+    
     }
   
     inherits(WebApp, AbstractModule);
