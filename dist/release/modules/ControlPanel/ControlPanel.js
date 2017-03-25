@@ -45,7 +45,7 @@ define('ControlPanel', ['AbstractModule', 'WebServer', 'WebApp'], function(Abstr
     	ws.addRoute('/modules/'+this.name+'/api/modules/:name/start', function(args){
     	    var name = args[0];
     	       
-            this.ml.loadModule(name);
+            this.ML.loadModule(name);
 	        
 	        return ws.sendJSON({success:true});
     	}, this);
@@ -53,7 +53,7 @@ define('ControlPanel', ['AbstractModule', 'WebServer', 'WebApp'], function(Abstr
     	ws.addRoute('/modules/'+this.name+'/api/modules/:name/stop', function(args){
     	    var name = args[0];
     	       
-	        var res = this.ml.unloadModule(name);
+	        var res = this.ML.unloadModule(name);
 	        if (!res || !res.length) 
 	            return ws.sendJSON({success:false});
 	        else 
@@ -64,7 +64,7 @@ define('ControlPanel', ['AbstractModule', 'WebServer', 'WebApp'], function(Abstr
     	ws.addRoute('/modules/'+this.name+'/api/modules/:name/restart', function(args){
     	    var name = args[0];
     	       
-	        var res = this.ml.unloadModule(name, true);
+	        var res = this.ML.unloadModule(name, true);
 	        if (!res || !res.length) 
 	            return ws.sendJSON({success:false});
 	        else 
