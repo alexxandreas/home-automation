@@ -127,7 +127,7 @@ define('WebServer', ['AbstractModule'], function(AbstractModule){
             return result;
         
         } catch(err) {
-            this.log('sendFile Error: ' + err.toString() + "\n" + err.stack);
+            this.log('sendFile Error: ' + err.toString());
             
             return this.sendError(500, err.toString() + "\n" + err.stack);
             // return {

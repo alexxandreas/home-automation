@@ -40,13 +40,12 @@ html, body {
 
 body {
 	-webkit-text-size-adjust: none;
-	//-webkit-font-smoothing: subpixel-antialiased !important;
 	-webkit-font-smoothing: antialiased !important;
 	-webkit-backface-visibility: hidden;
 	-moz-backface-visibility: hidden;
 	-ms-backface-visibility: hidden;
 
-	font:12px Open Sans, Calibri, Arial, Helvetica, sans-serif;
+	/*font:12px Open Sans, Calibri, Arial, Helvetica, sans-serif;*/
 }
 
 .body {
@@ -59,9 +58,54 @@ body {
 }
 
 
-.chart {
-	/*width:800px;
-	height:360px;*/
-	/*border:1px solid #666;*/
-	/*display: flex;*/
+@font-face {
+  font-family: 'Material Icons';
+  font-style: normal;
+  font-weight: 400;
+  src: url(/iconfont/MaterialIcons-Regular.eot); /* For IE6-8 */
+  src: local('Material Icons'),
+       local('MaterialIcons-Regular'),
+       url(/iconfont/MaterialIcons-Regular.woff2) format('woff2'),
+       url(/iconfont/MaterialIcons-Regular.woff) format('woff'),
+       url(/iconfont/MaterialIcons-Regular.ttf) format('truetype');
 }
+
+
+.material-icons {
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;  /* Preferred icon size */
+  display: inline-block;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+
+  /* Support for all WebKit browsers. */
+  -webkit-font-smoothing: antialiased;
+  /* Support for Safari and Chrome. */
+  text-rendering: optimizeLegibility;
+
+  /* Support for Firefox. */
+  -moz-osx-font-smoothing: grayscale;
+
+  /* Support for IE. */
+  font-feature-settings: 'liga';
+}
+
+/* Rules for sizing the icon. */
+.material-icons.md-18 { font-size: 18px; }
+.material-icons.md-24 { font-size: 24px; }
+.material-icons.md-36 { font-size: 36px; }
+.material-icons.md-48 { font-size: 48px; }
+
+/* Rules for using icons as black on a light background. */
+.material-icons.md-dark { color: rgba(0, 0, 0, 0.54); }
+.material-icons.md-dark.md-inactive { color: rgba(0, 0, 0, 0.26); }
+
+/* Rules for using icons as white on a dark background. */
+.material-icons.md-light { color: rgba(255, 255, 255, 1); }
+.material-icons.md-light.md-inactive { color: rgba(255, 255, 255, 0.3); }
