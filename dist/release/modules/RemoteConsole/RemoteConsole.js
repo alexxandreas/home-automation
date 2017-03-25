@@ -24,7 +24,7 @@ define('RemoteConsole', ['AbstractModule', 'WebServer', 'WebApp'], function(Abst
 	            var result = eval(code);
 	            return ws.sendJSON(result);
 	        } catch (err){
-	            return ws.sendJSON(err);
+	            return ws.sendError(500, {text: err.toString(), stack: err.stack});
 	        }
 	       
 	        //return ws.sendJSON(data);
