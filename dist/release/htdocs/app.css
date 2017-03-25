@@ -22,7 +22,7 @@
     
 }
 
-.RemoteConsole .inputText {
+.RemoteConsole .inputText1 {
     height:5in; 
     width:100%; 
     font-family: monospace; 
@@ -31,13 +31,22 @@
 }
 
 
-.RemoteConsole .outputText {
+.RemoteConsole .outputText1 {
     height:5in; 
     width:100%; 
     font-family: monospace; 
     font-size: 16; 
     font-weight: bold;
 }
+
+.RemoteConsole textarea {
+    /*height:5in; */
+    /*width:100%; */
+    font-family: monospace; 
+    font-size: 16px; 
+    font-weight: bold;
+}
+
 
 html, body {
 	width: 100%;

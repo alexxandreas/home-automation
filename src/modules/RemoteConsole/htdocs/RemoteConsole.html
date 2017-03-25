@@ -2,16 +2,16 @@
 ng-controller="RemoteConsoleCtrl"
 class="RemoteConsole">
 
-  <div flex>
+  <div flex layout="column" layout-align="start stretch">
     <textarea id="inputText" class="inputText" ng-bind="input" onkeyup="keyUp(event)"></textarea>
   </div>
   
-  <div flex>
+  <div flex layout="column" layout-align="start stretch">
     <textarea id="outputText" class="outputText" ng-bind="output"></textarea>
   </div>
   
   <div layout="row">
-    <md-button md-click="run()"></md-button>
+    <md-button md-click="run()">Run</md-button>
     <span ng-bing="status"></span>
   </div>
   
