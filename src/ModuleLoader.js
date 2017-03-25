@@ -80,7 +80,7 @@
         try {
             this.log('loadModule ' + name);
     		//var config = moduleObj.config;
-    		var define = this.prototype.define.bind(this);
+    		var define = this.define.bind(this);
     		
     		// TODO проверить, есть ли файл
     		var moduleStr = fs.load(MHA.fsRoot + 'modules/' + name + '/' + name + '.js');
