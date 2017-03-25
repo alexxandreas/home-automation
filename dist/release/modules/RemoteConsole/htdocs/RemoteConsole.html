@@ -1,9 +1,9 @@
-<div layout="column" layout-align="start stretch"
+<div layout="column" layout-align="start stretch" flex
 ng-controller="RemoteConsoleCtrl"
 class="RemoteConsole">
 
   <div flex layout="column" layout-align="start stretch">
-    <textarea id="inputText" class="inputText" ng-bind="input" onkeyup="keyUp(event)"></textarea>
+    <textarea id="inputText" class="inputText" ng-bind="input" ng-keyup="keyUp($event)" ></textarea>
   </div>
   
   <div flex layout="column" layout-align="start stretch">
@@ -11,7 +11,7 @@ class="RemoteConsole">
   </div>
   
   <div layout="row">
-    <md-button md-click="run()">Run</md-button>
+    <md-button ng-click="run()">Run</md-button>
     <span ng-bing="status"></span>
   </div>
   

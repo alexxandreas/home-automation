@@ -21,10 +21,11 @@
 
 .RemoteConsole textarea {
     height:100%; 
-    width:100%; 
+    /*width:100%; */
+    margin: 5px;
     font-family: monospace; 
-    font-size: 16px; 
-    font-weight: bold;
+    font-size: 14px; 
+    /*font-weight: bold;*/
     outline: none;
 }
 
