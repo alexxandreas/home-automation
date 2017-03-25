@@ -332,7 +332,7 @@ define('DeviceStorage', ['AbstractModule', 'WebServer', 'WebApp'], function(Abst
             	    + (command ? command : '') 
             	    + (args ? ', ' + JSON.stringify(args) : '') 
             	    + ') ' + data);
-            	}).bid(this);
+            	}).bind(this);
             	
             	var isPrevAction = !!vDev.MHA._actionObj;
             	// останавливаем предыдущее
