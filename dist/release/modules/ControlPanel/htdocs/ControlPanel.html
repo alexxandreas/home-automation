@@ -12,13 +12,13 @@ class="ControlPanel"
       <!--<img alt="{{ person.name }}" ng-src="{{ person.img }}" class="md-avatar" />-->
       <p>{{ name }}</p>
       <!--<md-checkbox class="md-secondary" ng-model="person.selected"></md-checkbox>-->
-      <md-button class="md-icon-button md-primary" ng-click="start(module);" ng-show="showStart(module)">
+      <md-button class="md-icon-button md-primary" ng-click="start(module);" ng-disabled="!showStart(module)">
         <md-icon class="material-icons">play_arrow</md-icon>
       </md-button>
-      <md-button class="md-icon-button md-accent" ng-click="stop(module)" ng-show="showStop(module)">
+      <md-button class="md-icon-button md-accent" ng-click="stop(module)" ng-disabled="!showStop(module)">
         <md-icon class="material-icons">stop</md-icon>
       </md-button>
-      <md-button class="md-icon-button" ng-click="restart(module);" ng-show="showRestart(module)">
+      <md-button class="md-icon-button" ng-click="restart(module);" ng-disabled="!showRestart(module)">
       <md-icon aria-label="replay" class="material-icons">replay</md-icon>
       </md-button>
     </md-list-item>
