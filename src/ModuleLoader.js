@@ -42,7 +42,7 @@
     
     // Загружает список модулей из ФС
     ModuleLoader.prototype.loadModulesList = function(){
-        var modules = {};
+        this.modules = {};
         var folder = MHA.fsRoot + 'modules/';
         var list = fs.list(folder);
         list.forEach(function(name){
