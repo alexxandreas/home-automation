@@ -20,7 +20,7 @@ define('WebApp', ['AbstractModule', 'WebServer'], function(AbstractModule, WebSe
         this.addPanel({title:'panel4'});
     }
   
-    inherits(WebApp, MHA.modules.AbstractModule);
+    inherits(WebApp, AbstractModule);
     
     WebApp.prototype._initRoutes = function(){
         var ws = WebServer;

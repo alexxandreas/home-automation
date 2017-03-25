@@ -1,7 +1,7 @@
 /*
 global config, inherits, controller, MHA
 */
-define('DeviceStorage', ['AbstractModule', 'WebServer'], function(AbstractModule, WebServer){
+define('DeviceStorage', ['AbstractModule', 'WebServer', 'WebApp'], function(AbstractModule, WebServer, WebApp){
    
    function DeviceStorage(config) {
         DeviceStorage.super_.call(this, config);
@@ -488,7 +488,7 @@ define('DeviceStorage', ['AbstractModule', 'WebServer'], function(AbstractModule
     	    return ws.sendError(404, method + ' not found');
     	}, this);
     	
-    	MHA.modules.WebApp.addPanel({
+    	WebApp.addPanel({
             title:'DeviceStorage',
             template: '/views/DeviceStorage/htdocs/DeviceStorage.html'
         });
