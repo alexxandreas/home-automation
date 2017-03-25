@@ -121,6 +121,7 @@ define('DeviceStorage', ['AbstractModule', 'WebServer', 'WebApp'], function(Abst
 
 
         function initDevices(){
+            this.log('initDevices');
             Object.keys(this.deviceNames).forEach(function(key){
               var vDevs = getDevicesByName.call(this,this.deviceNames[key]);
               if (vDevs.length == 0){
@@ -152,7 +153,7 @@ define('DeviceStorage', ['AbstractModule', 'WebServer', 'WebApp'], function(Abst
         возвращает массив подходящих vDev
         */
         function getDevicesByName(parts){
-            //this.log('getDevicesByName ' + JSON.stringify(parts));
+            this.log('getDevicesByName ' + JSON.stringify(parts));
             var devices=[];
             controller.devices.forEach(function(vDev){
               var devName = vDev.get('metrics:title') || '';
