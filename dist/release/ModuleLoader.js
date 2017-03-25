@@ -232,7 +232,8 @@
     ModuleLoader.prototype.loadModulesConfig = function(){
         this.modulesConfig = this.loadData('modulesConfig') || {
             'DeviceStorage': true,
-            'ControlPanel': true
+            'ControlPanel': true,
+            'RemoteConsole': true
         };
     };
     

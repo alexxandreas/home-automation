@@ -73,7 +73,7 @@ define('ControlPanel', ['AbstractModule', 'WebServer', 'WebApp'], function(Abstr
     	
     	
     	WebApp.addPanel({
-            title:'ControlPanel',
+            title:'Control Panel',
             template: '/views/ControlPanel/htdocs/ControlPanel.html'
         });
     };

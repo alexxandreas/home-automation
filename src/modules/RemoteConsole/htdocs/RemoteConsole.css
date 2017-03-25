@@ -1,0 +1,20 @@
+.RemoteConsole {
+    
+}
+
+.RemoteConsole .inputText {
+    height:5in; 
+    width:100%; 
+    font-family: monospace; 
+    font-size: 16; 
+    font-weight: bold;
+}
+
+
+.RemoteConsole .outputText {
+    height:5in; 
+    width:100%; 
+    font-family: monospace; 
+    font-size: 16; 
+    font-weight: bold;
+}

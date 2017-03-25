@@ -492,7 +492,7 @@ define('DeviceStorage', ['AbstractModule', 'WebServer', 'WebApp'], function(Abst
     	}, this);
     	
     	WebApp.addPanel({
-            title:'DeviceStorage',
+            title:'Device Storage',
             template: '/views/DeviceStorage/htdocs/DeviceStorage.html'
         });
     };
