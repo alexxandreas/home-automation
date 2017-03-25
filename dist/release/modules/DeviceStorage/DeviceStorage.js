@@ -124,7 +124,7 @@ define('DeviceStorage', ['AbstractModule', 'WebServer', 'WebApp'], function(Abst
             Object.keys(this.deviceNames).forEach(function(key){
               var vDevs = getDevicesByName.call(this,this.deviceNames[key]);
               if (vDevs.length == 0){
-                this.log('Error: initDevices(' + key + '): not found');
+                this.log('Error: initDevices(' + key + '): not found: ' + JSON.stringify(this.deviceNames[key]));
                 //return null;
               } else if (vDevs.length > 1){
                 var text = vDevs.map(function(vDev){
