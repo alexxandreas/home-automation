@@ -72,6 +72,19 @@ define('ControlPanel', ['AbstractModule', 'WebServer'], function(AbstractModule,
     	}, this);
     	
     	
+    	ws.addRoute('/modules/'+this.name+'/api/update', function(args){
+    	   
+    	    try {
+    	        var result = system('bash /opt/z-way-server/automation/modules/MyHomeAutomation/update.bash');
+    	        return ws.sendJSON({success:true, result:result});
+    	    } catch (err){
+    	        return ws.sendJSON({success:false, message: err.toString(), stack: err.stack});
+    	    }
+    	   
+    	}, this);
+    	
+    	
+    	
     	WebServer.addPanel({
     	    key: this.name,
             title:'Control Panel',

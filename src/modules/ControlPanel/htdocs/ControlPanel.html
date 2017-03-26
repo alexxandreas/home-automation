@@ -2,7 +2,10 @@
 ng-controller="ControlPanelCtrl"
 class="ControlPanel"
 
-    <!--<div layout="column" layout-align="start stretch"-->
+  <div>
+    <md-button ng-click="update()">Обновить без перезагрузки</md-button>
+    <md-button ng-click="updateReload()">Обновить с перезагрузкой</md-button>
+  </div>
   <md-list>
     
     <md-subheader class="md-no-sticky">Приложения</md-subheader>

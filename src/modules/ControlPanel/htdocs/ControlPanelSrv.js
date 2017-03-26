@@ -48,12 +48,25 @@
             });
         }
         
+        function sysUpdate(){
+            return $http.get('/mha/modules/ControlPanel/update').then(function(response){
+                return response.data;
+            });
+        }
+        
+        function sysUpdateReload(){
+            return $http.get('/mha/modules/ControlPanel/updateReload').then(function(response){
+                return response.data;
+            });
+        }
         
         var me = {
             reload: reload,
             start: start, 
             stop: stop,
-            restart: restart
+            restart: restart,
+            sysUpdate: sysUpdate,
+            sysUpdateReload: sysUpdateReload
         };
         
         return me;

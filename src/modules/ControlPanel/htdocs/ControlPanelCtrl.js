@@ -77,6 +77,25 @@
             return !!module.created;
         };
         
+        $scope.update = function(){
+            ControlPanelSrv
+                .sysUpdate()
+                .then(function(data){
+                    console.log(data);
+                }, function(response){
+                    
+                })
+        };
+        
+        $scope.updateReload = function(){
+            ControlPanelSrv
+                .sysUpdateReload()
+                .then(function(data){
+                    console.log(data);
+                }, function(response){
+                    
+                })
+        };
         
         $scope.reload();
         
