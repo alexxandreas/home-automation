@@ -380,13 +380,15 @@ angular
     
     PanelsSrv.$inject = [
         '$http',
+        '$rootScope'
     ];
     
     /**
      * events: PanelsSrv.loaded
      */
     function PanelsSrv(
-        $http
+        $http,
+        $rootScope
     ) {
         
         
