@@ -88,7 +88,7 @@
                 .sysUpdate()
                 .then(function(data){
                     console.log(data);
-                    $scope.showAlert(data.updateResult[1]);
+                    $scope.showAlert('Обновление', data.updateResult[1]);
                 }, function(response){
                     
                 })
@@ -100,7 +100,7 @@
                 .then(function(data){
                     console.log(data);
                     
-                    $scope.showAlert(data.updateResult[1])
+                    $scope.showAlert('Обновление', data.updateResult[1])
                         .then(function(){
                             $window.location.reload();
                         });
@@ -132,7 +132,7 @@
                 parent: angular.element(document.querySelector('body')),
                 //targetEvent: ev,
                 clickOutsideToClose:false,
-                locals: {
+                scope: {
                     title: title,
                     message: $sce.trustAsHtml(message)
                 }
