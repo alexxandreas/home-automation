@@ -8,6 +8,7 @@
         '$http',
         '$timeout',
         '$window',
+        '$sce',
         '$mdDialog',
         'ControlPanelSrv'
     ];
@@ -17,6 +18,7 @@
         $http,
         $timeout,
         $window,
+        $sce,
         $mdDialog,
         ControlPanelSrv
     ) {
@@ -130,6 +132,10 @@
                 parent: angular.element(document.querySelector('body')),
                 //targetEvent: ev,
                 clickOutsideToClose:false,
+                locals: {
+                    title: title,
+                    message: $sce.trustAsHtml(message)
+                }
                 //fullscreen: $scope.customFullscreen // Only for -xs, -sm b
             })
         }
