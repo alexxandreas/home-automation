@@ -135,9 +135,18 @@
                 locals: {
                     title: title,
                     message: $sce.trustAsHtml(message)
-                }
+                },
+                controller: DialogController
                 //fullscreen: $scope.customFullscreen // Only for -xs, -sm b
             })
+            
+            function DialogController($scope, $mdDialog, title, message) {
+                $scope.items = items;
+                $scope.message = message;
+                $scope.ok = function() {
+                  $mdDialog.hide();
+                }
+              }
         }
         $scope.reload();
         
