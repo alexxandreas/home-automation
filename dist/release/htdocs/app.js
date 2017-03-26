@@ -44,6 +44,8 @@ angular
         '$scope',
         '$http',
         '$timeout',
+        '$window',
+        '$mdDialog',
         'ControlPanelSrv'
     ];
 
@@ -51,6 +53,8 @@ angular
         $scope,
         $http,
         $timeout,
+        $window,
+        $mdDialog,
         ControlPanelSrv
     ) {
         $scope.modules = {};
@@ -119,6 +123,7 @@ angular
                 .sysUpdate()
                 .then(function(data){
                     console.log(data);
+                    $scope.showAlert(data.updateResult[1]);
                 }, function(response){
                     
                 })
@@ -129,11 +134,28 @@ angular
                 .sysUpdateReload()
                 .then(function(data){
                     console.log(data);
+                    
+                    $scope.showAlert(data.updateResult[1])
+                        .then(function(){
+                            $window.location.reload();
+                        });
                 }, function(response){
                     
                 })
         };
         
+        $scope.showAlert = function(title, message){
+            return $mdDialog.show(
+                $mdDialog.alert()
+                    .parent(angular.element(document.querySelector('body')))
+                    .clickOutsideToClose(false)
+                    .title(title)
+                    .textContent(message)
+                    //.ariaLabel('Alert Dialog Demo')
+                    .ok('OK')
+                    //.targetEvent(ev)
+            );
+        }
         $scope.reload();
         
         
