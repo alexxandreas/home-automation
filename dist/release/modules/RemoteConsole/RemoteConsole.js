@@ -1,7 +1,7 @@
 /*
 global config, inherits, controller, MHA
 */
-define('RemoteConsole', ['AbstractModule', 'WebServer', 'WebApp'], function(AbstractModule, WebServer, WebApp){
+define('RemoteConsole', ['AbstractModule', 'WebServer'], function(AbstractModule, WebServer){
    
    function RemoteConsole(config) {
         RemoteConsole.super_.call(this, config);
@@ -32,7 +32,7 @@ define('RemoteConsole', ['AbstractModule', 'WebServer', 'WebApp'], function(Abst
     	
     	
     	
-    	WebApp.addPanel({
+    	WebServer.addPanel({
             title:'Remote Console',
             template: '/views/RemoteConsole/htdocs/RemoteConsole.html'
         });

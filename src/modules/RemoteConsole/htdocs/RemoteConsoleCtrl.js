@@ -34,9 +34,9 @@
             //var code = document.getElementById("JSprogram").value;
             
             $http.get('/mha/modules/RemoteConsole/api/eval/' + $scope.input).then(function(response){
-                $scope.output = JSON.stringify(response, null, '  ');
-            }, function(err){
-               $scope.output = JSON.stringify(err, null, '  ');
+                $scope.output = JSON.stringify(response.data, null, '  ');
+            }, function(response){
+               $scope.output = JSON.stringify(response && response.data || response, null, '  ');
             }).finally(function(){
                 $scope.status = ""+(new Date().getTime()-time)/1000;
             });

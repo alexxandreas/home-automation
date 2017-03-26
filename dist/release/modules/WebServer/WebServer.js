@@ -1,6 +1,5 @@
 define('WebServer', ['AbstractModule'], function(AbstractModule){
 
-
     /**
      * 
      * 
@@ -13,6 +12,8 @@ define('WebServer', ['AbstractModule'], function(AbstractModule){
         this.name = 'WebServer';
         this.log('construcror');
         
+        this.panels = [];
+        
         //this.log(JSON.stringify(config, '', 4));
         this._startWebServer();
     }
@@ -24,6 +25,10 @@ define('WebServer', ['AbstractModule'], function(AbstractModule){
         this._stopWebServer();
         WebServer.super_.prototype.stop.apply(this, arguments);
     }
+    
+    WebServer.prototype.addPanel = function(panel){
+        this.panels.push(panel);
+    };
     
     /**
      * route - строка, из которой потом сформируется RegExp 
@@ -67,41 +72,46 @@ define('WebServer', ['AbstractModule'], function(AbstractModule){
         ws.allowExternalAccess("mha", controller.auth.ROLE.ANONYMOUS); // login required
     	
     	//this.addDefaultRoutes();
-    	this._addModulesRoutes();
+    	this._initRoutes();
     };
     
-    WebServer.prototype._addModulesRoutes = function(){
-        this.addRoute('/modules/:module/htdocs/:path', function(args){
-            return this.sendFile('modules/' + args[0] + '/htdocs/' + args[1]);
-            //return this._sendStatic(args[0], args[1]);
-        }, this);
-        
-        this.addRoute('/htdocs/:path', function(args){
+    WebServer.prototype._initRoutes = function(){
+        // index
+        this.addRoute('/', rootHandler, this);
+    	this.addRoute('/index.html', rootHandler, this);
+    	
+    	function rootHandler(params){
+    		this.log('get index: ' + JSON.stringify(params));
+    		return ws.sendFile('modules/WebApp/htdocs/index.html');
+    	}
+    	
+    	// root htdocs
+    	this.addRoute('/htdocs/:path', function(args){
             return this.sendFile('htdocs/' + args[0]);
-            //return this._sendStatic(args[0], args[1]);
         }, this);
+        
+        // module htdocs
+    	this.addRoute('/modules/:module/htdocs/:path', function(args){
+            return this.sendFile('modules/' + args[0] + '/htdocs/' + args[1]);
+        }, this);
+        
+        // WebServer Panels
+        this.addRoute('/modules/'+this.name+'/api/panels', function(args){
+    	    return this.sendJSON(this.panels);
+    	   
+    	}, this);
+        
         
     };
     
-    // WebServer.prototype.addDefaultRoutes = function(){
-    // 	this.addRoute('/', rootHandler, this);
-    // 	this.addRoute('/index.html', rootHandler, this);
-    	
-    // 	function rootHandler(params){
-    // 		this.log('get index: ' + JSON.stringify(params));
-    // 		return this.sendFile('modules/WebServer/htdocs/index.html');
-    // 	}
-    	
-    // };
-    	
-    // WebServer.prototype._sendStatic = function(moduleName, path){
-    //     return this.sendFile('modules/' + moduleName + '/htdocs/' + path);
-    // }	
+    
+   
 
     WebServer.prototype._getMimeType = function(path){
         var ext = path.split("/").pop().split(".").pop();
         return this._mimeTypes[ext] || 'application/octet-stream';
     }
+    	
     	
     WebServer.prototype.sendFile = function(path){
         var root = MHA.fsRoot; //  'modules/MyHomeAutomation/';
@@ -130,16 +140,7 @@ define('WebServer', ['AbstractModule'], function(AbstractModule){
         
         } catch(err) {
             this.log('sendFile Error (' + path + '): ' + err.toString());
-            
             return this.sendError(500, err.toString() + "\n" + err.stack);
-            // return {
-            //     status: 500,
-            //     headers: {
-            //         "Content-Type": "text/plain",
-            //         "Connection": "keep-alive"
-            //     },
-            //     body: err.toString() + "\n" + err.stack
-            // }
         }
         
     };
@@ -170,6 +171,8 @@ define('WebServer', ['AbstractModule'], function(AbstractModule){
     	ws.revokeExternalAccess("mha");
         mha = null;
     };
+    
+    
     
     WebServer.prototype._mimeTypes = {
         "ez": "application/andrew-inset",

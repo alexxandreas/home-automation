@@ -9,10 +9,12 @@
     
     ControlPanelSrv.$inject = [
         '$http',
+        'PanelsSrv'
     ];
     
     function ControlPanelSrv(
-        $http
+        $http,
+        PanelsSrv
     ) {
         
         
@@ -25,18 +27,24 @@
         function start(name){
             return $http.get('/mha/modules/ControlPanel/api/modules/'+name+'/start').then(function(response){
                 return response.data;
+            }).finally(function(){
+                PanelsSrv.reload();
             });
         }
         
         function stop(name){
             return $http.get('/mha/modules/ControlPanel/api/modules/'+name+'/stop').then(function(response){
                 return response.data;
+            }).finally(function(){
+                PanelsSrv.reload();
             });
         }
         
         function restart(name){
             return $http.get('/mha/modules/ControlPanel/api/modules/'+name+'/restart').then(function(response){
                 return response.data;
+            }).finally(function(){
+                PanelsSrv.reload();
             });
         }
         

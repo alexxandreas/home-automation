@@ -1,7 +1,7 @@
 /*
 global config, inherits, controller, MHA
 */
-define('ControlPanel', ['AbstractModule', 'WebServer', 'WebApp'], function(AbstractModule, WebServer, WebApp){
+define('ControlPanel', ['AbstractModule', 'WebServer'], function(AbstractModule, WebServer){
    
    function ControlPanel(config) {
         ControlPanel.super_.call(this, config);
@@ -72,7 +72,7 @@ define('ControlPanel', ['AbstractModule', 'WebServer', 'WebApp'], function(Abstr
     	}, this);
     	
     	
-    	WebApp.addPanel({
+    	WebServer.addPanel({
             title:'Control Panel',
             template: '/views/ControlPanel/htdocs/ControlPanel.html'
         });
