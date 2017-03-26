@@ -132,7 +132,7 @@
                 parent: angular.element(document.querySelector('body')),
                 //targetEvent: ev,
                 clickOutsideToClose:false,
-                scope: {
+                locals: {
                     title: title,
                     message: $sce.trustAsHtml(message)
                 }
