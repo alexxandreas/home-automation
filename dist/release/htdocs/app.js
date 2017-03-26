@@ -349,7 +349,7 @@ angular
     ) {
         $scope.panels = [];
         
-        $scope.$on('PanelsSrv.loaded', function(panels){
+        $scope.$on('PanelsSrv.loaded', function(event, panels){
             $scope.panels = panels;
             if ($scope.activePanel && !$scope.panels.some(function(panel){ 
                 return panel.key == $scope.activePanel.key;
