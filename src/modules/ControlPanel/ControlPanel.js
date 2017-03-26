@@ -73,16 +73,23 @@ define('ControlPanel', ['AbstractModule', 'WebServer'], function(AbstractModule,
     	
     	
     	ws.addRoute('/modules/'+this.name+'/api/update', function(args){
-    	   
     	    try {
-    	        var result = system('bash /opt/z-way-server/automation/modules/MyHomeAutomation/update.bash');
-    	        return ws.sendJSON({success:true, result:result});
+    	        var updateResult = system('bash /opt/z-way-server/automation/modules/MyHomeAutomation/update.bash');
+    	        return ws.sendJSON({success:true, updateResult:updateResult});
     	    } catch (err){
     	        return ws.sendJSON({success:false, message: err.toString(), stack: err.stack});
     	    }
-    	   
     	}, this);
     	
+    	ws.addRoute('/modules/'+this.name+'/api/updateReload', function(args){
+    	    try {
+    	        var updateResult = system('bash /opt/z-way-server/automation/modules/MyHomeAutomation/update.bash');
+    	        var reloadResult = this.ML.unloadModule('AbstractModule', true);
+    	        return ws.sendJSON({success:true, updateResult:updateResult, reloadResult:reloadResult});
+    	    } catch (err){
+    	        return ws.sendJSON({success:false, message: err.toString(), stack: err.stack});
+    	    }
+    	}, this);
     	
     	
     	WebServer.addPanel({

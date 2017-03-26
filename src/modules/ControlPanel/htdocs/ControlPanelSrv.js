@@ -49,13 +49,13 @@
         }
         
         function sysUpdate(){
-            return $http.get('/mha/modules/ControlPanel/update').then(function(response){
+            return $http.get('/mha/modules/ControlPanel/api/update').then(function(response){
                 return response.data;
             });
         }
         
         function sysUpdateReload(){
-            return $http.get('/mha/modules/ControlPanel/updateReload').then(function(response){
+            return $http.get('/mha/modules/ControlPanel/apiupdateReload').then(function(response){
                 return response.data;
             });
         }
