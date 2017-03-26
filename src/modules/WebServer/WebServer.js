@@ -82,7 +82,7 @@ define('WebServer', ['AbstractModule'], function(AbstractModule){
     	
     	function rootHandler(params){
     		this.log('get index: ' + JSON.stringify(params));
-    		return ws.sendFile('modules/WebApp/htdocs/index.html');
+    		return this.sendFile('modules/WebApp/htdocs/index.html');
     	}
     	
     	// root htdocs
