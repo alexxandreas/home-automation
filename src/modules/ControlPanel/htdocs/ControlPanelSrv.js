@@ -55,7 +55,7 @@
         }
         
         function sysUpdateReload(){
-            return $http.get('/mha/modules/ControlPanel/apiupdateReload').then(function(response){
+            return $http.get('/mha/modules/ControlPanel/api/updateReload').then(function(response){
                 return response.data;
             });
         }

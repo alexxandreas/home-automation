@@ -35,6 +35,41 @@ angular
 }*/
 
 
+
+(function () {
+    "use strict";
+    angular.module('WebApp')
+        .controller('ControlPanelAlertCtrl', ControlPanelAlertCtrl);
+
+    ControlPanelAlertCtrl.$inject = [
+        '$scope',
+        '$mdDialog'
+    ];
+
+    function ControlPanelAlertCtrl(
+        $scope,
+        $mdDialog
+    ) {
+        
+        // $scope.hide = function() {
+        //   $mdDialog.hide();
+        // };
+    
+        // $scope.cancel = function() {
+        //   $mdDialog.cancel();
+        // };
+    
+        // $scope.answer = function(answer) {
+        //   $mdDialog.hide(answer);
+        // };
+        
+        $scope.ok = function(){
+            $mdDialog.hide();
+        }
+        
+    }
+
+}());
 (function () {
     "use strict";
     angular.module('WebApp')
@@ -145,16 +180,30 @@ angular
         };
         
         $scope.showAlert = function(title, message){
-            return $mdDialog.show(
-                $mdDialog.alert()
-                    .parent(angular.element(document.querySelector('body')))
-                    .clickOutsideToClose(false)
-                    .title(title)
-                    .textContent(message)
-                    //.ariaLabel('Alert Dialog Demo')
-                    .ok('OK')
-                    //.targetEvent(ev)
-            );
+            // return $mdDialog.show(
+            //     $mdDialog.alert()
+            //         .parent(angular.element(document.querySelector('body')))
+            //         .clickOutsideToClose(false)
+            //         //.title(title)
+            //         //.textContent(message)
+            //         //.ok('OK')
+                    
+                    
+            //         //controller: DialogController,
+            //         .templateUrl: 'ControlPanelAlert.html'
+            //         //parent: angular.element(document.body),
+            //         //targetEvent: ev,
+            //         //clickOutsideToClose:true,
+            //         //fullscreen: $scope.customFullscreen // Only for -xs, -sm breakpoints.
+            // );
+            return $mdDialog.show({
+                //controller: DialogController,
+                templateUrl: 'ControlPanelAlert.html'
+                parent: angular.element(document.querySelector('body'))
+                //targetEvent: ev,
+                clickOutsideToClose:false,
+                //fullscreen: $scope.customFullscreen // Only for -xs, -sm b
+            })
         }
         $scope.reload();
         
@@ -219,7 +268,7 @@ angular
         }
         
         function sysUpdateReload(){
-            return $http.get('/mha/modules/ControlPanel/apiupdateReload').then(function(response){
+            return $http.get('/mha/modules/ControlPanel/api/updateReload').then(function(response){
                 return response.data;
             });
         }

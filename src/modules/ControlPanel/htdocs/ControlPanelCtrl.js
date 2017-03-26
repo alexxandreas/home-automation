@@ -108,16 +108,30 @@
         };
         
         $scope.showAlert = function(title, message){
-            return $mdDialog.show(
-                $mdDialog.alert()
-                    .parent(angular.element(document.querySelector('body')))
-                    .clickOutsideToClose(false)
-                    .title(title)
-                    .textContent(message)
-                    //.ariaLabel('Alert Dialog Demo')
-                    .ok('OK')
-                    //.targetEvent(ev)
-            );
+            // return $mdDialog.show(
+            //     $mdDialog.alert()
+            //         .parent(angular.element(document.querySelector('body')))
+            //         .clickOutsideToClose(false)
+            //         //.title(title)
+            //         //.textContent(message)
+            //         //.ok('OK')
+                    
+                    
+            //         //controller: DialogController,
+            //         .templateUrl: 'ControlPanelAlert.html'
+            //         //parent: angular.element(document.body),
+            //         //targetEvent: ev,
+            //         //clickOutsideToClose:true,
+            //         //fullscreen: $scope.customFullscreen // Only for -xs, -sm breakpoints.
+            // );
+            return $mdDialog.show({
+                //controller: DialogController,
+                templateUrl: 'ControlPanelAlert.html'
+                parent: angular.element(document.querySelector('body'))
+                //targetEvent: ev,
+                clickOutsideToClose:false,
+                //fullscreen: $scope.customFullscreen // Only for -xs, -sm b
+            })
         }
         $scope.reload();
         
