@@ -33,6 +33,7 @@ define('RemoteConsole', ['AbstractModule', 'WebServer'], function(AbstractModule
     	
     	
     	WebServer.addPanel({
+    	    key: this.name,
             title:'Remote Console',
             template: '/views/RemoteConsole/htdocs/RemoteConsole.html'
         });
@@ -40,6 +41,7 @@ define('RemoteConsole', ['AbstractModule', 'WebServer'], function(AbstractModule
     
     
     RemoteConsole.prototype.stop = function(){
+        WebServer.removePanel(this.name);
         RemoteConsole.super_.prototype.stop.apply(this, arguments);
     };
 

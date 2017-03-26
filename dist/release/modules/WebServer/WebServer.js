@@ -30,6 +30,12 @@ define('WebServer', ['AbstractModule'], function(AbstractModule){
         this.panels.push(panel);
     };
     
+    WebServer.prototype.removePanel = function(key){
+      this.panels = this.panels.filter(function(panel){
+          return panel.key != key;
+      });
+    };
+    
     /**
      * route - строка, из которой потом сформируется RegExp 
      * заменяется :\w+ на (.+)

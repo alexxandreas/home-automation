@@ -347,8 +347,15 @@ angular
         $scope,
         PanelsSrv
     ) {
-        $scope.$on('', function(panels){
+        $scope.panels = [];
+        
+        $scope.$on('PanelsSrv.loaded', function(panels){
             $scope.panels = panels;
+            if ($scope.activePanel && !$scope.panels.some(function(panel){ 
+                return panel.key == $scope.activePanel.key;
+            })) {
+                $scope.activePanel = null;
+            }
         });
         
         PanelsSrv.reload();

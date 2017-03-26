@@ -73,6 +73,7 @@ define('ControlPanel', ['AbstractModule', 'WebServer'], function(AbstractModule,
     	
     	
     	WebServer.addPanel({
+    	    key: this.name,
             title:'Control Panel',
             template: '/views/ControlPanel/htdocs/ControlPanel.html'
         });
@@ -80,6 +81,7 @@ define('ControlPanel', ['AbstractModule', 'WebServer'], function(AbstractModule,
     
     
     ControlPanel.prototype.stop = function(){
+        WebServer.removePanel(this.name);
         ControlPanel.super_.prototype.stop.apply(this, arguments);
     };
 

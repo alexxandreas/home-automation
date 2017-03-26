@@ -492,6 +492,7 @@ define('DeviceStorage', ['AbstractModule', 'WebServer'], function(AbstractModule
     	}, this);
     	
     	WebServer.addPanel({
+    	    key: this.name,
             title:'Device Storage',
             template: '/views/DeviceStorage/htdocs/DeviceStorage.html'
         });
@@ -509,6 +510,7 @@ define('DeviceStorage', ['AbstractModule', 'WebServer'], function(AbstractModule
             delete vDev.MHA;
         }, this);
         
+        WebServer.removePanel(this.name);
         DeviceStorage.super_.prototype.stop.apply(this, arguments);
     };
 
