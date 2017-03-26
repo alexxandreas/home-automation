@@ -35,41 +35,6 @@ angular
 }*/
 
 
-
-(function () {
-    "use strict";
-    angular.module('WebApp')
-        .controller('ControlPanelAlertCtrl', ControlPanelAlertCtrl);
-
-    ControlPanelAlertCtrl.$inject = [
-        '$scope',
-        '$mdDialog'
-    ];
-
-    function ControlPanelAlertCtrl(
-        $scope,
-        $mdDialog
-    ) {
-        
-        // $scope.hide = function() {
-        //   $mdDialog.hide();
-        // };
-    
-        // $scope.cancel = function() {
-        //   $mdDialog.cancel();
-        // };
-    
-        // $scope.answer = function(answer) {
-        //   $mdDialog.hide(answer);
-        // };
-        
-        $scope.ok = function(){
-            $mdDialog.hide();
-        }
-        
-    }
-
-}());
 (function () {
     "use strict";
     angular.module('WebApp')
@@ -182,6 +147,7 @@ angular
         };
         
         $scope.showAlert = function(title, message){
+            //message = message.replace('\n', '<br>');
             // return $mdDialog.show(
             //     $mdDialog.alert()
             //         .parent(angular.element(document.querySelector('body')))
@@ -206,14 +172,14 @@ angular
                 clickOutsideToClose:false,
                 locals: {
                     title: title,
-                    message: $sce.trustAsHtml(message)
+                    message: $sce.trustAsHtml('<pre><code>'+message+'</code></pre>')
                 },
                 controller: DialogController
                 //fullscreen: $scope.customFullscreen // Only for -xs, -sm b
             })
             
             function DialogController($scope, $mdDialog, title, message) {
-                $scope.items = items;
+                $scope.title = title;
                 $scope.message = message;
                 $scope.ok = function() {
                   $mdDialog.hide();
