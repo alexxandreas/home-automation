@@ -126,7 +126,7 @@
             // );
             return $mdDialog.show({
                 //controller: DialogController,
-                templateUrl: 'ControlPanelAlert.html',
+                templateUrl: '/views/ControlPanel/htdocs/ControlPanelAlert.html',
                 parent: angular.element(document.querySelector('body')),
                 //targetEvent: ev,
                 clickOutsideToClose:false,
