@@ -126,8 +126,8 @@
             // );
             return $mdDialog.show({
                 //controller: DialogController,
-                templateUrl: 'ControlPanelAlert.html'
-                parent: angular.element(document.querySelector('body'))
+                templateUrl: 'ControlPanelAlert.html',
+                parent: angular.element(document.querySelector('body')),
                 //targetEvent: ev,
                 clickOutsideToClose:false,
                 //fullscreen: $scope.customFullscreen // Only for -xs, -sm b
