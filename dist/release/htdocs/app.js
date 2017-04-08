@@ -524,7 +524,7 @@ angular
         
         
         function reload(){
-            return $http.get('/mha/modules/WebServer/api/panels').then(function(response){
+            return $http.get('modules/WebServer/api/panels').then(function(response){
                 $rootScope.$broadcast('PanelsSrv.loaded', response.data);
                 return response.data;
             });
