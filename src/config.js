@@ -1,4 +1,4 @@
-config = {
+/*config = {
    modules: [{
        name: 'AbstractModule'
    },{
@@ -13,5 +13,5 @@ config = {
            param2: 'bbb'
        }
    }]
-};
+};*/
 

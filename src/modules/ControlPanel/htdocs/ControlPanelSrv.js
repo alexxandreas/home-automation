@@ -19,13 +19,13 @@
         
         
         function reload(){
-            return $http.get('/mha/modules/ControlPanel/api/modules').then(function(response){
+            return $http.get('modules/ControlPanel/api/modules').then(function(response){
                 return response.data;
             });
         }
         
         function start(name){
-            return $http.get('/mha/modules/ControlPanel/api/modules/'+name+'/start').then(function(response){
+            return $http.get('modules/ControlPanel/api/modules/'+name+'/start').then(function(response){
                 return response.data;
             }).finally(function(){
                 PanelsSrv.reload();
@@ -33,7 +33,7 @@
         }
         
         function stop(name){
-            return $http.get('/mha/modules/ControlPanel/api/modules/'+name+'/stop').then(function(response){
+            return $http.get('modules/ControlPanel/api/modules/'+name+'/stop').then(function(response){
                 return response.data;
             }).finally(function(){
                 PanelsSrv.reload();
@@ -41,7 +41,7 @@
         }
         
         function restart(name){
-            return $http.get('/mha/modules/ControlPanel/api/modules/'+name+'/restart').then(function(response){
+            return $http.get('modules/ControlPanel/api/modules/'+name+'/restart').then(function(response){
                 return response.data;
             }).finally(function(){
                 PanelsSrv.reload();
@@ -49,13 +49,13 @@
         }
         
         function sysUpdate(){
-            return $http.get('/mha/modules/ControlPanel/api/update').then(function(response){
+            return $http.get('modules/ControlPanel/api/update').then(function(response){
                 return response.data;
             });
         }
         
         function sysUpdateReload(){
-            return $http.get('/mha/modules/ControlPanel/api/updateReload').then(function(response){
+            return $http.get('modules/ControlPanel/api/updateReload').then(function(response){
                 return response.data;
             });
         }

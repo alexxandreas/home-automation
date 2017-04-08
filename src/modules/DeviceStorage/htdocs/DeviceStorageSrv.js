@@ -17,7 +17,7 @@
         
         
         function reload(){
-            return $http.get('/mha/modules/DeviceStorage/api/state').then(function(response){
+            return $http.get('modules/DeviceStorage/api/state').then(function(response){
                 return response.data;
             });
         }

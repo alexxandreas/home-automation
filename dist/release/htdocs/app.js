@@ -253,13 +253,13 @@ angular
         
         
         function reload(){
-            return $http.get('/mha/modules/ControlPanel/api/modules').then(function(response){
+            return $http.get('modules/ControlPanel/api/modules').then(function(response){
                 return response.data;
             });
         }
         
         function start(name){
-            return $http.get('/mha/modules/ControlPanel/api/modules/'+name+'/start').then(function(response){
+            return $http.get('modules/ControlPanel/api/modules/'+name+'/start').then(function(response){
                 return response.data;
             }).finally(function(){
                 PanelsSrv.reload();
@@ -267,7 +267,7 @@ angular
         }
         
         function stop(name){
-            return $http.get('/mha/modules/ControlPanel/api/modules/'+name+'/stop').then(function(response){
+            return $http.get('modules/ControlPanel/api/modules/'+name+'/stop').then(function(response){
                 return response.data;
             }).finally(function(){
                 PanelsSrv.reload();
@@ -275,7 +275,7 @@ angular
         }
         
         function restart(name){
-            return $http.get('/mha/modules/ControlPanel/api/modules/'+name+'/restart').then(function(response){
+            return $http.get('modules/ControlPanel/api/modules/'+name+'/restart').then(function(response){
                 return response.data;
             }).finally(function(){
                 PanelsSrv.reload();
@@ -283,13 +283,13 @@ angular
         }
         
         function sysUpdate(){
-            return $http.get('/mha/modules/ControlPanel/api/update').then(function(response){
+            return $http.get('modules/ControlPanel/api/update').then(function(response){
                 return response.data;
             });
         }
         
         function sysUpdateReload(){
-            return $http.get('/mha/modules/ControlPanel/api/updateReload').then(function(response){
+            return $http.get('modules/ControlPanel/api/updateReload').then(function(response){
                 return response.data;
             });
         }
@@ -394,7 +394,7 @@ angular
         
         
         function reload(){
-            return $http.get('/mha/modules/DeviceStorage/api/state').then(function(response){
+            return $http.get('modules/DeviceStorage/api/state').then(function(response){
                 return response.data;
             });
         }
@@ -441,7 +441,7 @@ angular
         	
             //var code = document.getElementById("JSprogram").value;
             
-            $http.get('/mha/modules/RemoteConsole/api/eval/' + $scope.input).then(function(response){
+            $http.get('modules/RemoteConsole/api/eval/' + $scope.input).then(function(response){
                 $scope.output = JSON.stringify(response.data, null, '  ');
             }, function(response){
                $scope.output = JSON.stringify(response && response.data || response, null, '  ');
@@ -491,7 +491,7 @@ angular
         }
         
         // function loadPanels(){
-        //     $http.get('/mha/modules/WebServer/api/panels').then(function(response){
+        //     $http.get('modules/WebServer/api/panels').then(function(response){
         //         $scope.panels = response.data;
         //     }, function(response){
         //         //$q.reject(response);

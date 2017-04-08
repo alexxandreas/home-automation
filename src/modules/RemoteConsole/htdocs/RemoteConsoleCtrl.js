@@ -33,7 +33,7 @@
         	
             //var code = document.getElementById("JSprogram").value;
             
-            $http.get('/mha/modules/RemoteConsole/api/eval/' + $scope.input).then(function(response){
+            $http.get('modules/RemoteConsole/api/eval/' + $scope.input).then(function(response){
                 $scope.output = JSON.stringify(response.data, null, '  ');
             }, function(response){
                $scope.output = JSON.stringify(response && response.data || response, null, '  ');

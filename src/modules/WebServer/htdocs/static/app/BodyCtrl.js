@@ -32,7 +32,7 @@
         }
         
         // function loadPanels(){
-        //     $http.get('/mha/modules/WebServer/api/panels').then(function(response){
+        //     $http.get('modules/WebServer/api/panels').then(function(response){
         //         $scope.panels = response.data;
         //     }, function(response){
         //         //$q.reject(response);
