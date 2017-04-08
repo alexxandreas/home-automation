@@ -4,8 +4,6 @@ config = {
    },{
        name: 'WebServer'
    },{
-       name: 'WebApp'
-   },{
        name: 'DeviceStorage'
    },{
        name: 'TestModule', 
