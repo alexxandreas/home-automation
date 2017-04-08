@@ -49,6 +49,7 @@ define('DeviceStorage', ['AbstractModule', 'WebServer'], function(AbstractModule
           'hallway.motionSensor':   [dict.hallway, dict.sensor, dict.motion],   // FGMS-001
           'hallway.lightSensor':    [dict.hallway, dict.sensor, dict.light],    // FGMS-001
           'hallway.tempSensor':     [dict.hallway, dict.sensor, dict.temp],     // FGMS-001
+          'hallway.door':           [dict.hallway, dict.door],                  // FGRGBWM-441  (x.3 или x.5)
 
           'corridor.switch220':     [dict.corridor, dict.light, dict.L220],     // FGD-211
           'corridor.motionSensor':  [dict.corridor, dict.sensor, dict.motion],  // FGMS-001
