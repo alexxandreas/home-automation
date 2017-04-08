@@ -42,6 +42,7 @@ angular
 
     ControlPanelCtrl.$inject = [
         '$scope',
+        '$rootScope',
         '$http',
         '$timeout',
         '$window',
@@ -52,6 +53,7 @@ angular
 
     function ControlPanelCtrl(
         $scope,
+        $rootScope,
         $http,
         $timeout,
         $window,
@@ -132,9 +134,11 @@ angular
         };
         
         $scope.updateReload = function(){
+            $scope.showWait();
             ControlPanelSrv
                 .sysUpdateReload()
                 .then(function(data){
+                    $scope.hideWait();
                     console.log(data);
                     
                     $scope.showAlert('Обновление', data.updateResult[1])
@@ -142,8 +146,9 @@ angular
                             $window.location.reload();
                         });
                 }, function(response){
-                    
+                    $scope.hideWait();
                 })
+                
         };
         
         $scope.showAlert = function(title, message){
@@ -186,6 +191,36 @@ angular
                 }
               }
         }
+        
+        $scope.showWait = function(){
+            $mdDialog.show({
+                // controller: 'waitCtrl',
+                controller: waitCtrl,
+                template: '<md-dialog style="background-color:transparent;box-shadow:none">' +
+                            '<div layout="row" layout-sm="column" layout-align="center center" aria-label="wait">' +
+                                '<md-progress-circular md-mode="indeterminate" ></md-progress-circular>' +
+                            '</div>' +
+                         '</md-dialog>',
+                parent: angular.element(document.body),
+                clickOutsideToClose:false,
+                fullscreen: false
+            })
+            .then(function(answer) {
+            
+            });
+            
+            function waitCtrl($rootScope, $mdDialog) {
+                $rootScope.$on("hide_wait", function (event, args) {
+                    $mdDialog.cancel();
+                });
+            }
+          
+        }
+   
+        $scope.hideWait = function(){
+            $rootScope.$emit("hide_wait"); 
+        }
+        
         $scope.reload();
         
         
