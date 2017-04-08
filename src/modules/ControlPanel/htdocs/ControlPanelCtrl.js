@@ -104,10 +104,15 @@
                     $scope.hideWait();
                     console.log(data);
                     
-                    $scope.showAlert('Обновление', data.updateResult[1])
-                        .then(function(){
-                            $window.location.reload();
-                        });
+                    $scope.showAlert('Обновление', 
+                        'Обновление:\n' + 
+                        data.updateResult[1] + 
+                        '\n\nПерезагруженные модули:\n' + 
+                        data.reloadResult.join(', ')
+                    )
+                    .then(function(){
+                        $window.location.reload();
+                    });
                 }, function(response){
                     $scope.hideWait();
                 })
