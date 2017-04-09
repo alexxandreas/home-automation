@@ -1,0 +1,32 @@
+<md-dialog>
+  <form ng-cloak>
+    <md-toolbar>
+      <div class="md-toolbar-tools">
+        <h2>{{title}}</h2>
+      </div>
+    </md-toolbar>
+
+    <md-dialog-content>
+      <!--<div class="md-dialog-content" style="padding: 15px;" ng-bind-html="message">-->
+       
+      <!--</div>-->
+      <md-list>
+    
+        <!--<md-subheader class="md-no-sticky">Приложения</md-subheader>-->
+        
+        <md-divider ng-repeat-start="item in history"></md-divider>
+        <md-list-item ng-repeat-end class="noright">
+          <!--<img alt="{{ person.name }}" ng-src="{{ person.img }}" class="md-avatar" />-->
+          <p>{{ item.src }}</p>
+          <!--<md-checkbox class="md-secondary" ng-model="person.selected"></md-checkbox>-->
+        </md-list-item>
+        
+      </md-list>
+    </md-dialog-content>
+
+    <md-dialog-actions layout="row">
+      <span flex></span>
+      <md-button ng-click="cancel()">Cancel</md-button>
+    </md-dialog-actions>
+  </form>
+</md-dialog>

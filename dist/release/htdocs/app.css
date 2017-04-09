@@ -81,12 +81,12 @@ body {
   font-family: 'Material Icons';
   font-style: normal;
   font-weight: 400;
-  src: url(/mha/modules/WebApp/htdocs/iconfont/MaterialIcons-Regular.eot); /* For IE6-8 */
+  src: url(modules/WebApp/htdocs/iconfont/MaterialIcons-Regular.eot); /* For IE6-8 */
   src: local('Material Icons'),
        local('MaterialIcons-Regular'),
-       url(/mha/modules/WebApp/htdocs/static/app/iconfont/MaterialIcons-Regular.woff2) format('woff2'),
-       url(/mha/modules/WebApp/htdocs/static/app/iconfont/MaterialIcons-Regular.woff) format('woff'),
-       url(/mha/modules/WebApp/htdocs/static/app/iconfont/MaterialIcons-Regular.ttf) format('truetype');
+       url(modules/WebApp/htdocs/static/app/iconfont/MaterialIcons-Regular.woff2) format('woff2'),
+       url(modules/WebApp/htdocs/static/app/iconfont/MaterialIcons-Regular.woff) format('woff'),
+       url(modules/WebApp/htdocs/static/app/iconfont/MaterialIcons-Regular.ttf) format('truetype');
 }
 
 

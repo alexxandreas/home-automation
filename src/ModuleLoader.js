@@ -246,11 +246,13 @@
     
     ModuleLoader.prototype.loadData = function (key) {
     	var objName = 'MHA_' + key;
+    	this.log('loadData: ' + objName);
     	return loadObject(objName);
     };
     
     ModuleLoader.prototype.saveData = function (key, value) {
     	var objName = 'MHA_' + key;
+    	this.log('saveData: ' + objName);
     	saveObject(objName, value);
     };
   

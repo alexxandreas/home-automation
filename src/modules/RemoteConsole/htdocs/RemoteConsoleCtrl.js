@@ -7,6 +7,7 @@
         '$scope',
         '$http',
         '$timeout',
+        '$mdDialog',
         'RemoteConsoleSrv'
     ];
 
@@ -14,6 +15,7 @@
         $scope,
         $http,
         $timeout,
+        $mdDialog,
         RemoteConsoleSrv
     ) {
         
@@ -32,8 +34,45 @@
             $scope.output = item.result;
         };
         
-        $scope.showHistory = function(){
+        $scope.showHistory = function(history){
+            $mdDialog.show({
+              controller: DialogController,
+              //templateUrl: 'dialog1.tmpl.html',
+              templateUrl: '/views/RemoteConsole/htdocs/RemoteConsoleHistory.html',
+              parent: angular.element(document.body),
+              //targetEvent: ev,
+              locals: {
+                    title: "История запросов",
+                    history: history
+                    //message: $sce.trustAsHtml('<pre><code>'+message+'</code></pre>')
+              },
+              clickOutsideToClose:true,
+              fullscreen: true // Only for -xs, -sm breakpoints.
+            })
+            .then(function(answer) {
+              //$scope.status = 'You said the information was "' + answer + '".';
+            }, function() {
+              //$scope.status = 'You cancelled the dialog.';
+            });
+            var parentScope = $scope;
+            function DialogController($scope, $mdDialog, title, history) {
+                
+                $scope.title = title;
+                $scope.history = history;
+                
+                // $scope.hide = function() {
+                //   $mdDialog.hide();
+                // };
             
+                $scope.cancel = function() {
+                  $mdDialog.cancel();
+                };
+            
+                $scope.openHistoryItem = function(item) {
+                  parentScope.loadFromHistory(item);
+                  $mdDialog.cancel();
+                };
+            }
         };
         
         var time;

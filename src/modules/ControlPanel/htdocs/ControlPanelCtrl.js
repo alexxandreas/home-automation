@@ -86,13 +86,15 @@
         };
         
         $scope.update = function(){
+            $scope.showWait();
             ControlPanelSrv
                 .sysUpdate()
                 .then(function(data){
                     console.log(data);
+                    $scope.hideWait();
                     $scope.showAlert('Обновление', data.updateResult[1]);
                 }, function(response){
-                    
+                    $scope.hideWait();
                 })
         };
         
