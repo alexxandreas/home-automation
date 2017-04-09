@@ -250,7 +250,7 @@
     };
     
     ModuleLoader.prototype.saveData = function (key, value) {
-    	var objName = 'MHA' + key;
+    	var objName = 'MHA_' + key;
     	saveObject(objName, value);
     };
   

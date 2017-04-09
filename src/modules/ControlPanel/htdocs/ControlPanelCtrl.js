@@ -111,6 +111,7 @@
                         data.reloadResult.join(', ')
                     )
                     .then(function(){
+                        $scope.showWait();
                         $window.location.reload();
                     });
                 }, function(response){

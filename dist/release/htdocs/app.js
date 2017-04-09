@@ -148,6 +148,7 @@ angular
                         data.reloadResult.join(', ')
                     )
                     .then(function(){
+                        $scope.showWait();
                         $window.location.reload();
                     });
                 }, function(response){
@@ -414,18 +415,25 @@ angular
     RemoteConsoleCtrl.$inject = [
         '$scope',
         '$http',
-        '$timeout'
+        '$timeout',
+        'RemoteConsoleSrv'
     ];
 
     function RemoteConsoleCtrl(
         $scope,
         $http,
-        $timeout
+        $timeout,
+        RemoteConsoleSrv
     ) {
         
         $scope.input = "(function(){\n\n})()";
         $scope.output = "";
         $scope.status = "";
+        
+        RemoteConsoleSrv.getHistory().then(function(history){
+            if (history.length > 0)
+                $scope.input = history[history.length-1];
+        });
         
         var time;
         
@@ -441,8 +449,7 @@ angular
             //tnode.innerHTML = "running...";
         	
             //var code = document.getElementById("JSprogram").value;
-            
-            $http.get('modules/RemoteConsole/api/eval/' + $scope.input).then(function(response){
+            RemoteConsoleSrv.run($scope.input).then(function(response){
                 $scope.output = JSON.stringify(response.data, null, '  ');
             }, function(response){
                $scope.output = JSON.stringify(response && response.data || response, null, '  ');
@@ -458,6 +465,57 @@ angular
 }());
 
 
+(function () {
+    "use strict";
+    angular.module('WebApp')
+        .factory('RemoteConsoleSrv', RemoteConsoleSrv);
+
+
+    // инициализируем сервис
+    //angular.module('WebApp').run(['RemoteConsoleSrv', function(ApiSrv) {  }]);
+    
+    RemoteConsoleSrv.$inject = [
+        '$http',
+        '$q'
+    ];
+    
+    function RemoteConsoleSrv(
+        $http,
+        $q
+    ) {
+        
+        
+        function run(str){
+            return $http.get('modules/RemoteConsole/api/eval/' + str);
+            history.push(str);
+        }
+        
+        
+        var history = [];
+        function getHistory(){
+            return $q(function(resolve, reject){
+                if (history){
+                    resolve(history);
+                } else {
+                    $http.get('modules/RemoteConsole/api/history').then(function(response){
+                        history = response.data;
+                        resolve(history);
+                    }, function(response){
+                       //history = [];
+                       resolve(history);
+                    })
+                }
+            })
+        }
+        
+        var me = {
+            run: run,
+            getHistory: getHistory
+        };
+        
+        return me;
+    }
+}());
 (function () {
     "use strict";
     angular.module('WebApp')

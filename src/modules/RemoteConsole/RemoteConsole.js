@@ -17,20 +17,37 @@ define('RemoteConsole', ['AbstractModule', 'WebServer'], function(AbstractModule
     RemoteConsole.prototype._initFrontend = function(){
         var ws = WebServer;
         
+        var history = [];
+        try {
+            history = this.loadData('history') || [];
+        } catch (err){ }
+        
+        
     	ws.addRoute('/modules/'+this.name+'/api/eval/:code', function(args){
 	        var code = args[0];
-	        
 	        try {
+	            addToHistory(code);
 	            var result = eval(code);
 	            return ws.sendJSON(result);
 	        } catch (err){
 	            return ws.sendError(500, {text: err.toString(), stack: err.stack});
 	        }
-	       
-	        //return ws.sendJSON(data);
     	}, this);
     	
+    	ws.addRoute('/modules/'+this.name+'/api/history', function(args){
+	        try {
+	            return ws.sendJSON(history);
+	        } catch (err){
+	            return ws.sendError(500, {text: err.toString(), stack: err.stack});
+	        }
+    	}, this);
     	
+    	function addToHistory(code){
+    	    try {
+        	    history.push(code);
+        	    this.saveData('history', history);
+    	    } catch (err) {}
+    	}
     	
     	WebServer.addPanel({
     	    key: this.name,

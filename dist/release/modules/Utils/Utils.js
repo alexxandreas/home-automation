@@ -119,7 +119,7 @@ define('Utils', null, function(){
                     if (!dev) return true; // оставляем в массиве
                     
                     dev.MHA.onLevelChange(obj.handler, this);
-                    this.handlers.push(obj);
+                    this._handlers.push(obj);
                     
                     this.log('addDeviceHandler: ' + dev.MHA.key);
                     return false; // удаляем из массива

@@ -6,18 +6,25 @@
     RemoteConsoleCtrl.$inject = [
         '$scope',
         '$http',
-        '$timeout'
+        '$timeout',
+        'RemoteConsoleSrv'
     ];
 
     function RemoteConsoleCtrl(
         $scope,
         $http,
-        $timeout
+        $timeout,
+        RemoteConsoleSrv
     ) {
         
         $scope.input = "(function(){\n\n})()";
         $scope.output = "";
         $scope.status = "";
+        
+        RemoteConsoleSrv.getHistory().then(function(history){
+            if (history.length > 0)
+                $scope.input = history[history.length-1];
+        });
         
         var time;
         
@@ -33,8 +40,7 @@
             //tnode.innerHTML = "running...";
         	
             //var code = document.getElementById("JSprogram").value;
-            
-            $http.get('modules/RemoteConsole/api/eval/' + $scope.input).then(function(response){
+            RemoteConsoleSrv.run($scope.input).then(function(response){
                 $scope.output = JSON.stringify(response.data, null, '  ');
             }, function(response){
                $scope.output = JSON.stringify(response && response.data || response, null, '  ');
