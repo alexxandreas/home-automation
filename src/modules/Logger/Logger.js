@@ -10,7 +10,7 @@ define('Logger', ['AbstractModule', 'WebServer'], function(AbstractModule, WebSe
   
         this.logData = controller.MHA.logData;
         if (this.logData) 
-            this.log(this.logData.length);
+            this.log(this.logData.length.toString());
         else this.log('no logData');
         //this.ML = MHA.ModuleLoader;
         //this.modules = MHA.ModuleLoader.modules;
