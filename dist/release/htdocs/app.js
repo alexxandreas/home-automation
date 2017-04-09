@@ -431,9 +431,19 @@ angular
         $scope.status = "";
         
         RemoteConsoleSrv.getHistory().then(function(history){
-            if (history.length > 0)
-                $scope.input = history[history.length-1];
+            if (history.length > 0){
+                $scope.loadFromHistory([history.length-1]);
+            }
         });
+        
+        $scope.loadFromHistory = function(item){
+            $scope.input = item.src;
+            $scope.output = item.result;
+        };
+        
+        $scope.showHistory = function(){
+            
+        };
         
         var time;
         
