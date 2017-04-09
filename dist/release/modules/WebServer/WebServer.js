@@ -46,7 +46,7 @@ define('WebServer', ['AbstractModule'], function(AbstractModule){
      */
     WebServer.prototype.addRoute = function(route, handler, scope){
         var obj = {
-            pattern: new RegExp('^'+route.replace(/:\w+/g, '([^.]+)')+'$'),
+            pattern: new RegExp('^'+route.replace(/:\w+/g, '([^.]+)')),
             callback: scope ? handler.bind(scope) : handler
         } 
         this.routes.push(obj);
