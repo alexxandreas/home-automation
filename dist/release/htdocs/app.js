@@ -677,7 +677,7 @@ angular
     
     function TrustAsHtmlFltr($sce){
         return function trustAsHtml(value){
-            return $sce.trustAsHtml(value)
+            return $sce.trustAsHtml(value);
         }
     }
     

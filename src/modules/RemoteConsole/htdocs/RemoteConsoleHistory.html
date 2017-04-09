@@ -14,7 +14,7 @@
     
         <!--<md-subheader class="md-no-sticky">Приложения</md-subheader>-->
         
-        <md-divider ng-repeat-start="item in history"></md-divider>
+        <md-divider ng-repeat-start="item in history | orderBy: reverse"></md-divider>
         <md-list-item ng-repeat-end class="noright" ng-click="openHistoryItem(item)">
             <div layout="row" style="width: 100%;">
                 <!--<img alt="{{ person.name }}" ng-src="{{ person.img }}" class="md-avatar" />-->
