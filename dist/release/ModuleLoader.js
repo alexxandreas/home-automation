@@ -147,6 +147,7 @@
 				module.created = true;
 			} catch(err) {
 				this.log('startModule Error creating module ' + module.name + ':\n' + err.toString() + '\n' + err.stack);
+				this.unloadModule(name);
 			}
 		}
     };
@@ -160,10 +161,9 @@
             this.log('unloadModule Error: module ' + name + ' not found!');
             return;
         }
-        if (!module.module){
-            //this.log('unloadModule Error: module ' + name + ' not created!');
-            return;
-        }
+        // if (!module.module){
+        //     return;
+        // }
         
         var deps = this._getDepsTree(name);
         
