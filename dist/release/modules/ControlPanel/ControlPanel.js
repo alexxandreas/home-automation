@@ -45,7 +45,7 @@ define('ControlPanel', ['AbstractModule', 'WebServer'], function(AbstractModule,
     	ws.addRoute('/modules/'+this.name+'/api/modules/:name/start', function(args){
     	    var name = args[0];
     	       
-            this.ML.loadModule(name);
+            this.ML.activateModule(name);
 	        
 	        return ws.sendJSON({success:true});
     	}, this);
@@ -53,7 +53,7 @@ define('ControlPanel', ['AbstractModule', 'WebServer'], function(AbstractModule,
     	ws.addRoute('/modules/'+this.name+'/api/modules/:name/stop', function(args){
     	    var name = args[0];
     	       
-	        var res = this.ML.unloadModule(name);
+	        var res = this.ML.deactivateModule(name);
 	        if (!res || !res.length) 
 	            return ws.sendJSON({success:false});
 	        else 
@@ -64,7 +64,7 @@ define('ControlPanel', ['AbstractModule', 'WebServer'], function(AbstractModule,
     	ws.addRoute('/modules/'+this.name+'/api/modules/:name/restart', function(args){
     	    var name = args[0];
     	       
-	        var res = this.ML.unloadModule(name, true);
+	        var res = this.ML.restartModule(name);
 	        if (!res || !res.length) 
 	            return ws.sendJSON({success:false});
 	        else 
@@ -84,7 +84,7 @@ define('ControlPanel', ['AbstractModule', 'WebServer'], function(AbstractModule,
     	ws.addRoute('/modules/'+this.name+'/api/updateReload', function(args){
     	    try {
     	        var updateResult = system('bash /opt/z-way-server/automation/modules/MyHomeAutomation/update.bash');
-    	        var reloadResult = this.ML.unloadModule('AbstractModule', true);
+    	        var reloadResult = this.ML.restartModule('AbstractModule');
     	        return ws.sendJSON({success:true, updateResult:updateResult, reloadResult:reloadResult});
     	    } catch (err){
     	        return ws.sendJSON({success:false, message: err.toString(), stack: err.stack});

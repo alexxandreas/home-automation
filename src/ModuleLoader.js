@@ -36,7 +36,7 @@
         setTimeout((function(){
             // загружаем модули из конфига
             Object.keys(this.modulesConfig).forEach(function(name){
-                this.loadModule(name);
+                this._loadModule(name);
             },this);
         }).bind(this), 1);
     }
@@ -68,7 +68,7 @@
     };
     
     
-    ModuleLoader.prototype.loadModule = function(name){
+    ModuleLoader.prototype._loadModule = function(name){
         var module = this.modules[name];
         if (module && module.loaded){
             return;
@@ -92,7 +92,7 @@
     		module.loaded = true;
     	} catch (err){
     		this.log('loadModule: Error: ' + err.toString() + '\n' + err.stack);
-    		//this.unloadModules();
+    		//this._unloadModules();
     		return;
     	}
     };
@@ -129,7 +129,7 @@
         
         module.deps.forEach(function(depName){
             // зависимости загружаются и запускаются
-            this.loadModule(depName);
+            this._loadModule(depName);
         }, this);
         
         
@@ -147,7 +147,7 @@
 				module.created = true;
 			} catch(err) {
 				this.log('startModule Error creating module ' + module.name + ':\n' + err.toString() + '\n' + err.stack);
-				this.unloadModule(name);
+				this._unloadModule(name);
 			}
 		}
     };
@@ -155,7 +155,7 @@
     	
     // выгружает модуль и все его зависимости
     // возвращат массив затронутых модулей
-    ModuleLoader.prototype.unloadModule = function(name, reload){
+    ModuleLoader.prototype._unloadModule = function(name, reload){
         var module = this.modules[name];
         if (!module){
             this.log('unloadModule Error: module ' + name + ' not found!');
@@ -186,7 +186,7 @@
         
         deps = deps.reverse();
         deps.forEach(function(depName){
-            this.loadModule(depName);
+            this._loadModule(depName);
         }, this);
         
         return deps;
@@ -217,15 +217,23 @@
     };
     
     ModuleLoader.prototype.activateModule = function(name){
-        this.loadModule(name);
+        this._loadModule(name);
         this.modulesConfig[name] = true;
+        this.saveModulesConfig();
     };
     
     ModuleLoader.prototype.deactivateModule = function(name){
-        var deps = this.unloadModule(name);
+        var deps = this._unloadModule(name);
         deps.forEach(function(depName){
             delete this.modulesConfig[depName];
         }, this);
+        this.saveModulesConfig();
+        return deps;
+    };
+    
+    ModuleLoader.prototype.restartModule = function(name){
+        var deps = this._unloadModule(name, true);
+        return deps;
     };
     
     
@@ -264,7 +272,7 @@
         this.log('stop');
         // выгружаем модули
         Object.keys(this.modules).forEach(function(name){
-            this.unloadModule(name);
+            this._unloadModule(name);
         },this);
     }
     

@@ -14,16 +14,11 @@
     
         <!--<md-subheader class="md-no-sticky">Приложения</md-subheader>-->
         
-        <md-divider ng-repeat-start="item in history | orderBy: reverse"></md-divider>
+        <md-divider ng-repeat-start="item in history | orderBy:'-'"></md-divider>
         <md-list-item ng-repeat-end class="noright" ng-click="openHistoryItem(item)">
             <div layout="row" style="width: 100%;">
-                <!--<img alt="{{ person.name }}" ng-src="{{ person.img }}" class="md-avatar" />-->
                 <div  flex="50" style="padding: 5px;" ng-bind-html="makeHTML(item.src)"></div>
                 <div  flex="50" style="padding: 5px;" ng-bind-html="makeHTML(item.result)"></div>
-                <!--<p class="" flex="50">{{ item.src }}</p>-->
-                <!--<p class="" flex="50">{{ item.result }}</p>-->
-                <!--<md-checkbox class="md-secondary" ng-model="person.selected"></md-checkbox>-->
-          </div>
         </md-list-item>
         
       </md-list>
