@@ -32,19 +32,22 @@ define('Hallway', ['AbstractRoom'], function(AbstractRoom){
         }];
         
         this.settings = this.settings || {};
-        this.settings.userModeTimeout: 15, // таймаут сброса пользовательского режима, мин. Таймер запускается после выключения света
-        this.settings.intMotionTimeout: 0.5, // таймаут выключения света после окончания движения ВНУТРИ, мин
-        this.settings.extMotionTimeout: 0.5, // таймаут выключения света после окончания движения СНАРУЖИ, мин
-        this.settings.lightOffTimeout: 15, // таймаут обязательного выключения света (когда не срабатывает датчик движения)
-        this.settings.lastLightTimeout: 3, // таймаут сброса последнего света (12 или 220). Последний свет запоминается и включается при новом движении
+        this.settings.userModeTimeout = 15; // таймаут сброса пользовательского режима, мин. Таймер запускается после выключения света
+        this.settings.intMotionTimeout = 0.5; // таймаут выключения света после окончания движения ВНУТРИ, мин
+        this.settings.extMotionTimeout = 0.5; // таймаут выключения света после окончания движения СНАРУЖИ, мин
+        this.settings.lightOffTimeout = 15; // таймаут обязательного выключения света (когда не срабатывает датчик движения)
+        this.settings.lastLightTimeout = 3; // таймаут сброса последнего света (12 или 220). Последний свет запоминается и включается при новом движении
         
 
-        
+        this.init();
     }
 
     inherits(Hallway, AbstractRoom);
 
 
+    Hallway.prototype.init = function(){
+        Hallway.super_.prototype.init.apply(this, arguments);
+    };
     
     Hallway.prototype.stop = function(){
         Hallway.super_.prototype.stop.apply(this, arguments);

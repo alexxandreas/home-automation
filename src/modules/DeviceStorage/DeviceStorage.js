@@ -277,6 +277,12 @@ define('DeviceStorage', ['AbstractModule', 'WebServer'], function(AbstractModule
             _baseLevelChangeHandler: function(){
                 vDev.MHA.getLevel(); 
             },
+            // отписка от события изменения значения
+            offLevelChange: function(handler, scope){
+                vDev.MHA._levelChangeHandlers = vDev.MHA._levelChangeHandlers.filter(function(obj){
+                  return (obj.handler != handler);
+                });
+            },
             
             // массив модулей, которые используют девайс в текущий момент
             // когда модуль включает девайс - он добавляется в этот массив

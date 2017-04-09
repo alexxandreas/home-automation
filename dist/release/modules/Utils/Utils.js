@@ -103,6 +103,7 @@ define('Utils', null, function(){
             // хендлер вешается только на MHA.onLevelChange
             this.addHandler = function(getter, handler){
                 //this._deferredHandlers[key] = handler;
+                
                 this._deferredHandlers.push({
                     getter: getter, handler: handler
                 });
@@ -119,13 +120,17 @@ define('Utils', null, function(){
                     
                     dev.MHA.onLevelChange(obj.handler, this);
                     this.handlers.push(obj);
+                    
+                    this.log('addDeviceHandler: ' + dev.MHA.key);
                     return false; // удаляем из массива
                 }, this);
                 
                 
                 // запускаем таймер, чтобы через какое-то время снова подпиаться
                 // на несуществующие в данный момент девайсы
+                var timeout = 10; // sec
                 if (this._deferredHandlers.length > 0){
+                    this.log('addDeviceHandler: ' + this._deferredHandlers.length + ' devices not found! Repeat after ' + timeout + ' seconds');
                      this._handlersTimer = setTimeout(this._addHandlers.bind(this), 10*1000);
                 } 
             };
@@ -141,6 +146,7 @@ define('Utils', null, function(){
                 
                 //var handler = this._handlers[key];
                 dev.MHA.offLevelChange(obj.handler, this);
+                this.log('removeDeviceHandler: ' + dev.MHA.key);
             }, this);
             this._handlers = [];
         }
