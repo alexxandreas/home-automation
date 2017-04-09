@@ -71,6 +71,8 @@ angular
                 Object.keys(data).forEach(function(name){
                     $scope.modules[name] = angular.extend($scope.modules[name] || {}, data[name]);
                 });
+            }).finally(function(){
+                $scope.hideWait();
             })
         }
         
@@ -84,6 +86,7 @@ angular
         };
         
         $scope.start = function(module){
+            $scope.showWait();
             ControlPanelSrv
                 .start(module.name)
                 .then(function(data){}, function(){})
@@ -93,6 +96,7 @@ angular
         };
         
         $scope.stop = function(module){
+            $scope.showWait();
             ControlPanelSrv
                 .stop(module.name)
                 .then(function(data){}, function(){})
@@ -102,6 +106,7 @@ angular
         };
         
         $scope.restart = function(module){
+            $scope.showWait();
             ControlPanelSrv
                 .restart(module.name)
                 .then(function(data){}, function(){})
@@ -160,23 +165,7 @@ angular
         };
         
         $scope.showAlert = function(title, message){
-            //message = message.replace('\n', '<br>');
-            // return $mdDialog.show(
-            //     $mdDialog.alert()
-            //         .parent(angular.element(document.querySelector('body')))
-            //         .clickOutsideToClose(false)
-            //         //.title(title)
-            //         //.textContent(message)
-            //         //.ok('OK')
-                    
-                    
-            //         //controller: DialogController,
-            //         .templateUrl: 'ControlPanelAlert.html'
-            //         //parent: angular.element(document.body),
-            //         //targetEvent: ev,
-            //         //clickOutsideToClose:true,
-            //         //fullscreen: $scope.customFullscreen // Only for -xs, -sm breakpoints.
-            // );
+        
             return $mdDialog.show({
                 //controller: DialogController,
                 templateUrl: '/views/ControlPanel/htdocs/ControlPanelAlert.html',
@@ -205,7 +194,7 @@ angular
                 // controller: 'waitCtrl',
                 controller: waitCtrl,
                 template: '<md-dialog style="background-color:transparent;box-shadow:none">' +
-                            '<div layout="row" layout-sm="column" layout-align="center center" aria-label="wait">' +
+                            '<div layout="row" layout-sm="column" layout-align="center center" aria-label="wait" style="overflow: hidden">' +
                                 '<md-progress-circular md-mode="indeterminate" ></md-progress-circular>' +
                             '</div>' +
                          '</md-dialog>',
