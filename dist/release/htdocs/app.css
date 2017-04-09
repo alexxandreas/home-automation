@@ -136,10 +136,10 @@ pre {
   white-space: -o-pre-wrap;
   word-wrap: break-word;
   margin: 0;
+  line-height: normal;
 }
 
 code {
   font-family: Courier, 'New Courier', monospace;
   font-size: 12px;
-  line-height: normal;
 }
