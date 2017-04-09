@@ -29,6 +29,7 @@ define('ControlPanel', ['AbstractModule', 'WebServer'], function(AbstractModule,
 	            var module = this.modules[name];
 	            var obj = {
 	                name: module.name,
+                    visible: module.visible || false, // видимость модуля в UI
                     deps: module.deps, // текущий модуль зависит от этих
             		loaded: module.loaded, // файл модуля загружен из ФС и выполнен
             		//func: null, // функция-конструктор, определенная через define

@@ -63,6 +63,10 @@
                 		module: null // ссылка на созданный модуль
                     }
                 }
+                var showInUIFile = fs.stat(folder + name + '/' + '.showInUI');
+                if (statFile && statFile.type == 'file'){
+                    this.modules[name].visible = true;
+                }
             }
         }, this);
     };
