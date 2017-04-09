@@ -141,4 +141,5 @@ pre {
 code {
   font-family: Courier, 'New Courier', monospace;
   font-size: 12px;
+  line-height: normal;
 }

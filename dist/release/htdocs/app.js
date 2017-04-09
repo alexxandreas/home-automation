@@ -436,7 +436,7 @@ angular
         
         RemoteConsoleSrv.getHistory().then(function(history){
             if (history.length > 0){
-                $scope.loadFromHistory([history.length-1]);
+                $scope.loadFromHistory(history[history.length-1]);
             }
         });
         
@@ -505,7 +505,7 @@ angular
             //tnode.innerHTML = "running...";
         	
             //var code = document.getElementById("JSprogram").value;
-            RemoteConsoleSrv.run(encodeURIComponent($scope.input)).then(function(data){
+            RemoteConsoleSrv.run($scope.input).then(function(data){
                 $scope.output = data;
             }, function(response){ })
             .finally(function(){
@@ -543,7 +543,8 @@ angular
         var historyLoaded = false;
         
         function run(str){
-            return $http.get('modules/RemoteConsole/api/eval/' + str).then(function(response){
+            var encoded = encodeURIComponent(str);
+            return $http.get('modules/RemoteConsole/api/eval/' + encoded).then(function(response){
                 var data = JSON.stringify(response.data, null, '  ');
                 history.push({
                     src: str,

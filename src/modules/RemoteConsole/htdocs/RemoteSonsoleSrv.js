@@ -21,7 +21,8 @@
         var historyLoaded = false;
         
         function run(str){
-            return $http.get('modules/RemoteConsole/api/eval/' + str).then(function(response){
+            var encoded = encodeURIComponent(str);
+            return $http.get('modules/RemoteConsole/api/eval/' + encoded).then(function(response){
                 var data = JSON.stringify(response.data, null, '  ');
                 history.push({
                     src: str,

@@ -64,6 +64,9 @@ define('RemoteConsole', ['AbstractModule', 'WebServer'], function(AbstractModule
                 src: src,
                 result: result
             });
+            while (this.history.length > 50){
+                this.history.shift();
+            }
     	    this.saveData('history', this.history);
 	    } catch (err) {
 	        this.log('Error in addToHistory: '  + err.toString() + ' ' + err.stack);

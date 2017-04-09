@@ -25,7 +25,7 @@
         
         RemoteConsoleSrv.getHistory().then(function(history){
             if (history.length > 0){
-                $scope.loadFromHistory([history.length-1]);
+                $scope.loadFromHistory(history[history.length-1]);
             }
         });
         
@@ -94,7 +94,7 @@
             //tnode.innerHTML = "running...";
         	
             //var code = document.getElementById("JSprogram").value;
-            RemoteConsoleSrv.run(encodeURIComponent($scope.input)).then(function(data){
+            RemoteConsoleSrv.run($scope.input).then(function(data){
                 $scope.output = data;
             }, function(response){ })
             .finally(function(){
