@@ -10,7 +10,7 @@ class="ControlPanel">
     
     <md-subheader class="md-no-sticky">Приложения</md-subheader>
     
-    <md-divider ng-repeat-start="(name, module) in modules" | filter: {'module.visible': true}></md-divider>
+    <md-divider ng-repeat-start="(name, module) in modules"></md-divider>
     <md-list-item ng-repeat-end class="noright">
       <!--<img alt="{{ person.name }}" ng-src="{{ person.img }}" class="md-avatar" />-->
       <p>{{ name }}</p>

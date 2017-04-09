@@ -7,13 +7,11 @@
 	prefixLog: function(prefix, message);
 	modules: {name -> MODULE}
 	
-
-
-
 */
 function MyHomeAutomation (id, controller) {
     // Call superconstructor first (AutomationModule)
     this.log = MyHomeAutomation.prototype.prefixLog.bind(this, 'MyHomeAutomation');
+    this.logData = [];
     MyHomeAutomation.super_.call(this, id, controller);
 }
 
@@ -159,13 +157,24 @@ MyHomeAutomation.prototype.stop = function () {
 
 MyHomeAutomation.prototype.prefixLog = function (prefix, data) {
 	//console.log('[MyHomeAutomation_'+this.id + (this.module && this.module.name ? ' ('+this.module.name+')' : '') + '] ' + data);
+	
 	if (!data) {
-		console.log('[MHA] ' + prefix + data);
+		//console.log('[MHA] ' + prefix + data);
+		log.call(this, '[MHA] ' + prefix + data)
 		return;
 	}
 	data.split('\n').forEach(function(line){
-		console.log('[MHA] ' + prefix + ' ' + line);	
+		//console.log('[MHA] ' + prefix + ' ' + line);	
+		log.call(this, '[MHA] ' + prefix + ' ' + line);	
 	})
+	
+	function log(data){
+		console.log(data);
+		this.logData.push({
+			time: Date.now(),
+			data: data
+		})
+	}
 	
 };
 

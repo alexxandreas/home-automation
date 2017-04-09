@@ -32,6 +32,7 @@
         $scope.reload = function(){
             ControlPanelSrv.reload().then(function(data){
                 Object.keys(data).forEach(function(name){
+                    if (!data[name].visible) return;
                     $scope.modules[name] = angular.extend($scope.modules[name] || {}, data[name]);
                 });
             }).finally(function(){

@@ -64,7 +64,7 @@
                     }
                 }
                 var showInUIFile = fs.stat(folder + name + '/' + '.showInUI');
-                if (statFile && statFile.type == 'file'){
+                if (showInUIFile && showInUIFile.type == 'file'){
                     this.modules[name].visible = true;
                 }
             }
@@ -267,6 +267,8 @@
     	this.log('saveData: ' + objName);
     	saveObject(objName, value);
     };
+  
+    
   
     ModuleLoader.prototype.log = function(data){
         return MHA.prefixLog(this.name, data);

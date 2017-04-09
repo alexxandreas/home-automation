@@ -69,6 +69,7 @@ angular
         $scope.reload = function(){
             ControlPanelSrv.reload().then(function(data){
                 Object.keys(data).forEach(function(name){
+                    if (!data[name].visible) return;
                     $scope.modules[name] = angular.extend($scope.modules[name] || {}, data[name]);
                 });
             }).finally(function(){
@@ -390,6 +391,96 @@ angular
                 return response.data;
             });
         }
+        
+        var me = {
+            reload: reload
+        };
+        
+        return me;
+    }
+}());
+(function () {
+    "use strict";
+    angular.module('WebApp')
+        .controller('LoggerCtrl', LoggerCtrl);
+
+    LoggerCtrl.$inject = [
+        '$scope',
+        '$rootScope',
+        '$http',
+        '$timeout',
+        '$window',
+        '$sce',
+        '$mdDialog',
+        'LoggerSrv'
+    ];
+
+    function LoggerCtrl(
+        $scope,
+        $rootScope,
+        $http,
+        $timeout,
+        $window,
+        $sce,
+        $mdDialog,
+        LoggerSrv
+    ) {
+        
+        $scope.logData = "";
+        reload();
+
+        var reloadTimeout;
+        function reload(){
+            LoggerSrv.reload().then(function(data){
+                //data.forEach(function(dev){                });
+                $scope.logData = data.join('\n');
+            }).finally(function(){
+                if (!$scope.$$destroyed) 
+                    reloadTimeout = $timeout(reload, 2000);
+            })
+        }
+
+        $scope.$on("$destroy", function() {
+            if (reloadTimeout) {
+                $timeout.cancel(reloadTimeout);
+            }
+        });
+        
+    }
+
+}());
+(function () {
+    "use strict";
+    angular.module('WebApp')
+        .factory('LoggerSrv', LoggerSrv);
+
+
+    // инициализируем сервис
+    //angular.module('WebApp').run(['LoggerSrv', function(ApiSrv) {  }]);
+    
+    LoggerSrv.$inject = [
+        '$http',
+        'PanelsSrv'
+    ];
+    
+    function LoggerSrv(
+        $http,
+        PanelsSrv
+    ) {
+        
+        var lastTime = 0;
+        var logArray = [];
+        
+        function reload(){
+            return $http.get('modules/Logger/api/getLog/' + lastTime).then(function(response){
+                var arr = response.data;
+                logArray = logArray.concat(arr).slice(-1000);
+                lastTime = logArray[logArray.length-1].time;
+                return logArray;
+            });
+        }
+        
+        
         
         var me = {
             reload: reload
