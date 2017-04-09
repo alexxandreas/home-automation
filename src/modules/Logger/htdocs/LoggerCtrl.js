@@ -32,7 +32,10 @@
         function reload(){
             LoggerSrv.reload().then(function(data){
                 //data.forEach(function(dev){                });
-                $scope.logData = data.join('\n');
+                $scope.logData = data.map(function(item){
+                    var date = new Date(item.time);
+                    return '[' + date.toLocaleDateString() + ' ' + date.toLocaleTimeString() + '] ' + item.data;
+                }).join('\n');
             }).finally(function(){
                 if (!$scope.$$destroyed) 
                     reloadTimeout = $timeout(reload, 2000);

@@ -87,10 +87,10 @@ MyHomeAutomation.prototype.prefixLog = function (prefix, data) {
 	
 	function log(data){
 		console.log(data);
-		controller.MHA.logData.push({
+		controller.MHA.logData = controller.MHA.logData.push({
 			time: Date.now(),
 			data: data
-		})
+		}).slice(-500);
 	}
 	
 };
