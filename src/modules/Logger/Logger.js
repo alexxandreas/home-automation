@@ -7,7 +7,7 @@ define('Logger', ['AbstractModule', 'WebServer'], function(AbstractModule, WebSe
         Logger.super_.call(this, config);
         this.name = 'Logger';
         this.log('construcror');
-
+  
         this.logData = controller.MHA.logData;
         if (this.logData) 
             this.log(this.logData.length);
