@@ -40,7 +40,7 @@ define('RemoteConsole', ['AbstractModule', 'WebServer'], function(AbstractModule
     	
     	ws.addRoute('/modules/'+this.name+'/api/history', function(args){
 	        try {
-	            return ws.sendJSON(history);
+	            return ws.sendJSON(this.history);
 	        } catch (err){
 	            return ws.sendError(500, {text: err.toString(), stack: err.stack});
 	        }

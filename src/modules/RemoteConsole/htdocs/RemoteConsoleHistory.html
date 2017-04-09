@@ -15,10 +15,15 @@
         <!--<md-subheader class="md-no-sticky">Приложения</md-subheader>-->
         
         <md-divider ng-repeat-start="item in history"></md-divider>
-        <md-list-item ng-repeat-end class="noright">
-          <!--<img alt="{{ person.name }}" ng-src="{{ person.img }}" class="md-avatar" />-->
-          <p>{{ item.src }}</p>
-          <!--<md-checkbox class="md-secondary" ng-model="person.selected"></md-checkbox>-->
+        <md-list-item ng-repeat-end class="noright" ng-click="openHistoryItem(item)">
+            <div layout="row">
+                <!--<img alt="{{ person.name }}" ng-src="{{ person.img }}" class="md-avatar" />-->
+                <div class="md-dialog-content" flex="50" style="padding: 15px;" ng-bind-html="makeHTML(item.src)">
+                <div class="md-dialog-content" flex="50" style="padding: 15px;" ng-bind-html="makeHTML(item.result)">
+                <!--<p class="" flex="50">{{ item.src }}</p>-->
+                <!--<p class="" flex="50">{{ item.result }}</p>-->
+                <!--<md-checkbox class="md-secondary" ng-model="person.selected"></md-checkbox>-->
+          </div>
         </md-list-item>
         
       </md-list>

@@ -56,7 +56,7 @@
                   //$scope.status = 'You cancelled the dialog.';
                 });
                 var parentScope = $scope;
-                function DialogController($scope, $mdDialog, title, history) {
+                function DialogController($scope, $mdDialog, $sce, title, history) {
                     
                     $scope.title = title;
                     $scope.history = history;
@@ -64,6 +64,9 @@
                     // $scope.hide = function() {
                     //   $mdDialog.hide();
                     // };
+                    $scope.makeHTML = function(value){
+                        return $sce.trustAsHtml('<pre><code>'+value+'</code></pre>')
+                    }
                 
                     $scope.cancel = function() {
                       $mdDialog.cancel();
