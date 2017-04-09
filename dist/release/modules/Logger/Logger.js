@@ -9,6 +9,9 @@ define('Logger', ['AbstractModule', 'WebServer'], function(AbstractModule, WebSe
         this.log('construcror');
 
         this.logData = controller.MHA.logData;
+        if (logData) 
+            this.log(logData.length);
+        else this.log('no logData');
         //this.ML = MHA.ModuleLoader;
         //this.modules = MHA.ModuleLoader.modules;
         
