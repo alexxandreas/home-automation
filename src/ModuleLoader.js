@@ -22,6 +22,7 @@
     function ModuleLoader(config) {
         this.name = 'ModuleLoader';
         
+        
         // список модулей в ФС
         //this.modulesFS = {}; 
         this.loadModulesList();

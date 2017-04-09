@@ -22,12 +22,13 @@
         var time;
         
         $scope.keyUp = function(event){
-            if (event.which==77 && event.ctrlKey) $scope.run();
+            if (event.which==13 && event.ctrlKey) $scope.run();
         }
         
         $scope.run = function(){
             
             time = new Date().getTime();
+            $scope.status = 'running...';
         	//var tnode = document.getElementById("JStiming");
             //tnode.innerHTML = "running...";
         	
@@ -38,7 +39,7 @@
             }, function(response){
                $scope.output = JSON.stringify(response && response.data || response, null, '  ');
             }).finally(function(){
-                $scope.status = ""+(new Date().getTime()-time)/1000;
+                $scope.status = ""+(new Date().getTime()-time)/1000 + ' sec';
             });
             
         	

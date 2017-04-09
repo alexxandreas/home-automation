@@ -29,8 +29,8 @@ MyHomeAutomation.prototype.init = function (config) {
     // Call superclass' init (this will process config argument and so on)
     MyHomeAutomation.super_.prototype.init.call(this, config);
 	
-	this.modules = {};
-	this.modulesGraph = {};
+	//this.modules = {};
+	//this.modulesGraph = {};
 	
 	this.fsRoot = 'modules/MyHomeAutomation/';
 	
@@ -60,6 +60,7 @@ MyHomeAutomation.prototype.start = function(){
 	}
 };
 
+/*
 MyHomeAutomation.prototype.loadModules = function(){
 	this.log('reading modules config...');
 
@@ -96,7 +97,9 @@ MyHomeAutomation.prototype.loadModules = function(){
 		}
 	}
 }
+*/
 
+/*
 // загрузка одного модуля. name - имя и название файла (должны совпадать)
 MyHomeAutomation.prototype.loadModule = function(name){
 	this.log('loadModule: loading module ' + name + '...');
@@ -119,9 +122,9 @@ MyHomeAutomation.prototype.loadModule = function(name){
 	}
 };
 
+*/
 
-
-
+/*
 MyHomeAutomation.prototype.unloadModules = function(){
 	this.log('unloading modules...');
 	for (var i = this.modulesConfig.modules.length-1; i >= 0; i--){
@@ -140,6 +143,7 @@ MyHomeAutomation.prototype.unloadModules = function(){
 
 	}
 }
+*/
 
 MyHomeAutomation.prototype.stop = function () {
 	this.log('stop');
