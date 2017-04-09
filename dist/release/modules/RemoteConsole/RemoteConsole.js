@@ -26,7 +26,7 @@ define('RemoteConsole', ['AbstractModule', 'WebServer'], function(AbstractModule
     	ws.addRoute('/modules/'+this.name+'/api/eval/:code', function(args){
 	        var code = args[0];
 	        try {
-	            addToHistory(code);
+	            //addToHistory(code);
 	            var result = eval(code);
 	            addToHistory(code, result);
 	            return ws.sendJSON(result);
@@ -54,7 +54,9 @@ define('RemoteConsole', ['AbstractModule', 'WebServer'], function(AbstractModule
                     result: result
                 });
         	    this.saveData('history', history);
-    	    } catch (err) {}
+    	    } catch (err) {
+    	        this.log('Error in addToHistory: '  + err.toString() + ' ' + err.stack);
+    	    }
     	}
     	
     	WebServer.addPanel({
