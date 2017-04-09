@@ -10,8 +10,9 @@
 */
 function MyHomeAutomation (id, controller) {
     // Call superconstructor first (AutomationModule)
-    this.log = MyHomeAutomation.prototype.prefixLog.bind(this, 'MyHomeAutomation');
     this.logData = [];
+    this.log = MyHomeAutomation.prototype.prefixLog.bind(this, 'MyHomeAutomation');
+    
     MyHomeAutomation.super_.call(this, id, controller);
 }
 
@@ -86,7 +87,7 @@ MyHomeAutomation.prototype.prefixLog = function (prefix, data) {
 	
 	function log(data){
 		console.log(data);
-		this.logData.push({
+		controller.MHA.logData.push({
 			time: Date.now(),
 			data: data
 		})
