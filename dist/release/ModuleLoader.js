@@ -63,7 +63,7 @@
                 		module: null // ссылка на созданный модуль
                     }
                 }
-                var showInUIFile = fs.stat(folder + name + '/' + '.showInUI');
+                var showInUIFile = fs.stat(folder + name + '/' + 'showInUI');
                 if (showInUIFile && showInUIFile.type == 'file'){
                     this.modules[name].visible = true;
                 }
