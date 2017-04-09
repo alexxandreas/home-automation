@@ -8,7 +8,7 @@ define('Logger', ['AbstractModule', 'WebServer'], function(AbstractModule, WebSe
         this.name = 'Logger';
         this.log('construcror');
 
-        this.logData = MHA.logData;
+        this.logData = controller.MHA.logData;
         //this.ML = MHA.ModuleLoader;
         //this.modules = MHA.ModuleLoader.modules;
         
