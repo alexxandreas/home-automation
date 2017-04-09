@@ -1,7 +1,3 @@
-.ControlPanel {
-    
-}
-
 .DeviceStorage {
     
     
@@ -18,6 +14,10 @@
 .DeviceStorage .greenButon {
     background-color: green;
 }
+.ControlPanel {
+    
+}
+
 .RemoteConsole {
     
 }
@@ -81,12 +81,12 @@ body {
   font-family: 'Material Icons';
   font-style: normal;
   font-weight: 400;
-  src: url(../modules/WebApp/htdocs/iconfont/MaterialIcons-Regular.eot); /* For IE6-8 */
+  src: url(../modules/WebServer/htdocs/iconfont/MaterialIcons-Regular.eot); /* For IE6-8 */
   src: local('Material Icons'),
        local('MaterialIcons-Regular'),
-       url(../modules/WebApp/htdocs/static/app/iconfont/MaterialIcons-Regular.woff2) format('woff2'),
-       url(../modules/WebApp/htdocs/static/app/iconfont/MaterialIcons-Regular.woff) format('woff'),
-       url(../modules/WebApp/htdocs/static/app/iconfont/MaterialIcons-Regular.ttf) format('truetype');
+       url(../modules/WebServer/htdocs/static/app/iconfont/MaterialIcons-Regular.woff2) format('woff2'),
+       url(../modules/WebServer/htdocs/static/app/iconfont/MaterialIcons-Regular.woff) format('woff'),
+       url(../modules/WebServer/htdocs/static/app/iconfont/MaterialIcons-Regular.ttf) format('truetype');
 }
 
 
