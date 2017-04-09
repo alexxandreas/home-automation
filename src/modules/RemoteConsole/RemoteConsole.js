@@ -26,6 +26,7 @@ define('RemoteConsole', ['AbstractModule', 'WebServer'], function(AbstractModule
         
     	ws.addRoute('/modules/'+this.name+'/api/eval/:code', function(args){
 	        var code = args[0];
+	        code = decodeURIComponent(code);
 	        try {
 	            //addToHistory(code);
 	            var result = eval(code);

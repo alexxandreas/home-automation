@@ -94,7 +94,7 @@
             //tnode.innerHTML = "running...";
         	
             //var code = document.getElementById("JSprogram").value;
-            RemoteConsoleSrv.run($scope.input).then(function(data){
+            RemoteConsoleSrv.run(encodeURIComponent($scope.input)).then(function(data){
                 $scope.output = data;
             }, function(response){ })
             .finally(function(){
