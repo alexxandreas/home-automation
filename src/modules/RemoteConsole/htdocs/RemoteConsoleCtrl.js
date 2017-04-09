@@ -15,7 +15,7 @@
         $timeout
     ) {
         
-        $scope.input = "";
+        $scope.input = "(function(){\n\n})()";
         $scope.output = "";
         $scope.status = "";
         
