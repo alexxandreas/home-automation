@@ -40,11 +40,10 @@
             //tnode.innerHTML = "running...";
         	
             //var code = document.getElementById("JSprogram").value;
-            RemoteConsoleSrv.run($scope.input).then(function(response){
-                $scope.output = JSON.stringify(response.data, null, '  ');
-            }, function(response){
-               $scope.output = JSON.stringify(response && response.data || response, null, '  ');
-            }).finally(function(){
+            RemoteConsoleSrv.run($scope.input).then(function(data){
+                $scope.output = data;
+            }, function(response){ })
+            .finally(function(){
                 $scope.status = ""+(new Date().getTime()-time)/1000 + ' sec';
             });
             

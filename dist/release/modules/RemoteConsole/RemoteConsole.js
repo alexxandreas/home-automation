@@ -28,9 +28,12 @@ define('RemoteConsole', ['AbstractModule', 'WebServer'], function(AbstractModule
 	        try {
 	            addToHistory(code);
 	            var result = eval(code);
+	            addToHistory(code, result);
 	            return ws.sendJSON(result);
 	        } catch (err){
-	            return ws.sendError(500, {text: err.toString(), stack: err.stack});
+	            var errObj = {text: err.toString(), stack: err.stack};
+	            addToHistory(code, errObj);
+	            return ws.sendError(500, errObj);
 	        }
     	}, this);
     	
@@ -42,9 +45,14 @@ define('RemoteConsole', ['AbstractModule', 'WebServer'], function(AbstractModule
 	        }
     	}, this);
     	
-    	function addToHistory(code){
+    	function addToHistory(src, data){
     	    try {
-        	    history.push(code);
+    	        var result = JSON.stringify(data, null, '  ').substr(0, 1000);
+        	    //history.push(code);
+        	    history.push({
+                    src: src,
+                    result: result
+                });
         	    this.saveData('history', history);
     	    } catch (err) {}
     	}

@@ -449,11 +449,10 @@ angular
             //tnode.innerHTML = "running...";
         	
             //var code = document.getElementById("JSprogram").value;
-            RemoteConsoleSrv.run($scope.input).then(function(response){
-                $scope.output = JSON.stringify(response.data, null, '  ');
-            }, function(response){
-               $scope.output = JSON.stringify(response && response.data || response, null, '  ');
-            }).finally(function(){
+            RemoteConsoleSrv.run($scope.input).then(function(data){
+                $scope.output = data;
+            }, function(response){ })
+            .finally(function(){
                 $scope.status = ""+(new Date().getTime()-time)/1000 + ' sec';
             });
             
@@ -484,24 +483,39 @@ angular
         $q
     ) {
         
+        var history = [];
+        var historyLoaded = false;
         
         function run(str){
-            return $http.get('modules/RemoteConsole/api/eval/' + str);
-            history.push(str);
+            return $http.get('modules/RemoteConsole/api/eval/' + str).then(function(response){
+                var data = JSON.stringify(response.data, null, '  ');
+                history.push({
+                    src: str,
+                    result: data
+                });
+                return data;
+            }, function(response){
+                var data = JSON.stringify(response && response.data || response, null, '  ');
+                history.push({
+                    src: str,
+                    result: data
+                }); 
+                return data;
+            });
         }
         
         
-        var history = [];
         function getHistory(){
             return $q(function(resolve, reject){
-                if (history){
+                if (historyLoaded){
                     resolve(history);
                 } else {
                     $http.get('modules/RemoteConsole/api/history').then(function(response){
                         history = response.data;
+                        historyLoaded = true;
                         resolve(history);
                     }, function(response){
-                       //history = [];
+                       historyLoaded = true;
                        resolve(history);
                     })
                 }
