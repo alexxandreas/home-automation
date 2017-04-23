@@ -91,7 +91,7 @@ MyHomeAutomation.prototype.prefixLog = function (prefix, data) {
 			time: Date.now(),
 			data: data
 		});
-		controller.MHA.logData = controller.MHA.logData.slice(-500);
+		//controller.MHA.logData = controller.MHA.logData.slice(-500);
 	}
 	
 };
