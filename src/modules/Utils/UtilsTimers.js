@@ -2,13 +2,8 @@
 global config, inherits, controller, MHA
 */
 
-/**
- * Utils.extend(this, Utils.timers)
- * Utils.extend(this, Utils.eventHandlers)
- * 
- */
-
-define('UtilsTimers', ['Utils'], function(Utils){
+(function(){
+    var Utils = require('Utils');
     
     Utils.prototype.timers = {
         init: function(){
@@ -61,5 +56,5 @@ define('UtilsTimers', ['Utils'], function(Utils){
         }
         
     }
-    
-});
+})();
+

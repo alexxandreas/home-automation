@@ -86,6 +86,7 @@
             this.log('loadModule ' + name);
     		//var config = moduleObj.config;
     		var define = this._define.bind(this);
+    		var require = this._require.bind(this);
     		
     		// TODO проверить, есть ли файл
     		var moduleStr = fs.load(MHA.fsRoot + 'modules/' + name + '/' + name + '.js');
@@ -114,6 +115,13 @@
 	    module.func = func;
 	    
 	    this._startModule(name);
+    };
+    
+    ModuleLoader.prototype._require = function(name) {
+        this.log('require ' + name);
+        this._loadModule(name);
+        var module = this.modules[name];
+        return module ? module.module : undefined;
     };
     
     ModuleLoader.prototype._startModule = function(name){
