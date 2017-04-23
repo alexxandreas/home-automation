@@ -1,5 +1,5 @@
 /*
-global config, inherits, controller, MHA
+global config, inherits, controller, MHA, asyncCall
 */
 
 (function(){
