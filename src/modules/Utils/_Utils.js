@@ -32,57 +32,57 @@ define('Utils', null, function(){
         
     }
     
-    Utils.prototype.timers = {
-        init: function(){
-            this.timers = {};
+    // Utils.prototype.timers = {
+    //     init: function(){
+    //         this.timers = {};
             
             
-            // запуск таймера. 
-            // name - уникальное название
-            // sec - время в секундах
-            // callback - функция обратного вызова
-            // continue - если true и такой таймер уже запущен - запускается таймер с наименьшим оставшимся временем
-            this.startTimer = function(name, sec, callback, _continue){
-                var oldTimer = this.timers[name];
-                oldTimer && oldTimer.timer && clearTimeout(oldTimer.timer);
-                if (oldTimer && oldTimer.offTime && _continue){
-                    var timeout = Math.min(sec * 1000, oldTimer.offTime - Date.now());
-                } else {
-                    var timeout = sec * 1000;
-                }
+    //         // запуск таймера. 
+    //         // name - уникальное название
+    //         // sec - время в секундах
+    //         // callback - функция обратного вызова
+    //         // continue - если true и такой таймер уже запущен - запускается таймер с наименьшим оставшимся временем
+    //         this.startTimer = function(name, sec, callback, _continue){
+    //             var oldTimer = this.timers[name];
+    //             oldTimer && oldTimer.timer && clearTimeout(oldTimer.timer);
+    //             if (oldTimer && oldTimer.offTime && _continue){
+    //                 var timeout = Math.min(sec * 1000, oldTimer.offTime - Date.now());
+    //             } else {
+    //                 var timeout = sec * 1000;
+    //             }
                 
-                var self = this;
-                this.timers[name] = {
-                    offTime: Date.now() + timeout,
-                    timer: setTimeout(function(){
-                        // иногда после stopTimer все равно вызывается callback (если время до вызова меньше секунды)
-                        if (!self.timers[name]) return; 
-                        delete self.timers[name];
-                        callback.call(self);
-                    }, timeout)
-                };
+    //             var self = this;
+    //             this.timers[name] = {
+    //                 offTime: Date.now() + timeout,
+    //                 timer: setTimeout(function(){
+    //                     // иногда после stopTimer все равно вызывается callback (если время до вызова меньше секунды)
+    //                     if (!self.timers[name]) return; 
+    //                     delete self.timers[name];
+    //                     callback.call(self);
+    //                 }, timeout)
+    //             };
                 
-                this.log('startTimer(' + name + ', ' + sec + ') -> timeout=' + timeout/1000);
-            };
+    //             this.log('startTimer(' + name + ', ' + sec + ') -> timeout=' + timeout/1000);
+    //         };
             
-            this.stopTimer = function(name){
-                var oldTimer = this.timers[name];
-                if (!oldTimer) return;
-                oldTimer.timer && clearTimeout(oldTimer.timer);
-                delete this.timers[name];
-                this.log('stopTimer(' + name + ')');
-            };
-        },
+    //         this.stopTimer = function(name){
+    //             var oldTimer = this.timers[name];
+    //             if (!oldTimer) return;
+    //             oldTimer.timer && clearTimeout(oldTimer.timer);
+    //             delete this.timers[name];
+    //             this.log('stopTimer(' + name + ')');
+    //         };
+    //     },
         
-        stop: function(){
-            this.log('moduleBase.destroy');
-            //var self = this;
-            Object.keys(this.timers).forEach(function(name){
-              this.stopTimer(name);
-            }, this);
-        }
+    //     stop: function(){
+    //         this.log('moduleBase.destroy');
+    //         //var self = this;
+    //         Object.keys(this.timers).forEach(function(name){
+    //           this.stopTimer(name);
+    //         }, this);
+    //     }
         
-    }
+    // }
     
     Utils.prototype.deviceHandlers = {
         init: function(){
@@ -105,11 +105,14 @@ define('Utils', null, function(){
                 //this._deferredHandlers[key] = handler;
                 
                 this._deferredHandlers.push({
-                    getter: getter, handler: handler
+                    getter: getter, 
+                    handler: handler
+                    //wrapper: wrapper
                 });
                 this._addHandlers();
             };
-        
+            
+           
             this._addHandlers = function(){
                 this._handlersTimer && clearTimeout(this._handlersTimer);
                 delete this._handlersTimer;
@@ -118,7 +121,18 @@ define('Utils', null, function(){
                     var dev = obj.getter();
                     if (!dev) return true; // оставляем в массиве
                     
-                    dev.MHA.onLevelChange(obj.handler, this);
+                    obj.deviceKey = dev.MHA.key;
+                    var self = this;
+                    
+                    obj.handlerWrapper = function(){
+                        try {
+                            obj.handler.apply(self, arguments);
+                        } catch(err){
+                            self.log('Error in handler: '+ obj.deviceKey + ' ' + err.toString() + ' ' + err.stack);
+                        }    
+                    }
+                    dev.MHA.onLevelChange(obj.handlerWrapper, this);
+                    
                     this._handlers.push(obj);
                     
                     this.log('addDeviceHandler: ' + dev.MHA.key);
@@ -137,7 +151,9 @@ define('Utils', null, function(){
           
         },
         
-        stop: function(){
+        
+        
+        stop: function(){ 
             this._handlersTimer && clearTimeout(this._handlersTimer);
             
             this._handlers.forEach(function(obj){
@@ -145,7 +161,7 @@ define('Utils', null, function(){
                 if (!dev) return;
                 
                 //var handler = this._handlers[key];
-                dev.MHA.offLevelChange(obj.handler, this);
+                dev.MHA.offLevelChange(obj.handlerWrapper, this);
                 this.log('removeDeviceHandler: ' + dev.MHA.key);
             }, this);
             this._handlers = [];

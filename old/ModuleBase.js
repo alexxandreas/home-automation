@@ -336,6 +336,7 @@ ModuleBase.prototype.is12TargetsExists = function(){
 // sec - время в секундах
 // callback - функция обратного вызова
 // continue - если true и такой таймер уже запущен - запускается таймер с наименьшим оставшимся временем
+// +
  ModuleBase.prototype.startTimer = function(name, sec, callback, _continue){
   var oldTimer = this.timers[name];
   oldTimer && oldTimer.timer && clearTimeout(oldTimer.timer);
@@ -359,6 +360,7 @@ ModuleBase.prototype.is12TargetsExists = function(){
   this.log('startTimer(' + name + ', ' + sec + ') -> timeout=' + timeout/1000);
 };
 
+// +
 ModuleBase.prototype.stopTimer = function(name){
   var oldTimer = this.timers[name];
   if (!oldTimer) return;
@@ -369,7 +371,7 @@ ModuleBase.prototype.stopTimer = function(name){
 
 
 
-
+// +
 ModuleBase.prototype.onIntMChanged = function (id){ // внутреннее движение началось или завершилось
    
     // обновляем общее состояние внутренних датчиков движения
@@ -386,6 +388,7 @@ ModuleBase.prototype.onIntMChanged = function (id){ // внутреннее дв
 	this[motion == 'on' ? 'onIntMOn' : 'onIntMOff'].call(this);
   };
   
+  // +
   ModuleBase.prototype.onIntMOn = function(){ // начало движения внутри
 	this.log('onIntMOn: начало движения внутри. userMode='+ this.state.userMode);
 	this.stopTimer('offTimer');
@@ -398,6 +401,7 @@ ModuleBase.prototype.onIntMChanged = function (id){ // внутреннее дв
 	  this.switchLight({mode:'on'});
   };
   
+  // +
   ModuleBase.prototype.onIntMOff = function(){ // конец движения внутри
 	this.log('onIntMOff: конец движения внутри. userMode='+ this.state.userMode);
 	//if (this.state.userMode != 'on' && this.state.userMode != 'off') { // таймер взводим только если режим не on и не off
@@ -513,26 +517,29 @@ ModuleBase.prototype.onIntMChanged = function (id){ // внутреннее дв
 	}
   };
   
+  // +
   ModuleBase.prototype.onOffTimer = function(){ // сработал таймер отключения света
-	this.log('onOffTimer: Отключение света по таймеру. userMode='+ this.state.userMode);
-	this.stopTimer('offTimer');
-	//setOffTimer(null); // сбрасываем таймер
-	if (this.state.userMode != 'on')
-	  this.switchLight({mode:'off'});
+  	this.log('onOffTimer: Отключение света по таймеру. userMode='+ this.state.userMode);
+  	this.stopTimer('offTimer');
+  	//setOffTimer(null); // сбрасываем таймер
+  	if (this.state.userMode != 'on')
+  	  this.switchLight({mode:'off'});
   };
   
+  // +
   ModuleBase.prototype.onUserModeTimer = function(){ // сработал таймер сброса пользовательского режима
-	this.log('onUserModeTimer: Сброс userMode по таймеру: ' + this.state.userMode + '=>null');
-	//if (this.state.userMode == 'on' && this.state.light){
-    if (this.state.light){
-	  this.switchLight({mode:'off'});
-	}
-	this.state.userMode = null;
+  	this.log('onUserModeTimer: Сброс userMode по таймеру: ' + this.state.userMode + '=>null');
+  	//if (this.state.userMode == 'on' && this.state.light){
+      if (this.state.light){
+  	  this.switchLight({mode:'off'});
+  	}
+  	this.state.userMode = null;
   };
   
+  // +
   ModuleBase.prototype.onLastLightTimer = function(){ // сработал таймер сброса пользовательского режима
-	this.log('onLastLightTimer: Сброс lastLight по таймеру: ' + this.state.lastLight + '=>null');
-	this.state.lastLight = null;
+  	this.log('onLastLightTimer: Сброс lastLight по таймеру: ' + this.state.lastLight + '=>null');
+  	this.state.lastLight = null;
   };
   
   ModuleBase.prototype.onButtonUp = function(){ // кликнута кнопка Вверх
@@ -600,6 +607,7 @@ ModuleBase.prototype.onIntMChanged = function (id){ // внутреннее дв
   // options.mode: 'on', 'off'
   // options.force: true/false - принудительное включение/выключение 
   // options.light: null, '12', '220' - режим света. если не указан - автовыбор
+  // +
   ModuleBase.prototype.switchLight = function(options){
      
       if (options.mode == 'on'){ // включить

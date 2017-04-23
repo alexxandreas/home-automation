@@ -10,6 +10,9 @@ var angularTemplatecache = require('gulp-angular-templatecache');
 //var templateCache = require('gulp-angular-templatecache');
 var del = require('del');
 
+var fs = require('fs');
+var path = require('path');
+
 //var appJs = ['../src/app/**/_*.js','../src/app/**/*.js']; // not include config.js 
 //var appCss = ['../src/app/**/_*.less', '../src/app/**/*.less'];
 //var appViews = ['../src/app/**/*.html']; // not include index.html 
@@ -62,22 +65,32 @@ var appJs = [
 	'!../src/modules/*/htdocs/**/-*.js'	
 ];
 
+// CSS клиентского приложения
 var appCss = [
 	'../src/modules/*/htdocs/**/*.css'
 ];
 
+// Views клиентского приложения
 var appViews = [
 	'../src/modules/*/htdocs/**/*.html',
 	'!../src/modules/**/index.html'
 ]
-    
+
+// index.html клиентского приложения  
+var appIndex = [
+	'../src/modules/WebServer/index.html'
+]
+
+// путь к модулям. файлы модулей склеиваются в один файл
+var modulesPath = '../src/modules';
     
 // Файлы, копируемые в каталог сборки
 var copyToRootFiles = [
-    //'../src/update.bash'
-    '../src/**',
-    //'!../src/modules/*/htdocs/**/*.html',
-    '../src/modules/*/htdocs/index.html',
+ 
+    //'../src/**',
+    '../src/*',
+    
+    //'../src/modules/*/htdocs/index.html',
     '!../src/modules/*/htdocs/**/*.js',
     '!../src/modules/*/htdocs/**/*.css'
     ];
@@ -103,6 +116,13 @@ gulp.task('build-js', function(cb){
     return gulp.src(js)
 		.pipe(concat('index.js'))
 		.pipe(gulp.dest(debugMode ? distDebug : distRelease));
+});
+
+gulp.task('copy-index', function(cb){
+	//return gulp.src('../src/modules/WebServer/index.html', {base: 'WebServer'})
+	return gulp.src('WebServer/htdocs/index.html', {cwd: '../src/modules'})
+	//.pipe(concat('libs.css'))
+	.pipe(gulp.dest((debugMode ? distDebug : distRelease) + '/htdocs'));
 });
 
 gulp.task('build-libs-js', function(cb){
@@ -147,6 +167,38 @@ gulp.task('build-app-views', function() {
 		.pipe(gulp.dest((debugMode ? distDebug : distRelease) + '/htdocs'));
 });
 
+// Собирает модули из нескольких файлов в один
+gulp.task('build-modules', function(cb){
+	
+	var folders = getFolders(modulesPath);
+	console.log(JSON.stringify(folders));
+
+	var tasks = folders.map(function(folder) {
+    	return gulp.src([path.join(modulesPath, folder, '/_*.js'), path.join(modulesPath, folder, '/*.js')])
+        // concat into foldername.js
+        .pipe(concat(folder + '.js'))
+        // write to output
+        .pipe(gulp.dest(debugMode ? path.join(distDebug, 'modules', folder) : path.join(distRelease, 'modules', folder)))
+        
+        //.pipe(gulp.dest(scriptsPath)) 
+        // minify
+        //.pipe(uglify())    
+        // rename to folder.min.js
+        //.pipe(rename(folder + '.min.js')) 
+        // write to output again
+        //.pipe(gulp.dest(scriptsPath));    
+	});
+
+	//return merge(tasks);
+	cb();
+	
+	function getFolders(dir) {
+	    return fs.readdirSync(dir).filter(function(file) {
+	        return fs.statSync(path.join(dir, file)).isDirectory();
+	    });
+	}
+});
+
 gulp.task('copy-files', function(cb){
     return gulp.src(copyToRootFiles)
     	.pipe(print())
@@ -157,11 +209,13 @@ gulp.task('copy-files', function(cb){
 gulp.task('build', ['clean'], function(cb) {
 	runSequence(
 		//..'build-js',
+		'copy-index',
 		'build-libs-js',
 		'build-libs-css',
 		'build-app-js',
 		'build-app-css',
 		'build-app-views',
+		'build-modules',
 		'copy-files',
 		//'rebuildStatic',
 		cb);

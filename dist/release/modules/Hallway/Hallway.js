@@ -31,7 +31,7 @@ define('Hallway', ['AbstractRoom'], function(AbstractRoom){
             door:           'corridor.door'
         }];
         
-        this.settings = this.settings || {};
+        //this.settings = this.settings || {};
         this.settings.userModeTimeout = 15; // таймаут сброса пользовательского режима, мин. Таймер запускается после выключения света
         this.settings.intMotionTimeout = 0.5; // таймаут выключения света после окончания движения ВНУТРИ, мин
         this.settings.extMotionTimeout = 0.5; // таймаут выключения света после окончания движения СНАРУЖИ, мин
