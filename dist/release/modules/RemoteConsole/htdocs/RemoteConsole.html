@@ -1,0 +1,20 @@
+<div layout="column" layout-align="start stretch" flex
+ng-controller="RemoteConsoleCtrl"
+class="RemoteConsole">
+
+  <div flex layout="column" layout-align="start stretch">
+    <textarea id="inputText" class="inputText" ng-model="input" ng-keyup="keyUp($event)" ></textarea>
+  </div>
+  
+  <div flex layout="column" layout-align="start stretch">
+    <textarea id="outputText" class="outputText" ng-model="output"></textarea>
+  </div>
+  
+  <div layout="row">
+    <md-button class="md-raised md-primary" ng-click="run()">Run</md-button>
+    <span layout="row" layout-align="center center">{{status}}</span>
+    <div flex></div>
+    <md-button class="md-raised md-primary" ng-click="showHistory()">История запросов</md-button>
+  </div>
+  
+</div>

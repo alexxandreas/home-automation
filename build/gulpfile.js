@@ -88,8 +88,8 @@ var modulesPath = '../src/modules';
 var copyToRootFiles = [
  
     //'../src/**',
-    '../src/*',
-    
+    '../src/**',
+    '!../src/**/*.js',
     //'../src/modules/*/htdocs/index.html',
     '!../src/modules/*/htdocs/**/*.js',
     '!../src/modules/*/htdocs/**/*.css'
