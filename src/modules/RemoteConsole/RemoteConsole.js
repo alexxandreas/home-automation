@@ -30,6 +30,8 @@ define('RemoteConsole', ['AbstractModule', 'WebServer'], function(AbstractModule
 	        try {
 	            //addToHistory(code);
 	            var result = eval(code);
+	            if (result === undefined)
+	                result = 'undefined';
 	            this.addToHistory(code, result);
 	            return ws.sendJSON(result);
 	        } catch (err){

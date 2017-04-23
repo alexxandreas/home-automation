@@ -8,32 +8,11 @@ global config, inherits, controller, MHA
  * 
  */
 
-define('UtilsTimers', 'Utils', function(Utils){
-    
-    // function Utils(config) {
-    //     this.name = 'Utils';
-    // }
-  
-  
-    
-    // Utils.prototype.extend = function(module, util){
-    //     if (util.init){
-    //         util.init.call(module);
-    //     }
-        
-    //     if (util.stop){
-    //         var oldStop = module.stop;
-    //         module.stop = (function(){
-    //             util.stop.call(module);
-    //             oldStop.call(module);
-    //         }).bind(module);
-    //     }
-        
-    // }
+define('UtilsTimers', ['Utils'], function(Utils){
     
     Utils.prototype.timers = {
         init: function(){
-            this.timers = {};
+            this._timers = {};
             
             
             // запуск таймера. 
@@ -42,7 +21,7 @@ define('UtilsTimers', 'Utils', function(Utils){
             // callback - функция обратного вызова
             // continue - если true и такой таймер уже запущен - запускается таймер с наименьшим оставшимся временем
             this.startTimer = function(name, sec, callback, _continue){
-                var oldTimer = this.timers[name];
+                var oldTimer = this._timers[name];
                 oldTimer && oldTimer.timer && clearTimeout(oldTimer.timer);
                 if (oldTimer && oldTimer.offTime && _continue){
                     var timeout = Math.min(sec * 1000, oldTimer.offTime - Date.now());
@@ -51,12 +30,12 @@ define('UtilsTimers', 'Utils', function(Utils){
                 }
                 
                 var self = this;
-                this.timers[name] = {
+                this._timers[name] = {
                     offTime: Date.now() + timeout,
                     timer: setTimeout(function(){
                         // иногда после stopTimer все равно вызывается callback (если время до вызова меньше секунды)
-                        if (!self.timers[name]) return; 
-                        delete self.timers[name];
+                        if (!self._timers[name]) return; 
+                        delete self._timers[name];
                         callback.call(self);
                     }, timeout)
                 };
@@ -65,10 +44,10 @@ define('UtilsTimers', 'Utils', function(Utils){
             };
             
             this.stopTimer = function(name){
-                var oldTimer = this.timers[name];
+                var oldTimer = this._timers[name];
                 if (!oldTimer) return;
                 oldTimer.timer && clearTimeout(oldTimer.timer);
-                delete this.timers[name];
+                delete this._timers[name];
                 this.log('stopTimer(' + name + ')');
             };
         },
@@ -76,7 +55,7 @@ define('UtilsTimers', 'Utils', function(Utils){
         stop: function(){
             this.log('moduleBase.destroy');
             //var self = this;
-            Object.keys(this.timers).forEach(function(name){
+            Object.keys(this._timers).forEach(function(name){
               this.stopTimer(name);
             }, this);
         }
