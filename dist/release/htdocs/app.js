@@ -635,20 +635,26 @@ angular
                     return value;
                 }
             }).then(function(response) {
-                var data = JSON.stringify(response.data, null, '  ');
-                history.push({
-                    src: str,
-                    result: data
+                    if (typeof response.data == 'string') {
+                        var data = response.data;
+                    }
+                    else {
+                        var data = JSON.stringify(response.data, null, '  ');
+                    }
+                    history.push({
+                        src: str,
+                        result: data
+                    });
+                    return data;
+                },
+                function(response) {
+                    var data = JSON.stringify(response && response.data || response, null, '  ');
+                    history.push({
+                        src: str,
+                        result: data
+                    });
+                    return data;
                 });
-                return data;
-            }, function(response) {
-                var data = JSON.stringify(response && response.data || response, null, '  ');
-                history.push({
-                    src: str,
-                    result: data
-                });
-                return data;
-            });
         }
 
 

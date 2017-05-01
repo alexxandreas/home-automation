@@ -42,7 +42,6 @@ define('UtilsDeviceHandlers', ['AbstractModule', 'DeviceStorage'], function(Abst
         delete this._handlersTimer;
 
         this._deferredHandlers = this._deferredHandlers.filter(function(obj) {
-            //var dev = obj.getter();
             var dev = DeviceStorage.getDevice(obj.key);
             if (!dev) return true; // оставляем в массиве
 
@@ -80,7 +79,7 @@ define('UtilsDeviceHandlers', ['AbstractModule', 'DeviceStorage'], function(Abst
         this._handlersTimer && clearTimeout(this._handlersTimer);
 
         this._handlers.forEach(function(obj) {
-            var dev = obj.getter();
+            var dev = DeviceStorage.getDevice(obj.key);
             if (!dev) return;
 
             //var handler = this._handlers[key];
