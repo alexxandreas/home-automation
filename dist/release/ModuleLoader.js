@@ -70,7 +70,7 @@
             }
         }, this);
         this.log("Finded modules:\n" + Object.keys(this.modules).map(function(name) {
-            return this.modules[name] + (this.modules[name].visible ? 'visible' : '');
+            return name + (this.modules[name].visible ? ' visible' : '');
         }, this).join('\n'));
     };
 
@@ -173,7 +173,8 @@
             var notLoadedDeps = module.deps.filter(function(depName) {
                 return !this.modules[depName].created;
             }, this).join(' ,');
-            this.log('startModule Error: module ' + name + 'can not load deps: [' + notLoadedDeps + ']')
+            this.log('startModule Error: module ' + name + ' can\' load deps: [' + notLoadedDeps + ']')
+            this._unloadModule(name);
         };
     };
 
