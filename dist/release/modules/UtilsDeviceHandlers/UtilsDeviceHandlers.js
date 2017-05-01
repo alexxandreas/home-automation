@@ -43,7 +43,7 @@ define('UtilsDeviceHandlers', ['AbstractModule', 'DeviceStorage'], function(Abst
 
         this._deferredHandlers = this._deferredHandlers.filter(function(obj) {
             //var dev = obj.getter();
-            var dev = DeviceStorage.getDevice(key);
+            var dev = DeviceStorage.getDevice(obj.key);
             if (!dev) return true; // оставляем в массиве
 
             //obj.deviceKey = dev.MHA.key;

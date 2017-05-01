@@ -69,9 +69,7 @@
                 }
             }
         }, this);
-        this.log("Finded modules:\n" + Object.keys(this.modules).map(function(name) {
-            return name + (this.modules[name].visible ? ' visible' : '');
-        }, this).join('\n'));
+        this.log("Finded modules: [" + Object.keys(this.modules).join(', ') + ']');
     };
 
 
