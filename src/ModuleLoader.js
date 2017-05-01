@@ -42,7 +42,7 @@
     }
 
     // Загружает список модулей из ФС
-    ModuleLoader.prototype.loadModulesList = function() {
+    ModuleLoader.prototype.loadModulesList = function loadModulesList() {
         this.modules = {};
         var folder = MHA.fsRoot + 'modules/';
         var list = fs.list(folder);
@@ -69,14 +69,13 @@
                 }
             }
         }, this);
-
-        this.log("Finded modules:\n" + this.modules.map(function(module) {
-            return module.name + (module.visible ? 'visible' : '');
-        }).join('\n'));
+        this.log("Finded modules:\n" + Object.keys(this.modules).map(function(name) {
+            return this.modules[name] + (this.modules[name].visible ? 'visible' : '');
+        }, this).join('\n'));
     };
 
 
-    ModuleLoader.prototype._loadModule = function(name) {
+    ModuleLoader.prototype._loadModule = function _loadModule(name) {
         var module = this.modules[name];
         if (module && module.loaded) {
             return;
@@ -110,7 +109,7 @@
 
 
 
-    ModuleLoader.prototype._define = function(name, deps, func) {
+    ModuleLoader.prototype._define = function _define(name, deps, func) {
         this.log('define ' + name);
         var module = this.modules[name];
         if (!module) {
@@ -131,7 +130,7 @@
     // };
 
 
-    ModuleLoader.prototype._startModule = function(name) {
+    ModuleLoader.prototype._startModule = function _startModule(name) {
         //this.log('startModule ' + name);
         var module = this.modules[name];
         if (!module) {
@@ -180,7 +179,7 @@
 
     // выгружает модуль и все его зависимости
     // возвращат массив затронутых модулей
-    ModuleLoader.prototype._unloadModule = function(name, reload) {
+    ModuleLoader.prototype._unloadModule = function _unloadModule(name, reload) {
         var module = this.modules[name];
         if (!module) {
             this.log('unloadModule Error: module ' + name + ' not found!');
@@ -218,7 +217,7 @@
         return deps;
     };
 
-    ModuleLoader.prototype._getDepsTree = function(name) {
+    ModuleLoader.prototype._getDepsTree = function _getDepsTree(name) {
         var module = this.modules[name];
         var deps = [];
         rec.call(this, name);
@@ -242,13 +241,13 @@
         }
     };
 
-    ModuleLoader.prototype.activateModule = function(name) {
+    ModuleLoader.prototype.activateModule = function activateModule(name) {
         this._loadModule(name);
         this.modulesConfig[name] = true;
         this.saveModulesConfig();
     };
 
-    ModuleLoader.prototype.deactivateModule = function(name) {
+    ModuleLoader.prototype.deactivateModule = function deactivateModule(name) {
         var deps = this._unloadModule(name);
         deps.forEach(function(depName) {
             delete this.modulesConfig[depName];
@@ -257,14 +256,14 @@
         return deps;
     };
 
-    ModuleLoader.prototype.restartModule = function(name) {
+    ModuleLoader.prototype.restartModule = function restartModule(name) {
         var deps = this._unloadModule(name, true);
         return deps;
     };
 
 
 
-    ModuleLoader.prototype.loadModulesConfig = function() {
+    ModuleLoader.prototype.loadModulesConfig = function loadModulesConfig() {
         this.modulesConfig = this.loadData('modulesConfig') || {
             'DeviceStorage': true,
             'ControlPanel': true,
@@ -272,19 +271,19 @@
         };
     };
 
-    ModuleLoader.prototype.saveModulesConfig = function() {
+    ModuleLoader.prototype.saveModulesConfig = function saveModulesConfig() {
         this.saveData('modulesConfig', this.modulesConfig);
     };
 
 
 
-    ModuleLoader.prototype.loadData = function(key) {
+    ModuleLoader.prototype.loadData = function loadData(key) {
         var objName = 'MHA_' + key;
         this.log('loadData: ' + objName);
         return loadObject(objName);
     };
 
-    ModuleLoader.prototype.saveData = function(key, value) {
+    ModuleLoader.prototype.saveData = function saveData(key, value) {
         var objName = 'MHA_' + key;
         this.log('saveData: ' + objName);
         saveObject(objName, value);
@@ -292,11 +291,11 @@
 
 
 
-    ModuleLoader.prototype.log = function(data) {
+    ModuleLoader.prototype.log = function log(data) {
         return MHA.prefixLog(this.name, data);
     };
 
-    ModuleLoader.prototype.stop = function() {
+    ModuleLoader.prototype.stop = function stop() {
         this.log('stop');
         // выгружаем модули
         Object.keys(this.modules).forEach(function(name) {
