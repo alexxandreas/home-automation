@@ -167,7 +167,7 @@ define('UtilsRoomHelpers', ['AbstractModule', 'DeviceStorage'], function(Abstrac
      *  }
      */
     UtilsRoomHelpers.prototype.getExtRooms220State = function(extRooms) {
-        return extRooms.reduce(function(result, room) {
+        return extRooms.reduce((function(result, room) {
             if (!room.switch220) return result;
             var devData = this.getDeviceData(room.switch220);
             result.rooms.push(devData);
@@ -180,7 +180,7 @@ define('UtilsRoomHelpers', ['AbstractModule', 'DeviceStorage'], function(Abstrac
                 result.summary.lastLevelChange = Math.min(result.summary.lastLevelChange || Number.MAX_VALUE, devData.lastLevelChange);
 
             return result;
-        }, {
+        }).bind(this), {
             rooms: [],
             summary: {
                 level: null,

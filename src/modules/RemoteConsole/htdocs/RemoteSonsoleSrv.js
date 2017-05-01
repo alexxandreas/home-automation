@@ -43,7 +43,11 @@
                     return data;
                 },
                 function(response) {
-                    var data = JSON.stringify(response && response.data || response, null, '  ');
+                    var data = response && response.data || response
+                    if (typeof data != 'string') {
+                        data = JSON.stringify(data, null, '  ');
+                    }
+
                     history.push({
                         src: str,
                         result: data
