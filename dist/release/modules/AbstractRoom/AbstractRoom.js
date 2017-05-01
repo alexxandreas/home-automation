@@ -427,7 +427,7 @@ define('AbstractRoom', [
                 room.motionIgnore = false;
         }, this);
 
-        if (this.state.userMode != 'off' && this.getLightState().sumary.level == 'off')
+        if (this.state.userMode != 'off' && this.getLightState().summary.level == 'off')
             this.switchLight({
                 mode: 'on'
             });
@@ -436,7 +436,7 @@ define('AbstractRoom', [
     AbstractRoom.prototype.onMotionSensorOff = function() {
         this.log('onMotionSensorOff. userMode=' + this.state.userMode);
 
-        if (this.state.userMode == 'on' || this.getLightState().sumary.level == 'off') return; // таймер взводим только если режим не on и свет горит
+        if (this.state.userMode == 'on' || this.getLightState().summary.level == 'off') return; // таймер взводим только если режим не on и свет горит
 
         var timeouts = [];
 
