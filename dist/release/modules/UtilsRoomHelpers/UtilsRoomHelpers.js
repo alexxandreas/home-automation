@@ -75,7 +75,7 @@ define('UtilsRoomHelpers', ['AbstractModule', 'DeviceStorage'], function(Abstrac
             result['12'].level === 'on' || result['12'].level > 0)
             result.summary.level = 'on='
         else if (result['220'].level == 'off' || result['220'].level == 0 ||
-            result['12'].level == 'off' || result['12'].level == 'off')
+            result['12'].level == 'off' || result['12'].level == 0)
             result.summary.level = 'off'
 
         if (result.summary.level)

@@ -265,15 +265,15 @@ define('AbstractRoom', [
     };
 
     AbstractRoom.prototype.getExtRoomsMotionState = function() {
-        return this.roomHelpers.getMotionState(this.extRooms);
+        return this.roomHelpers.getExtRoomsMotionState(this.extRooms);
     };
 
     AbstractRoom.prototype.getExtRoomsDoorsState = function() {
-        return this.roomHelpers.getMotionState(this.extRooms);
+        return this.roomHelpers.getExtRoomsDoorsState(this.extRooms);
     };
 
     AbstractRoom.prototype.getExtRooms220State = function() {
-        return this.roomHelpers.getMotionState(this.extRooms);
+        return this.roomHelpers.getExtRooms220State(this.extRooms);
     };
 
 

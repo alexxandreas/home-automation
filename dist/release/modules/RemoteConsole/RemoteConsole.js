@@ -39,7 +39,7 @@ define('RemoteConsole', ['AbstractModule', 'WebServer'], function(AbstractModule
             catch (err) {
                 var errObj = {
                     text: err.toString(),
-                    stack: err.stack
+                    stack: err.stack.replace('\\n', '\n')
                 };
                 this.addToHistory(code, errObj);
                 return ws.sendError(500, errObj);
@@ -53,7 +53,7 @@ define('RemoteConsole', ['AbstractModule', 'WebServer'], function(AbstractModule
             catch (err) {
                 return ws.sendError(500, {
                     text: err.toString(),
-                    stack: err.stack
+                    stack: err.stack.replace('\\n', '\n')
                 });
             }
         }, this);
