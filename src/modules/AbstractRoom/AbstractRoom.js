@@ -4,7 +4,7 @@ global config, inherits, controller, MHA
 define('AbstractRoom', [
     'AbstractModule',
     'DeviceStorage',
-    'UtilsDeviceHandler',
+    'UtilsDeviceHandlers',
     'UtilsTimers',
     'UtilsRoomHelpers'
 ], function(
