@@ -27,19 +27,29 @@ define('UtilsRoomHelpers', ['AbstractModule', 'DeviceStorage'], function(Abstrac
      *      lastLevelChange: null
      * }
      */
-    UtilsRoomHelpers.prototype.getDeviceData = function(key) {
+    UtilsRoomHelpers.prototype.getDeviceData = function(key, convertToOnOff) {
         var dev = DeviceStorage.getDevice(key);
 
-        if (dev) return {
-            level: dev.MHA.getLevel(),
-            lastLevelChange: dev.MHA.lastLevelChange(true)
+        if (dev) {
+            var result = {
+                level: dev.MHA.getLevel(),
+                lastLevelChange: dev.MHA.lastLevelChange(true)
+            }
+            if (convertToOnOff) {
+                if (result.level == 0)
+                    result.level = 'off';
+                else if (result.level > 0)
+                    result.level = 'on';
+            }
         }
-        else return {
-            level: null,
-            lastLevelChange: null
+        else {
+            var result = {
+                level: null,
+                lastLevelChange: null
+            }
         }
+        return result;
     };
-
     // возвращает состояние света в комнате:
     /* {
      *   220:    'on' / 'off' / null
@@ -63,19 +73,17 @@ define('UtilsRoomHelpers', ['AbstractModule', 'DeviceStorage'], function(Abstrac
      */
     UtilsRoomHelpers.prototype.getLightState = function(dev220key, dev12key) {
         var result = {
-            '220': this.getDeviceData(dev220key),
-            '12': this.getDeviceData(dev12key),
+            '220': this.getDeviceData(dev220key, true),
+            '12': this.getDeviceData(dev12key, true),
             summary: {
                 level: null,
                 lastLevelChange: null
             }
         };
 
-        if (result['220'].level === 'on' || result['220'].level > 0 ||
-            result['12'].level === 'on' || result['12'].level > 0)
+        if (result['220'].level === 'on' || result['12'].level === 'on')
             result.summary.level = 'on='
-        else if (result['220'].level == 'off' || result['220'].level == 0 ||
-            result['12'].level == 'off' || result['12'].level == 0)
+        else if (result['220'].level == 'off' || result['12'].level == 'off')
             result.summary.level = 'off'
 
         if (result.summary.level)
@@ -169,7 +177,7 @@ define('UtilsRoomHelpers', ['AbstractModule', 'DeviceStorage'], function(Abstrac
     UtilsRoomHelpers.prototype.getExtRooms220State = function(extRooms) {
         return extRooms.reduce((function(result, room) {
             if (!room.switch220) return result;
-            var devData = this.getDeviceData(room.switch220);
+            var devData = this.getDeviceData(room.switch220, true);
             result.rooms.push(devData);
 
             // TODO здесь какая-то обработка для summary

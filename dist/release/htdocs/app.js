@@ -652,7 +652,6 @@ angular
                     if (typeof data != 'string') {
                         data = JSON.stringify(data, null, '  ');
                     }
-
                     history.push({
                         src: str,
                         result: data
