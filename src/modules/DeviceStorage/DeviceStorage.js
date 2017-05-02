@@ -349,10 +349,12 @@ define('DeviceStorage', ['AbstractModule', 'WebServer'], function(AbstractModule
                     if (obj.command == 'on') // включаем безусловно
                         command = 'on';
                     else if (obj.command == 'exact' && obj.args) {
-                        if (obj.args.level != undefined) { // указан level
+                        if (obj.args.level != undefined && obj.args.level != 0) { // указан level
+                            command = 'exact';
                             args.level = Math.max(args.level || 0, obj.args.level);
                         }
                         else if (obj.args.red !== undefined || obj.args.green !== undefined || obj.args.blue != undefined) {
+                            command = 'exact';
                             args.red = Math.max(args.red || 0, obj.args.red);
                             args.green = Math.max(args.green || 0, obj.args.green);
                             args.blue = Math.max(args.blue || 0, obj.args.blue);
