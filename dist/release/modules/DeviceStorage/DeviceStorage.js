@@ -385,9 +385,9 @@ define('DeviceStorage', ['AbstractModule', 'WebServer'], function(AbstractModule
                 vDev.MHA._actionObj = undefined;
 
 
-                if (!action) { // останавливаем, если есть, и выходим
-                    return;
-                }
+                // if (!action) { // останавливаем, если есть, и выходим
+                //     return;
+                // }
 
 
 

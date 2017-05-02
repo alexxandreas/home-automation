@@ -82,7 +82,7 @@ define('UtilsRoomHelpers', ['AbstractModule', 'DeviceStorage'], function(Abstrac
         };
 
         if (result['220'].level === 'on' || result['12'].level === 'on')
-            result.summary.level = 'on='
+            result.summary.level = 'on'
         else if (result['220'].level == 'off' || result['12'].level == 'off')
             result.summary.level = 'off'
 
@@ -109,80 +109,47 @@ define('UtilsRoomHelpers', ['AbstractModule', 'DeviceStorage'], function(Abstrac
 
 
     /** EXT ROOMS **/
-    // возвращает состояние датчиков движения в соседних комнатах:
-    /* {
-     *       rooms: [{
-     *           level:    'on' / 'off' / null,
-     *           lastLevelChange : время с момента последнего изменения / null
-     *       }],
-     *       //summary: {
-     *       //    level:    'on' / 'off' / null, // если хотя бы один on - то on
-     *       //    lastLevelChange : минимальное время с момента последнего изменения / null
-     *       //}
-     *  }
-     */
-    UtilsRoomHelpers.prototype.getExtRoomsMotionState = function(extRooms) {
-        return extRooms.reduce(function(result, room) {
-            if (!room.motionSensor) return result;
-            var devData = this.getDeviceData(room.motionSensor);
-            result.rooms.push(devData);
 
-            // TODO здесь какая-то обработка для summary
-            return result;
-        }, {
-            rooms: []
-        });
+    // возвращает состояние датчиков движения в соседних комнатах:
+    UtilsRoomHelpers.prototype.getExtRoomsMotionState = function(extRooms) {
+        return this._getExtRoomsState(extRooms, 'motionSensor');
+    };
+
+    // возвращает состояние дверей:
+    UtilsRoomHelpers.prototype.getExtRoomsDoorsState = function(extRooms) {
+        return this._getExtRoomsState(extRooms, 'door');
+    }
+
+    // возвращает состояние 220-света:
+    UtilsRoomHelpers.prototype.getExtRooms220State = function(extRooms) {
+        return this._getExtRoomsState(extRooms, 'switch220');
     };
 
 
-
-    // возвращает состояние дверей:
-    /* {
+    /** Универсальный метод, возвращает состояние указанного устройства 
+     * в соседних комнатах
+     * {
      *       rooms: [{
-     *           level:    'on' / 'off' / null,
-     *           lastLevelChange : время с момента последнего изменения / null
-     *       }],
-     *       //summary: {
-     *       //    level:    'on' / 'off' / null, // если хотя бы один on - то on
-     *       //    lastLevelChange : минимальное время с момента последнего изменения / null
-     *       //}
-     *  }
-     */
-    UtilsRoomHelpers.prototype.getExtRoomsDoorsState = function(extRooms) {
-        return extRooms.reduce(function(result, room) {
-            if (!room.door) return result;
-            var devData = this.getDeviceData(room.door);
-            result.rooms.push(devData);
-
-            // TODO здесь какая-то обработка для summary
-            return result;
-        }, {
-            rooms: []
-        });
-    }
-
-
-    // возвращает состояние 220-света:
-    /* {
-     *       rooms: [{
-     *           level:    'on' / 'off' / null,
+     *           level:    'on' / 'off' / null, 
      *           lastLevelChange : время с момента последнего изменения / null
      *       }],
      *       summary: {
-     *           level:    'on' / 'off' / null, // если хотя бы один on - то on
+     *           level:    'on' / 'off' / null, // если хотя бы один on - то on 
+     *                      иначе если хотя бы один off - то off иначе null
      *           lastLevelChange : минимальное время с момента последнего изменения / null
      *       }
      *  }
      */
-    UtilsRoomHelpers.prototype.getExtRooms220State = function(extRooms) {
+    UtilsRoomHelpers.prototype._getExtRoomsState = function(extRooms, param) {
         return extRooms.reduce((function(result, room) {
-            if (!room.switch220) return result;
-            var devData = this.getDeviceData(room.switch220, true);
+            if (!room[param]) return result;
+            var devData = this.getDeviceData(room[param], true);
             result.rooms.push(devData);
 
-            // TODO здесь какая-то обработка для summary
             if (devData.level == 'on')
                 result.summary.level = 'on';
+            else if (devData.level == 'off' && !result.summary.level)
+                result.summary.level = 'off';
 
             if (devData.lastLevelChange)
                 result.summary.lastLevelChange = Math.min(result.summary.lastLevelChange || Number.MAX_VALUE, devData.lastLevelChange);
@@ -195,7 +162,7 @@ define('UtilsRoomHelpers', ['AbstractModule', 'DeviceStorage'], function(Abstrac
                 lastLevelChange: null
             }
         });
-    }
+    };
 
 
     UtilsRoomHelpers.prototype.stop = function(name) {
