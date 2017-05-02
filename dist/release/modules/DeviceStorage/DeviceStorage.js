@@ -347,7 +347,7 @@ define('DeviceStorage', ['AbstractModule', 'WebServer'], function(AbstractModule
                 initiators.forEach(function(initiator) {
                     var obj = vDev.MHA._usedBy[initiator];
                     if (obj.command == 'on') // включаем безусловно
-                        command = command;
+                        command = 'on';
                     else if (obj.command == 'exact' && obj.args) {
                         if (obj.args.level != undefined) { // указан level
                             args.level = Math.max(args.level || 0, obj.args.level);
