@@ -384,11 +384,9 @@ define('DeviceStorage', ['AbstractModule', 'WebServer'], function(AbstractModule
                 }
                 vDev.MHA._actionObj = undefined;
 
-
-                // if (!action) { // останавливаем, если есть, и выходим
-                //     return;
-                // }
-
+                if (!command) { // останавливаем, если есть, и выходим
+                    return;
+                }
 
 
                 var action;
@@ -399,7 +397,8 @@ define('DeviceStorage', ['AbstractModule', 'WebServer'], function(AbstractModule
                         vDev.performCommand('on');
                     };
                     check = function() {
-                        vDev.MHA.getLevel() === 'on' || vDev.MHA.getLevel() > 0;
+                        //log('check: level: ' + vDev.MHA.getLevel());
+                        return vDev.MHA.getLevel() === 'on' || vDev.MHA.getLevel() > 0;
                     };
                 }
                 else if (command == 'off') {
@@ -407,7 +406,8 @@ define('DeviceStorage', ['AbstractModule', 'WebServer'], function(AbstractModule
                         vDev.performCommand('off');
                     };
                     check = function() {
-                        vDev.MHA.getLevel() === 'off' || vDev.MHA.getLevel() === 0;
+                        //log('check: level: ' + vDev.MHA.getLevel());
+                        return vDev.MHA.getLevel() === 'off' || vDev.MHA.getLevel() === 0;
                     };
                 }
                 else if (command == 'exact') {
@@ -461,7 +461,7 @@ define('DeviceStorage', ['AbstractModule', 'WebServer'], function(AbstractModule
                         //counter++;
                         //if (counter > maxRestartCount){
                         if (seconds > 60 * 10) {
-                            log(' ERROR');
+                            log('ERROR');
                             //delete self.actions[name];
                             vDev.MHA._actionObj = undefined;
                             return;
