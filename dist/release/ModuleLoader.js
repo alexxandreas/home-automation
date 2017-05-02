@@ -150,7 +150,7 @@
 
 
         if (module.deps.every(function(depName) {
-                return this.modules[depName].created;
+                return this.modules[depName] && this.modules[depName].created;
             }, this)) { // все зависимости загружены (и, если был define - запущены)
             var depsA = module.deps.map(function(depName) {
                 return this.modules[depName].module;
