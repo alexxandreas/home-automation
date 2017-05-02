@@ -348,7 +348,7 @@ define('DeviceStorage', ['AbstractModule', 'WebServer'], function(AbstractModule
                     var obj = vDev.MHA._usedBy[initiator];
                     if (obj.command == 'on') // включаем безусловно
                         command = 'on';
-                    else if (obj.command == 'exact' && obj.args) {
+                    else if (command != 'on' && obj.command == 'exact' && obj.args) {
                         if (obj.args.level != undefined && obj.args.level != 0) { // указан level
                             command = 'exact';
                             args.level = Math.max(args.level || 0, obj.args.level);
@@ -378,6 +378,7 @@ define('DeviceStorage', ['AbstractModule', 'WebServer'], function(AbstractModule
                         ') ' + data);
                 }).bind(this);
 
+                log();
                 var isPrevAction = !!vDev.MHA._actionObj;
                 // останавливаем предыдущее
                 if (isPrevAction) {

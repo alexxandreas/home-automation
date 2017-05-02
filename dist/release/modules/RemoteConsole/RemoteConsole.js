@@ -1,7 +1,7 @@
 /*
 global config, inherits, controller, MHA
 */
-define('RemoteConsole', ['AbstractModule', 'WebServer'], function(AbstractModule, WebServer) {
+define('RemoteConsole', ['AbstractModule', 'WebServer', 'UtilsJSON'], function(AbstractModule, WebServer, UtilsJSON) {
 
     function RemoteConsole(config) {
         RemoteConsole.super_.call(this, config);
@@ -33,6 +33,9 @@ define('RemoteConsole', ['AbstractModule', 'WebServer'], function(AbstractModule
                 var result = eval(code);
                 if (result === undefined)
                     result = 'undefined';
+
+                result = UtilsJSON.stringify(result);
+
                 this.addToHistory(code, result);
                 return ws.sendJSON(result);
             }
@@ -41,6 +44,7 @@ define('RemoteConsole', ['AbstractModule', 'WebServer'], function(AbstractModule
                     text: err.toString(),
                     stack: err.stack.replace('\\n', '\n')
                 };
+
                 this.addToHistory(code, errObj);
                 return ws.sendError(500, errObj);
             }
@@ -69,11 +73,14 @@ define('RemoteConsole', ['AbstractModule', 'WebServer'], function(AbstractModule
 
     RemoteConsole.prototype.addToHistory = function(src, data) {
         try {
-            var result = JSON.stringify(data, null, '  ').substr(0, 1000);
+            //var result = JSON.stringify(data, null, '  ').substr(0, 1000);
+            if (typeof data != 'string')
+                data = UtilsJSON.stringify(data, null, '  ');
+            data = data.substr(0, 1000);
             //history.push(code);
             this.history.push({
                 src: src,
-                result: result
+                result: data
             });
             while (this.history.length > 50) {
                 this.history.shift();
