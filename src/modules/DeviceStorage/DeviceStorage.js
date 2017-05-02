@@ -378,7 +378,7 @@ define('DeviceStorage', ['AbstractModule', 'WebServer'], function(AbstractModule
                         ') ' + data);
                 }).bind(this);
 
-                log();
+
                 var isPrevAction = !!vDev.MHA._actionObj;
                 // останавливаем предыдущее
                 if (isPrevAction) {
@@ -391,6 +391,7 @@ define('DeviceStorage', ['AbstractModule', 'WebServer'], function(AbstractModule
                     return;
                 }
 
+                log("");
 
                 var action;
                 var check;
