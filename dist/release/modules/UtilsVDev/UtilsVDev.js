@@ -27,15 +27,12 @@ define('UtilsVDev', ['AbstractModule'], function(AbstractModule) {
     function DefaultMHA(key, vDev) {
         this.key = key;
         this.vDev = vDev;
-        vDev.MHA = this;
-
-        // текущее значение
-        this._lastLevel = this.getLevel();
+        vDev.MHA = this;   
 
         // время последнего изменения значения
         this._lastLevelChange = Date.now();
 
-        this._levelChangeHandlers = [];
+        this._levelChangeHandlers = [];   
 
         // массив модулей, которые используют девайс в текущий момент
         // когда модуль включает девайс - он добавляется в этот массив
@@ -45,6 +42,9 @@ define('UtilsVDev', ['AbstractModule'], function(AbstractModule) {
         this._usedBy = {};
 
         this._actionObj = undefined;
+        
+         // текущее значение
+        this._lastLevel = this.getLevel();
 
         controller.devices.on(vDev.id, 'change:metrics:level', this._baseLevelChangeHandler);
     }
