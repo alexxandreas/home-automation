@@ -10,12 +10,15 @@ define('Hallway', ['AbstractRoom'], function(AbstractRoom){
 
         this.devices = {
             switch220:      'hallway.switch220',
+        
             light12:        'hallway.light12',
             motionSensor:   'hallway.motionSensor',
             lightSensor:    'hallway.lightSensor',
             tempSensor:     'hallway.tempSensor',
             door:           'hallway.door'
         };
+        
+        
         
         this.extRooms = [{
             switch220:      'bathroom.switch220',

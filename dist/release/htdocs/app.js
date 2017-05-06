@@ -630,10 +630,10 @@ angular
             //return $http.get('modules/RemoteConsole/api/eval/' + encoded)
             return $http({
                 url: 'modules/RemoteConsole/api/eval/' + encoded,
-                method: 'GET',
-                transformResponse: function(value) {
-                    return value;
-                }
+                method: 'GET'
+                    // transformResponse: function(value) {
+                    //     return value;
+                    // }
             }).then(function(response) {
                     if (typeof response.data == 'string') {
                         var data = response.data;
@@ -643,7 +643,7 @@ angular
                     }
                     history.push({
                         src: str,
-                        result: data
+                        result: data ? data.substr(0, 200) : ''
                     });
                     return data;
                 },

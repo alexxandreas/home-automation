@@ -152,17 +152,36 @@ define('AbstractRoom', [
     AbstractRoom.prototype._initBaseHandlers = function() {
         var handlers = {
             switch220: this.onSwitch220Change,
+            
+            switch220_10: this.onSwitch220SceneUpClick,
+            switch220_11: this.onSwitch220SceneDownClick,
+            switch220_13: this.onSwitch220SceneUpDownRelease,
+            switch220_14: this.onSwitch220SceneUpDoubleClick,
+            switch220_17: this.onSwitch220SceneUpHold,
+            switch220_18: this.onSwitch220SceneDownHold,
+            
             //light12:        this.onLight12Change,
             motionSensor: this.onMotionSensorChange,
             lightSensor: this.onLightSensorChange,
             tempSensor: this.onTempSensorChange,
             door: this.onDoorChange
         };
+        
+        // сцены для выключателя света
+        if (this.devices.switch220){
+            [10, 11, 13, 14, 17, 18].forEach(function(sceneId){
+                this.devices['switch220_' + sceneId] = this.devices.switch220 + '_' + sceneId;
+            }, this);
+        }
 
         Object.keys(handlers).forEach(function(key) {
             if (!this.devices[key]) return;
+            if (!handlers[key]) return;
             this.handlers.addHandler(this.devices[key], handlers[key], this);
+            
         }, this);
+              
+        
     };
 
 
