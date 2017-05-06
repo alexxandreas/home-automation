@@ -162,7 +162,7 @@ define('UtilsVDev', ['AbstractModule'], function(AbstractModule) {
             else if (obj.command == 'on' && command != 'exact') { // включаем безусловно
                 command = 'on';
             }
-        });
+        }, this);
 
         this._action(command, args);
     };
