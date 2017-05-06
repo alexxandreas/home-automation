@@ -280,7 +280,7 @@ define('AbstractRoom', [
     };
 
     AbstractRoom.prototype.getMotionState = function() {
-        return this.roomHelpers.getMotionState(this.extRooms);
+        return this.roomHelpers.getMotionState(this.devices.motionSensor);
     };
 
     AbstractRoom.prototype.getExtRoomsMotionState = function() {

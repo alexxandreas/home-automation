@@ -251,6 +251,8 @@ define('DeviceStorage', ['AbstractModule', 'WebServer', 'UtilsVDev'],
 
 
         DeviceStorage.prototype.getDevice = function(key) {
+            if (!key)
+                return null;
             if (!this.devices[key]) {
                 var parts = key.split('_');
                 var devKey = parts[0];
