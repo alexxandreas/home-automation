@@ -30,8 +30,8 @@ define('Hallway', ['AbstractRoom'], function(AbstractRoom){
             door:           'toilet.door'
         }, {
             switch220:      'corridor.switch220',
-            motionSensor:   'corridor.motionSensor',
-            door:           'corridor.door'
+            motionSensor:   'corridor.motionSensor'
+            //door:           'corridor.door'
         }];
         
         //this.settings = this.settings || {};
