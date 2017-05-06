@@ -122,7 +122,7 @@ define('DeviceStorage', ['AbstractModule', 'WebServer', 'UtilsVDev'],
                 'hall.switch220center': { name:  [dict.hall, dict.light, dict.center], type: this._deviceTypes.FGD211}, //  FGD-211
                 'hall.switch220edge': { name:  [dict.hall, dict.light, dict.edge], type: this._deviceTypes.FGD211}, //  FGD-211
                 'hall.rgb': { name:  [dict.hall, dict.light, dict.rgb], type: this._deviceTypes.default}, //  FGRGBWM-441 (switchRGBW) (1110 1110 1110)
-                'hall.w': [dict.hall, dict.light, dict.L12] // FGRGBWM-441 (x.5) (1110)
+                'hall.w': { name: [dict.hall, dict.light, dict.L12], type: this._deviceTypes.default}, // FGRGBWM-441 (x.5) (1110)
             };
 
             
