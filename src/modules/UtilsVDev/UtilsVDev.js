@@ -339,7 +339,7 @@ define('UtilsVDev', ['AbstractModule'], function(AbstractModule) {
     /**********************************************************/
         
     function DoorMHA(key, vDev) {
-        DoorMHA.super_.call(this, config);
+        DoorMHA.super_.apply(this, arguments);
     }
 
     inherits(DoorMHA, DefaultMHA);
@@ -362,7 +362,7 @@ define('UtilsVDev', ['AbstractModule'], function(AbstractModule) {
     /**********************************************************/
         
     function VirtualDoorMHA(key, vDev) {
-        VirtualDoorMHA.super_.call(this, config);
+        VirtualDoorMHA.super_.apply(this, arguments);
         
         this.closeTime = 5*1000; // время в мс, через которое дверь будет закрыта
     }
@@ -433,7 +433,7 @@ define('UtilsVDev', ['AbstractModule'], function(AbstractModule) {
     /**********************************************************/
         
     function TabletopSwitchMHA(key, vDev) {
-        TabletopSwitchMHA.super_.call(this, config);
+        TabletopSwitchMHA.super_.apply(this, arguments);
     }
 
     inherits(TabletopSwitchMHA, DefaultMHA);
