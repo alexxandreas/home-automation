@@ -3,7 +3,7 @@ global config, inherits, controller, MHA
 */
 
 // Прихожая
-define('Kitchen', ['AbstractRoom', 'DeviceStorage'], function(AbstractRoom, DeviceStorage){
+define('Kitchen', ['AbstractRoom', 'DeviceStorage', 'UtilsRoomHelpers'], function(AbstractRoom, DeviceStorage, UtilsRoomHelpers){
    
    function Kitchen(config) {
         Kitchen.super_.call(this, config);
@@ -94,37 +94,12 @@ define('Kitchen', ['AbstractRoom', 'DeviceStorage'], function(AbstractRoom, Devi
     Kitchen.prototype._setInitialState = function() {
         Kitchen.super_.prototype._setInitialState.apply(this, arguments);
         
-        this.state.switchMode = 'off';
-        var devSwitch = DeviceStorage.getDevice(this.devices.tabletopSwitch);
-        if (devSwitch) {
-            var level = devSwitch.MHA.getLevel();
-            this.onTabletopSwitchChange(level);    
-        }
+        this.updateTabletop();
         
-        
-        this.getTargets('tabletop').forEach(function(id) {
-          var vDev = this.getVDev(id);
-          vDev && vDev.performCommand('off');
-        }, this);
-        
-        this.state.switchMode = 'off';
-        var switchId = this.getTarget('switch');
-        if (!switchId) return;
-        this.onSwitchChange(switchId);
     }
     
     Kitchen.prototype.onTabletopSwitchChange = function(value){
-        // var vDev = this.getVDev(id);
-        // if (!vDev) return;
-        // var value = vDev.get("metrics:level");
-        
-        var mode = value > 70 ? 'off' : value > 35 ? 'half' : 'on';
-        //this.log('onSwitchChange: ' + value + ' -> ' + mode);
-        if (mode == this.state.switchMode) return;
-        
-        this.state.switchMode = mode;
         this.updateTabletop();
-        
     };
 
 
@@ -147,11 +122,14 @@ define('Kitchen', ['AbstractRoom', 'DeviceStorage'], function(AbstractRoom, Devi
             ) || lightState['12'].level == 'on')
             var light = 12;
         
+        var devSwitch = DeviceStorage.getDevice(this.devices.tabletopSwitch);
+        var switchState = devSwitch && devSwitch.MHA.getLevel() || 'off';
+        
         var newValue;
-        if (!light || this.state.switchMode == 'off')
+        if (!light || switchState == 'off')
           newValue = 0;
         else
-          newValue = this.settings['tabletop' + light + this.state.switchMode];
+          newValue = this.settings['tabletop' + light + switchState];
         this.log('updateTabletop (' + newValue + '%)');
         
         var devLight = DeviceStorage.getDevice(this.devices.tabletopLight);
