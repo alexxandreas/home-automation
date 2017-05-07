@@ -45,6 +45,8 @@ define('UtilsVDev', ['AbstractModule'], function(AbstractModule) {
         
          // текущее значение
         this._lastLevel = this.getLevel();
+        
+        this._pendingLevel = undefined;
 
         controller.devices.on(vDev.id, 'change:metrics:level', this._baseLevelChangeHandler);
     }
@@ -72,6 +74,18 @@ define('UtilsVDev', ['AbstractModule'], function(AbstractModule) {
         }
         return newLevel;
     };
+    
+    
+    /**
+     * Возвращает уровень, который должен быть установлен для 
+     * устройства, но пока еще не установился по причине затупа сети
+     */
+    DefaultMHA.prototype.getPendingLevel = function(){
+        //if (this._pendingLevel !== undefined)
+            return this._pendingLevel;
+        //else 
+        //    return this.getLevel();
+    }
 
     DefaultMHA.prototype._getLevel = function() {
         return this.vDev.get("metrics:level");
@@ -185,7 +199,9 @@ define('UtilsVDev', ['AbstractModule'], function(AbstractModule) {
             this._actionObj.timer && clearTimeout(this._actionObj.timer);
             log('STOP PREV');
         }
+        
         delete this._actionObj;
+        delete this._pendingLevel;
 
         // если команда пустая - значит это команда отмены любого действия - выходим
         if (!command) {
@@ -205,6 +221,7 @@ define('UtilsVDev', ['AbstractModule'], function(AbstractModule) {
                 //log('check: level: ' + this.getLevel());
                 return this.getLevel() === 'on' || this.getLevel() > 0;
             };
+            this._pendingLevel = 'on';
         }
         else if (command == 'off') {
             action = function() {
@@ -214,6 +231,7 @@ define('UtilsVDev', ['AbstractModule'], function(AbstractModule) {
                 //log('check: level: ' + this.getLevel());
                 return this.getLevel() === 'off' || this.getLevel() === 0;
             };
+            this._pendingLevel = 'off';
         }
         else if (command == 'exact') {
             action = function() {
@@ -227,10 +245,12 @@ define('UtilsVDev', ['AbstractModule'], function(AbstractModule) {
                     return this.getLevel() !== 'off' && this.getLevel() !== 0;
                 }
             };
+            this._pendingLevel = args.level ? args.level : args;
         }
 
 
         if (!isPrevAction && check.call(this)) { // если проверка проходит сразу и небыло предыдущего действия - не запускаем 
+            delete this._pendingLevel;
             //log()
             return;
         }
@@ -265,7 +285,8 @@ define('UtilsVDev', ['AbstractModule'], function(AbstractModule) {
                 this._actionObj.log('OK');
                 //self.log(name + ' OK');
                 //delete self.actions[name];
-                this._actionObj = undefined;
+                delete this._actionObj;
+                delete this._pendingLevel;
                 return;
             }
             //counter++;
@@ -273,7 +294,8 @@ define('UtilsVDev', ['AbstractModule'], function(AbstractModule) {
             if (seconds > 60 * 10) {
                 this._actionObj.log('ERROR');
                 //delete self.actions[name];
-                this._actionObj = undefined;
+                delete this._actionObj;
+                delete this._pendingLevel;
                 return;
             }
 

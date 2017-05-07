@@ -256,6 +256,7 @@ ModuleBase.prototype.getNextRoom = function(){
 
 
 // подбор подходящего по обстоятельствам света (основной 220, или подсветка 12)
+// +
 ModuleBase.prototype.getSuitableLight = function(){
   
   var conf = this.suitableLightConfig;
@@ -448,7 +449,7 @@ ModuleBase.prototype.onIntMChanged = function (id){ // внутреннее дв
 	
   };
   
-  
+  // +
   ModuleBase.prototype.onExtMChanged = function (id){  // внешнее движение началось или завершилось
 	//this.log('onExtMChanged (' + id + ')');
     /*var val = (this.getTargets('extMotion').some(function(dev){
@@ -483,6 +484,7 @@ ModuleBase.prototype.onIntMChanged = function (id){ // внутреннее дв
     
   };
   
+  // +
   ModuleBase.prototype.onExtMOn = function(id){ // начало движения снаружи
     //this.state.extMotions[id].ignore = (this.state.intM == 'off' && !!this.state.light);
     if (!this.state.light){
@@ -500,6 +502,7 @@ ModuleBase.prototype.onIntMChanged = function (id){ // внутреннее дв
     }
   };
   
+  // +
   ModuleBase.prototype.onExtMOff = function(id){ // конец движения снаружи
 	this.log('onExtMOff: конец движения снаружи. userMode='+ this.state.userMode + ' ignoreExtMotion['+id+']==' + this.state.extMotions[id].ignore);
 	if (this.state.extMotions[id].ignore) return;
@@ -542,6 +545,7 @@ ModuleBase.prototype.onIntMChanged = function (id){ // внутреннее дв
   	this.state.lastLight = null;
   };
   
+  // +
   ModuleBase.prototype.onButtonUp = function(){ // кликнута кнопка Вверх
 	if (!this.state.light){
 	  this.log('onButtonUp: кликнута кнопка Вверх. userMode=>220');
@@ -557,6 +561,7 @@ ModuleBase.prototype.onIntMChanged = function (id){ // внутреннее дв
 	}
   };
   
+  // +
   ModuleBase.prototype.onButtonDown = function(){ // кликнута кнопка Вниз
 	if (!this.state.light){
 	  this.log('onButtonDown: кликнута кнопка Вниз. userMode=>off');
@@ -579,6 +584,7 @@ ModuleBase.prototype.onIntMChanged = function (id){ // внутреннее дв
 	}
   };
   
+  // +
   ModuleBase.prototype.onLightOn = function(light){ // свет включен каким-то образом извне. light == '12' || '220'
 	return;
 	this.log('onLightOn: ' + light + ' включён извне. userMode=>on');
@@ -590,6 +596,7 @@ ModuleBase.prototype.onIntMChanged = function (id){ // внутреннее дв
 	  this.startTimer('userMode', this.settings.userModeTimeout*60, this.onUserModeTimer);
   };
   
+  // +
   ModuleBase.prototype.onLightOff = function(light){ // свет выключен каким-то образом извне. light == '12' || '220'  
 	return;
 	if (this.state.userMode == light || this.state.userMode == 'on'){
@@ -704,7 +711,7 @@ ModuleBase.prototype.onIntMChanged = function (id){ // внутреннее дв
       
   };
   
-  
+  // +
   ModuleBase.prototype.switchFan = function(mode){
      
      if (this.state.fanMode == mode)
@@ -795,57 +802,57 @@ ModuleBase.prototype.onIntMChanged = function (id){ // внутреннее дв
     }
     
   };*/
-  
+  // +
   ModuleBase.prototype.action = function(name, action, check, count){
-	//this.log('action: ' + name);
-	var oldAction = this.actions[name];
-	// останавливаем предыдущее
-	oldAction && oldAction.timer && clearTimeout(oldAction.timer);
-
-	if (!(action instanceof Function)){ // stop
-		this.log(name + ' STOP');
-		delete this.actions[name];
-		return;
-	}
-	
-    this.actions[name] = {
-      startTime: Date.now()
-    };
-	var self = this;
-    //var maxRestartCount = count || 60; // кол-во вызовов run. на maxRestartCount+1 вызов - ошибка
-    run();
-	
-	function run(){
-	  if (!self.actions[name]) return;
-      var seconds = Math.floor((Date.now() - self.actions[name].startTime)/1000);
-      
-      self.log(name + (seconds > 0 ? ' +' + seconds + ' sec' : ''));
-      action.call(self);
-      
-      var timeout = (Math.floor(seconds / 15)+1)*1000;
-      
-      self.actions[name].timer = setTimeout(function () { 
-          if (check.call(self)) {// проверка прошла успешно
-            self.log(name + ' OK');
-			delete self.actions[name];
-            return; 
-          }
-          //counter++;
-          //if (counter > maxRestartCount){
-          if (seconds > 60*10) {
-            self.log(name + ' ERROR');
-			delete self.actions[name];
-            return;
-          }
-          run();
-        }, 
-        timeout
-      );
-    }
+  	//this.log('action: ' + name);
+  	var oldAction = this.actions[name];
+  	// останавливаем предыдущее
+  	oldAction && oldAction.timer && clearTimeout(oldAction.timer);
+  
+  	if (!(action instanceof Function)){ // stop
+  		this.log(name + ' STOP');
+  		delete this.actions[name];
+  		return;
+  	}
+  	
+      this.actions[name] = {
+        startTime: Date.now()
+      };
+  	var self = this;
+      //var maxRestartCount = count || 60; // кол-во вызовов run. на maxRestartCount+1 вызов - ошибка
+      run();
+  	
+  	function run(){
+  	  if (!self.actions[name]) return;
+        var seconds = Math.floor((Date.now() - self.actions[name].startTime)/1000);
+        
+        self.log(name + (seconds > 0 ? ' +' + seconds + ' sec' : ''));
+        action.call(self);
+        
+        var timeout = (Math.floor(seconds / 15)+1)*1000;
+        
+        self.actions[name].timer = setTimeout(function () { 
+            if (check.call(self)) {// проверка прошла успешно
+              self.log(name + ' OK');
+  			delete self.actions[name];
+              return; 
+            }
+            //counter++;
+            //if (counter > maxRestartCount){
+            if (seconds > 60*10) {
+              self.log(name + ' ERROR');
+  			delete self.actions[name];
+              return;
+            }
+            run();
+          }, 
+          timeout
+        );
+      }
 	
   };
   
-  
+  // +
   ModuleBase.prototype.onDoorChanged = function(id){
     var vDev = this.getVDev(id);
     if (!vDev) {
@@ -885,6 +892,8 @@ ModuleBase.prototype.onIntMChanged = function (id){ // внутреннее дв
         * Если меньше, чем 20 секунд назад - выключить свет с минимальным таймаута
         * Если больше, чем 20 секунд назад - не учитывать двери
   */
+  
+  // +
   ModuleBase.prototype.onDoorOpen = function(id){
     this.log('onDoorOpen: открыта дверь. userMode='+ this.state.userMode);
     if (this.state.userMode != 'off' && !this.state.light){
@@ -903,6 +912,7 @@ ModuleBase.prototype.onIntMChanged = function (id){ // внутреннее дв
     //} 
   }
   
+  // +
   ModuleBase.prototype.onDoorClose = function(id){
     this.log('onDoorOpen: закрыта дверь. userMode='+ this.state.userMode);
     //this.switchLight({mode:'off'});

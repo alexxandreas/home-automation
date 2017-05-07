@@ -3,7 +3,7 @@ global config, inherits, controller, MHA
 */
 
 // Прихожая
-define('Kitchen', ['AbstractRoom'], function(AbstractRoom){
+define('Kitchen', ['AbstractRoom', 'DeviceStorage'], function(AbstractRoom, DeviceStorage){
    
    function Kitchen(config) {
         Kitchen.super_.call(this, config);
@@ -16,7 +16,11 @@ define('Kitchen', ['AbstractRoom'], function(AbstractRoom){
             light12:        'kitchen.light12',
             motionSensor:   'kitchen.motionSensor',
             lightSensor:    'kitchen.lightSensor',
-            tempSensor:     'kitchen.tempSensor'
+            tempSensor:     'kitchen.tempSensor',
+            
+            tabletopLight:  'kitchen.tabletopLight',
+            tabletopSwitch: 'kitchen.tabletopSwitch'
+                
             //door:           'hallway.door'
         };
         
@@ -71,11 +75,68 @@ define('Kitchen', ['AbstractRoom'], function(AbstractRoom){
         this.settings.lightOffTimeout = 15; // таймаут обязательного выключения света (когда не срабатывает датчик движения)
         this.settings.lastLightTimeout = 3; // таймаут сброса последнего света (12 или 220). Последний свет запоминается и включается при новом движении
         
-
+        this.settings.tabletop220on = 99, // полный уровень яркости столешницы при включенном 220
+        this.settings.tabletop220half = 70, // половинный уровень яркости столешницы при включенном 220
+        this.settings.tabletop12on = 70, // полный уровень яркости столешницы при включенном 12
+        this.settings.tabletop12half = 40 // половинный уровень яркости столешницы при включенном 12
+      
+      
+        this.handlersConfig.tabletopSwitch = this.onTabletopSwitchChange;
+        
+      
         this.init();
     }
 
     inherits(Kitchen, AbstractRoom);
+
+
+    Kitchen.prototype.onTabletopSwitchChange = function(value){
+        // var vDev = this.getVDev(id);
+        // if (!vDev) return;
+        // var value = vDev.get("metrics:level");
+        
+        var mode = value > 70 ? 'off' : value > 35 ? 'half' : 'on';
+        //this.log('onSwitchChange: ' + value + ' -> ' + mode);
+        if (mode == this.state.switchMode) return;
+        
+        this.state.switchMode = mode;
+        this.updateTabletop();
+        
+    };
+
+
+    Kitchen.prototype.switchLight = function(options){
+        Kitchen.super_.prototype.switchLight.apply(this, arguments);
+        this.updateTabletop();
+    };
+  
+    Kitchen.prototype.updateTabletop = function(){
+        
+        var lightState = this.getLightState();
+        if (lightState['220'].pendingLevel && (
+                lightState['220'].pendingLevel == 'on' || 
+                lightState['220'].pendingLevel > 0
+            ) || lightState['220'].level == 'on')
+            var light = 220;
+        else if (lightState['12'].pendingLevel && (
+                lightState['12'].pendingLevel == 'on' || 
+                lightState['12'].pendingLevel > 0
+            ) || lightState['12'].level == 'on')
+            var light = 12;
+        
+        var newValue;
+        if (!light || this.state.switchMode == 'off')
+          newValue = 0;
+        else
+          newValue = this.settings['tabletop' + light + this.state.switchMode];
+        this.log('updateTabletop (' + newValue + '%)');
+        
+        var devLight = DeviceStorage.getDevice(this.config.tabletopLight);
+        devLight && devLight.MHA.performCommand(this.name, 'exact', {level: newValue});
+        
+    };
+
+
 
 
     Kitchen.prototype.init = function(){

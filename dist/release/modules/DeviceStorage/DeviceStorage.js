@@ -110,6 +110,7 @@ define('DeviceStorage', ['AbstractModule', 'WebServer', 'UtilsVDev'],
                 'kitchen.tempSensor': { name:  [dict.kitchen, dict.sensor, dict.temp], type: this._deviceTypes.default}, //  FGMS-001
                 'kitchen.tabletopLight': { name:  [dict.kitchen, dict.light, dict.tabletop], type: this._deviceTypes.default}, //  FGRGBWM-441  (x.5)
                 'kitchen.tabletopSwitch': { name:  [dict.kitchen, dict.switch_, dict.tabletop], type: this._deviceTypes.default}, //  FGRGBWM-441  (x.3) (0001)
+                'kitchen.door': { name: [dict.kitchen, dict.door], type: this._deviceTypes.default},
                 
                 'wardrobe.switch220': { name:  [dict.wardrobe, dict.light], type: this._deviceTypes.default}, // 
                 'wardrobe.door': { name:  [dict.wardrobe, dict.door], type: this._deviceTypes.default}, //  FGRGBWM-441  (x.4)

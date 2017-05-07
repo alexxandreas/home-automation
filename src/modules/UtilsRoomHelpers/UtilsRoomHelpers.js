@@ -18,13 +18,16 @@ define('UtilsRoomHelpers', ['AbstractModule', 'DeviceStorage'], function(Abstrac
     /**
      * Если устройство с ключем key есть - возвращает объект
      * {
-     *      level: 'on' / 'off'
+     *      level: 'on' / 'off',
+     *      pendingLevel: 'on' / 'off' / level
      *      lastLevelChange : время с момента последнего изменения
      * }
      * Если устройства нет - возвращает объект
      * {
-     *      level: null,
-     *      lastLevelChange: null
+     *      level: undefined,
+     *      pendingLevel: undefined,
+     *      lastLevelChange: undefined,
+     *      deviceNotExists: true
      * }
      */
     UtilsRoomHelpers.prototype.getDeviceData = function(key, convertToOnOff) {
@@ -33,6 +36,7 @@ define('UtilsRoomHelpers', ['AbstractModule', 'DeviceStorage'], function(Abstrac
         if (dev) {
             var result = {
                 level: dev.MHA.getLevel(),
+                pendingLevel: dev.MHA.getPendingLevel(),
                 lastLevelChange: dev.MHA.lastLevelChange(true)
             }
             if (convertToOnOff) {
@@ -44,8 +48,10 @@ define('UtilsRoomHelpers', ['AbstractModule', 'DeviceStorage'], function(Abstrac
         }
         else {
             var result = {
-                level: null,
-                lastLevelChange: null
+                level: undefined,
+                pendingLevel: undefined,
+                lastLevelChange: undefined,
+                deviceNotExists: true
             }
         }
         return result;
@@ -107,24 +113,33 @@ define('UtilsRoomHelpers', ['AbstractModule', 'DeviceStorage'], function(Abstrac
     };
 
 
-
+    UtilsRoomHelpers.prototype.getFanState = function(devFanKey) {
+        return this.getDeviceData(devFanKey);
+    };
+    
+    
+    
     /** EXT ROOMS **/
 
     // возвращает состояние датчиков движения в соседних комнатах:
     UtilsRoomHelpers.prototype.getExtRoomsMotionState = function(extRooms) {
-        return this._getExtRoomsState(extRooms, 'motionSensor');
+        return this._getExtRoomsState(extRooms, 'motionSensor', true);
     };
 
     // возвращает состояние дверей:
     UtilsRoomHelpers.prototype.getExtRoomsDoorsState = function(extRooms) {
-        return this._getExtRoomsState(extRooms, 'door');
+        return this._getExtRoomsState(extRooms, 'door', true);
     }
 
     // возвращает состояние 220-света:
     UtilsRoomHelpers.prototype.getExtRooms220State = function(extRooms) {
-        return this._getExtRoomsState(extRooms, 'switch220');
+        return this._getExtRoomsState(extRooms, 'switch220', true);
     };
 
+    // возвращает состояние датчиков влажности:
+    UtilsRoomHelpers.prototype.getExtRoomsHumState = function(extRooms) {
+        return this._getExtRoomsState(extRooms, 'switch220', false);
+    };
 
     /** Универсальный метод, возвращает состояние указанного устройства 
      * в соседних комнатах
@@ -140,15 +155,15 @@ define('UtilsRoomHelpers', ['AbstractModule', 'DeviceStorage'], function(Abstrac
      *       }
      *  }
      */
-    UtilsRoomHelpers.prototype._getExtRoomsState = function(extRooms, param) {
+    UtilsRoomHelpers.prototype._getExtRoomsState = function(extRooms, param, convertToOnOff) {
         return extRooms.reduce((function(result, room) {
             if (!room[param]) return result;
-            var devData = this.getDeviceData(room[param], true);
+            var devData = this.getDeviceData(room[param], convertToOnOff);
             result.rooms.push(devData);
 
-            if (devData.level == 'on')
+            if (devData.level == 'on' || devData.level > 0)
                 result.summary.level = 'on';
-            else if (devData.level == 'off' && !result.summary.level)
+            else if ((devData.level == 'off' || devData.level == 0) && !result.summary.level)
                 result.summary.level = 'off';
 
             if (devData.lastLevelChange)

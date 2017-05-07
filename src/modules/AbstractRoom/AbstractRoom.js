@@ -77,7 +77,8 @@ define('AbstractRoom', [
         //     motionSensor:   'hallway.motionSensor',
         //     lightSensor:    'hallway.lightSensor',
         //     tempSensor:     'hallway.tempSensor',
-        //     door:           'hallway.door'
+        //     humSensor:       ''
+        //     fan:            'toilet.fan'
         // };
 
         // this.extRooms = [{
@@ -108,6 +109,24 @@ define('AbstractRoom', [
             //   ext220Targets: 'ext220', // устройства, отвечающие за внешний 220В свет. Если он включен - включится 220, иначе 12
             //   int12Targets: '12' // устройства, отвечающие за 12В свет в текущем помещении. Если таких нет - вернется 220
         };
+        
+        this.handlersConfig = {
+            switch220: this.onSwitch220Change,
+            
+            switch220_10: this.onSwitch220SceneUpClick,
+            switch220_11: this.onSwitch220SceneDownClick,
+            switch220_13: this.onSwitch220SceneUpDownRelease,
+            switch220_14: this.onSwitch220SceneUpDoubleClick,
+            switch220_17: this.onSwitch220SceneUpHold,
+            switch220_18: this.onSwitch220SceneDownHold,
+            
+            //light12:        this.onLight12Change,
+            motionSensor: this.onMotionSensorChange,
+            lightSensor: this.onLightSensorChange,
+            tempSensor: this.onTempSensorChange,
+            humSensor: this.onHumSensorChange,
+            //door: this.onDoorChange
+        }
 
     }
 
@@ -138,7 +157,7 @@ define('AbstractRoom', [
             someDoorClosed: false, // хотя бы одна дверь закрыта
 
             fanMode: 'off', // состояние вентилятора (для ванной и туалета) ('on', 'off')
-            fanModeTimeout: 0 //  Date.now(); - время изменения значения fanMode
+            //fanModeTimeout: 0 //  Date.now(); - время изменения значения fanMode
         };
 
 
@@ -150,22 +169,24 @@ define('AbstractRoom', [
 
 
     AbstractRoom.prototype._initBaseHandlers = function() {
-        var handlers = {
-            switch220: this.onSwitch220Change,
+        // var handlers = {
+        //     switch220: this.onSwitch220Change,
             
-            switch220_10: this.onSwitch220SceneUpClick,
-            switch220_11: this.onSwitch220SceneDownClick,
-            switch220_13: this.onSwitch220SceneUpDownRelease,
-            switch220_14: this.onSwitch220SceneUpDoubleClick,
-            switch220_17: this.onSwitch220SceneUpHold,
-            switch220_18: this.onSwitch220SceneDownHold,
+        //     switch220_10: this.onSwitch220SceneUpClick,
+        //     switch220_11: this.onSwitch220SceneDownClick,
+        //     switch220_13: this.onSwitch220SceneUpDownRelease,
+        //     switch220_14: this.onSwitch220SceneUpDoubleClick,
+        //     switch220_17: this.onSwitch220SceneUpHold,
+        //     switch220_18: this.onSwitch220SceneDownHold,
             
-            //light12:        this.onLight12Change,
-            motionSensor: this.onMotionSensorChange,
-            lightSensor: this.onLightSensorChange,
-            tempSensor: this.onTempSensorChange,
-            door: this.onDoorChange
-        };
+        //     //light12:        this.onLight12Change,
+        //     motionSensor: this.onMotionSensorChange,
+        //     lightSensor: this.onLightSensorChange,
+        //     tempSensor: this.onTempSensorChange,
+        //     humSensor: this.onHumSensorChange,
+        //     //door: this.onDoorChange
+        // };
+        
         
         // сцены для выключателя света
         if (this.devices.switch220){
@@ -174,13 +195,29 @@ define('AbstractRoom', [
             }, this);
         }
 
-        Object.keys(handlers).forEach(function(key) {
+        Object.keys(this.handlersConfig).forEach(function(key) {
             if (!this.devices[key]) return;
-            if (!handlers[key]) return;
-            this.handlers.addHandler(this.devices[key], handlers[key], this);
-            
+            if (!this.handlersConfig[key]) return;
+            this.handlers.addHandler(this.devices[key], this.handlersConfig[key], this);
         }, this);
+           
+            
+        // ExtRooms
+        
+        var extRoomsHandlers = {
+            //switch220:      this.onExtRoomSwitch220Change,
+            motionSensor:   this.onExtRoomMotionSensorChange,
+            door:           this.onExtRoomDoorChange
+        };
               
+        this.extRooms.forEach(function(extRoom){
+            Object.keys(extRoomsHandlers).forEach(function(key){
+                if (!extRoom[key]) return;
+                if (!extRoomsHandlers[key]) return;
+                var handler = extRoomsHandlers[key].bind(this, extRoom);
+                this.handlers.addHandler(extRoom[key], handler, this);
+            }, this);
+        }, this);
         
     };
 
@@ -282,6 +319,10 @@ define('AbstractRoom', [
     AbstractRoom.prototype.getMotionState = function() {
         return this.roomHelpers.getMotionState(this.devices.motionSensor);
     };
+    
+    AbstractRoom.prototype.getFanState = function() {
+        return this.roomHelpers.getFanState(this.devices.fan);
+    };
 
     AbstractRoom.prototype.getExtRoomsMotionState = function() {
         return this.roomHelpers.getExtRoomsMotionState(this.extRooms);
@@ -294,6 +335,11 @@ define('AbstractRoom', [
     AbstractRoom.prototype.getExtRooms220State = function() {
         return this.roomHelpers.getExtRooms220State(this.extRooms);
     };
+    
+    AbstractRoom.prototype.getExtRoomsHumState = function() {
+        return this.roomHelpers.getExtRoomsHumState(this.extRooms);
+    };
+    
 
 
 
@@ -413,6 +459,11 @@ define('AbstractRoom', [
     };
 
 
+    AbstractRoom.prototype.switchFan = function(mode){
+        var devFan = DeviceStorage.getDevice(this.devices.fan);
+        devFan && devFan.MHA.performCommand(this.name, mode);
+    };
+
 
 
 
@@ -423,6 +474,18 @@ define('AbstractRoom', [
 
     AbstractRoom.prototype.onSwitch220Change = function(level) {
         this.log('onSwitch220Change: ' + level);
+        if (level == 'on' || level > 0)
+            this.onSwitch220On(level);
+        else 
+            this.onSwitch220Off(level);
+    };
+    
+    AbstractRoom.prototype.onSwitch220On = function(level) {
+        this.log('onSwitch220On: ' + level);
+    };
+    
+    AbstractRoom.prototype.onSwitch220Off = function(level) {
+        this.log('onSwitch220Off: ' + level);
     };
 
 
@@ -499,46 +562,176 @@ define('AbstractRoom', [
             this.onOffTimer,
             this,
             true);
-
-        // this.extRooms && this.extRooms.forEach(function(room){
-        //     var dev220 = DeviceStorage.getDevice(room.switch220);
-        //     var devMotion = DeviceStorage.getDevice(room.motionSensor);
-        //     var devDoor = DeviceStorage.getDevice(room.door);
-
-        //     if (!devMotion) return;
-
-        //     if (devMotion && devMotion.MHA.getLevel() == 'on'){ 
-        //         // движение в соседней комнате есть
-        //         timeouts.push((this.settings.intMotionTimeout + this.settings.extMotionTimeout)*60/2);
-        //     } else {
-
-        //     }
-        // }, this);
-
-
-        // this.extRooms = [{
-        //     switch220:      'bathroom.switch220',
-        //     motionSensor:   'bathroom.motionSensor',
-        //     door:           'bathroom.door'
-        // }
-
     };
 
 
+    AbstractRoom.prototype.onSwitch220SceneUpClick = function(level) {
+        this.log('onSwitch220SceneUpClick: ' + level);
+        return;
+        
+        if (!this.state.light){
+    	  this.log('onButtonUp: кликнута кнопка Вверх. userMode=>220');
+    	  this.state.userMode = '220';
+    	  this.switchLight({mode:'on', force:true, light:'220'});
+    	} else if (this.state.light == '12'){
+    	  this.log('onButtonUp: кликнута кнопка Вверх. userMode=>220');
+    	  this.state.userMode = '220';
+    	  this.switchLight({mode:'on', force:true, light:'220'});
+    	} else if (this.state.light == '220'){
+    	  this.log('onButtonUp: кликнута кнопка Вверх. userMode=>on');
+    	  this.state.userMode = 'on';
+    	}
+    };
+
+    AbstractRoom.prototype.onSwitch220SceneDownClick = function(level) {
+        this.log('onSwitch220SceneDownClick: ' + level);
+        return;
+        
+        if (!this.state.light){
+    	  this.log('onButtonDown: кликнута кнопка Вниз. userMode=>off');
+    	  this.state.userMode = 'off';
+    	} else if (this.state.light == '12'){
+    	  this.log('onButtonDown: кликнута кнопка Вниз. userMode=>off');
+    	  this.state.userMode = 'off';
+    	  this.switchLight({mode:'off', force:true});
+    	} else if (this.state.light == '220'){
+          if (this.is12TargetsExists()){
+            this.log('onButtonDown: кликнута кнопка Вниз. userMode=>12');
+            this.state.userMode = '12';
+            this.switchLight({mode:'on', force:true, light:'12'});
+          } else {
+            this.log('onButtonDown: кликнута кнопка Вниз. 12В устройства не найдены. userMode=>off');
+            this.state.userMode = 'off';
+            this.switchLight({mode:'off', force:true});
+          }
+    	  
+    	}
+    };
+
+    AbstractRoom.prototype.onSwitch220SceneUpDownRelease = function(level) {
+        this.log('onSwitch220SceneUpDownRelease: ' + level);
+    };
+
+    AbstractRoom.prototype.onSwitch220SceneUpDoubleClick = function(level) {
+        this.log('onSwitch220SceneUpDoubleClick: ' + level);
+    };
+
+    AbstractRoom.prototype.onSwitch220SceneUpHold = function(level) {
+        this.log('onSwitch220SceneUpHold: ' + level);
+    };
+
+    AbstractRoom.prototype.onSwitch220SceneDownHold = function(level) {
+        this.log('onSwitch220SceneDownHold: ' + level);
+    };
+
+            
 
     AbstractRoom.prototype.onLightSensorChange = function(level) {
         this.log('onLightSensorChange: ' + level);
     };
 
     AbstractRoom.prototype.onTempSensorChange = function(level) {
-        this.log('onSwitchonTempSensorChange220Change: ' + level);
-    };
-
-    AbstractRoom.prototype.onDoorChange = function(level) {
-        this.log('onDoorChange: ' + level);
+        this.log('onTempSensorChange: ' + level);
     };
 
 
+    /**********************************************************/
+    /******************* EXT ROOMS HANDLERS *******************/
+    /**********************************************************/
+    
+    AbstractRoom.prototype.onExtRoomMotionSensorChange = function(extRoom, level) {
+        //this.log('onExtRoomMotionSensorChange: ' + level);
+        this[level == 'on' ? 'onExtRoomMotionSensorOn' : 'onExtRoomMotionSensorOff'].call(this, extRoom);
+    };
+    
+    AbstractRoom.prototype.onExtRoomMotionSensorOn = function(extRoom) {
+        //this.log('onExtRoomMotionSensorOn');
+        
+        if (this.getLightState().summary.level == 'off') {
+            extRoom.motionIgnore = false;
+            this.log('onExtRoomMotionSensorOn: userMode='+ this.state.userMode + ' extRoom.motionIgnore => ' + extRoom.motionIgnore + ' (свет выключен)');
+        } else if (this.getMotionState().level == 'on') {
+            extRoom.motionIgnore = false;
+            this.log('onExtRoomMotionSensorOn: userMode='+ this.state.userMode + ' extRoom.motionIgnore => ' + extRoom.motionIgnore + ' (есть движение внутри)');
+        } else if (this.getMotionState().lastLevelChange < 5*1000) {
+            extRoom.motionIgnore = false;
+            this.log('onExtRoomMotionSensorOn: userMode='+ this.state.userMode + ' extRoom.motionIgnore => ' + extRoom.motionIgnore + ' (с конца движения внутри прошло < 5 сек.)');
+        } else {
+            extRoom.motionIgnore = true;
+            this.log('onExtRoomMotionSensorOn: userMode='+ this.state.userMode + ' extRoom.motionIgnore => ' + extRoom.motionIgnore + ' (с конца движения внутри прошло > 5 сек.)');
+        }
+    };
+    
+    AbstractRoom.prototype.onExtRoomMotionSensorOff = function(extRoom) {
+        this.log('onExtRoomMotionSensorOff userMode='+ this.state.userMode + ' extRoom.motionIgnore ==' + extRoom.motionIgnore);
+        if (extRoom.motionIgnore) return;
+        if (this.getMotionState().level == 'on') return;
+        if (this.state.userMode != 'on' && this.getLightState().summary.level != 'off') {
+            // таймер взводим только если режим не on и свет горит 
+            this.timers.startTimer(
+                'offTimer', 
+        		this.settings.extMotionTimeout*60, 
+        		this.onOffTimer,
+        		this,
+        		true
+		    );
+        }
+    };
+        
+    
+    
+    AbstractRoom.prototype.onExtRoomDoorChange = function(extRoom, level) {
+        //this.log('onDooonExtRoomDoorChangerChange: ' + level);
+        this[level == 'on' ? 'onExtRoomDoorOpen' : 'onExtRoomDoorClose'].call(this, extRoom);
+    };
+    
+
+    /**
+     * Если дверь открылась (любая на периметре помещения) - свет нужно включить
+     * Если дверь закрылась - кто-то либо вошел, либо вышел
+     *      Если нет движения внутри - выключить свет с минимальным таймаутом
+     *      Если есть движение внутри - то по окончании движения посчитать,
+     *      как давно закрылась последняя дверь. 
+     *          Если меньше, чем 20 секунд назад - выключить свет с минимальным таймаута
+     *          Если больше, чем 20 секунд назад - не учитывать двери
+    */
+    AbstractRoom.prototype.onExtRoomDoorOpen = function(extRoom) {
+        this.log('onExtRoomDoorOpen');
+        // время последнего изменения двери:
+        // var dev = DeviceStorage.getDevice(room.door);
+        // var lastLevelChange = dev.MHA.lastLevelChange(true)
+        
+        if (this.state.userMode != 'off' && this.getLightState().summary.level == 'off'){
+    	    this.switchLight({mode:'on'});
+            this.timers.startTimer(
+                'offTimer', 
+                this.settings.intMotionTimeout*60, 
+                this.onOffTimer,
+                this,
+                true
+            );
+        }
+    };
+
+    AbstractRoom.prototype.onExtRoomDoorClose = function(extRoom) {
+        this.log('onExtRoomDoorClose');
+        if (this.getMotionState().level == 'on') return;
+        if (this.state.userMode != 'on' && this.getLightState().summary.level != 'off') {
+            // таймер взводим только если режим не on и свет горит 
+            this.timers.startTimer('offTimer', 
+        		this.settings.extMotionTimeout*60, 
+        		this.onOffTimer,
+        		this,
+        		true
+		    );
+        }
+    };
+    
+    
+
+    /**********************************************************/
+    /************************* TIMERS *************************/
+    /**********************************************************/
 
     AbstractRoom.prototype.onOffTimer = function() { // сработал таймер отключения света
         this.log('onOffTimer: Отключение света по таймеру. userMode=' + this.state.userMode);

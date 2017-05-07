@@ -2,21 +2,21 @@
 global config, inherits, controller, MHA
 */
 
-// Прихожая
-define('Kitchen', ['AbstractRoom'], function(AbstractRoom){
+// Корридор
+define('Corridor', ['AbstractRoom'], function(AbstractRoom){
    
-   function Kitchen(config) {
-        Kitchen.super_.call(this, config);
-        this.name = 'Kitchen';
+   function Corridor(config) {
+        Corridor.super_.call(this, config);
+        this.name = 'Corridor';
         this.log('construcror');
 
         this.devices = {
-            switch220:      'kitchen.switch220',
+            switch220:      'corridor.switch220',
         
-            light12:        'kitchen.light12',
-            motionSensor:   'kitchen.motionSensor',
-            lightSensor:    'kitchen.lightSensor',
-            tempSensor:     'kitchen.tempSensor'
+            light12:        'hallway.light12',
+            motionSensor:   'corridor.motionSensor',
+            lightSensor:    'corridor.lightSensor',
+            tempSensor:     'corridor.tempSensor'
             //door:           'hallway.door'
         };
         
@@ -37,14 +37,13 @@ define('Kitchen', ['AbstractRoom'], function(AbstractRoom){
         // корридор
         {
             switch220:      'corridor.switch220',
-            //motionSensor:   'corridor.motionSensor'
-            //door:           'corridor.door'
+            motionSensor:   'corridor.motionSensor'
         }, 
-        // прихожая
+        // кухня
         {
-            switch220:      'hallway.switch220',
-            motionSensor:   'hallway.motionSensor',
-            door:           'kitchen.door',
+            switch220:      'kitchen.switch220',
+            //motionSensor:   'kitchen.motionSensor',
+            //door:           'kitchen.door',
         },
         // спальня-center
         {
@@ -61,12 +60,13 @@ define('Kitchen', ['AbstractRoom'], function(AbstractRoom){
         // холл-edge
         {
             switch220:      'bedroom.switch220edge'
-        }];
+        }
+        ];
         
         
         //this.settings = this.settings || {};
         this.settings.userModeTimeout = 15; // таймаут сброса пользовательского режима, мин. Таймер запускается после выключения света
-        this.settings.intMotionTimeout = 2; // таймаут выключения света после окончания движения ВНУТРИ, мин
+        this.settings.intMotionTimeout = 0.5; // таймаут выключения света после окончания движения ВНУТРИ, мин
         this.settings.extMotionTimeout = 0.5; // таймаут выключения света после окончания движения СНАРУЖИ, мин
         this.settings.lightOffTimeout = 15; // таймаут обязательного выключения света (когда не срабатывает датчик движения)
         this.settings.lastLightTimeout = 3; // таймаут сброса последнего света (12 или 220). Последний свет запоминается и включается при новом движении
@@ -75,17 +75,17 @@ define('Kitchen', ['AbstractRoom'], function(AbstractRoom){
         this.init();
     }
 
-    inherits(Kitchen, AbstractRoom);
+    inherits(Corridor, AbstractRoom);
 
 
-    Kitchen.prototype.init = function(){
-        Kitchen.super_.prototype.init.apply(this, arguments);
+    Corridor.prototype.init = function(){
+        Corridor.super_.prototype.init.apply(this, arguments);
     };
     
-    Kitchen.prototype.stop = function(){
-        Kitchen.super_.prototype.stop.apply(this, arguments);
+    Corridor.prototype.stop = function(){
+        Corridor.super_.prototype.stop.apply(this, arguments);
     };
 
-    return new Kitchen();
+    return new Corridor();
 });
 
