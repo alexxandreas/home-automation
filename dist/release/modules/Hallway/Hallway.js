@@ -38,7 +38,6 @@ define('Hallway', ['AbstractRoom'], function(AbstractRoom){
         {
             switch220:      'corridor.switch220',
             motionSensor:   'corridor.motionSensor',
-            door:           'corridor.door'
         }, 
         // кухгя
         {
