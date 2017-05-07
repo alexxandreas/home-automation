@@ -68,6 +68,9 @@ define('UtilsDeviceHandlers', ['AbstractModule', 'DeviceStorage'], function(Abst
         // запускаем таймер, чтобы через какое-то время снова подпиаться
         // на несуществующие в данный момент девайсы
         var timeout = 10; // sec
+        
+        return; // TODO потом подумать, как подписываться на несуществующие девайсы, но не засрать всю память и консоль
+        
         if (this._deferredHandlers.length > 0) {
             this.log('addDeviceHandler: ' + this._deferredHandlers.length + ' devices not found! Repeat after ' + timeout + ' seconds');
             this._handlersTimer = setTimeout(this._addHandlers.bind(this), 10 * 1000);

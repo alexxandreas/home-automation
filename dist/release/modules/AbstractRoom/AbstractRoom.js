@@ -62,7 +62,7 @@ define('AbstractRoom', [
 
         this.handlers = new UtilsDeviceHandler();
         this.timers = new UtilsTimers();
-        this.roomHelpers = new UtilsRoomHelpers();
+        //this.roomHelpers = new UtilsRoomHelpers();
 
         //Utils.extend(this, Utils.timers);
         //Utils.extend(this, Utils.deviceHandlers);
@@ -313,31 +313,31 @@ define('AbstractRoom', [
     /**********************************************************/
 
     AbstractRoom.prototype.getLightState = function() {
-        return this.roomHelpers.getLightState(this.devices.switch220, this.devices.light12);
+        return UtilsRoomHelpers.getLightState(this.devices.switch220, this.devices.light12);
     };
 
     AbstractRoom.prototype.getMotionState = function() {
-        return this.roomHelpers.getMotionState(this.devices.motionSensor);
+        return UtilsRoomHelpers.getMotionState(this.devices.motionSensor);
     };
     
     AbstractRoom.prototype.getFanState = function() {
-        return this.roomHelpers.getFanState(this.devices.fan);
+        return UtilsRoomHelpers.getFanState(this.devices.fan);
     };
 
     AbstractRoom.prototype.getExtRoomsMotionState = function() {
-        return this.roomHelpers.getExtRoomsMotionState(this.extRooms);
+        return UtilsRoomHelpers.getExtRoomsMotionState(this.extRooms);
     };
 
     AbstractRoom.prototype.getExtRoomsDoorsState = function() {
-        return this.roomHelpers.getExtRoomsDoorsState(this.extRooms);
+        return UtilsRoomHelpers.getExtRoomsDoorsState(this.extRooms);
     };
 
     AbstractRoom.prototype.getExtRooms220State = function() {
-        return this.roomHelpers.getExtRooms220State(this.extRooms);
+        return UtilsRoomHelpers.getExtRooms220State(this.extRooms);
     };
     
     AbstractRoom.prototype.getExtRoomsHumState = function() {
-        return this.roomHelpers.getExtRoomsHumState(this.extRooms);
+        return UtilsRoomHelpers.getExtRoomsHumState(this.extRooms);
     };
     
 
@@ -429,7 +429,7 @@ define('AbstractRoom', [
             //       }
             //   }
 
-            if (this.roomHelpers.getMotionState().level == 'off') {
+            if (this.getMotionState().level == 'off') {
                 this.timers.startTimer('offTimer',
                     this.settings.lightOffTimeout * 60,
                     this.onOffTimer,
@@ -766,7 +766,7 @@ define('AbstractRoom', [
     AbstractRoom.prototype.stop = function() {
         this.handlers.stop();
         this.timers.stop();
-        this.roomHelpers.stop();
+        //this.roomHelpers.stop();
 
         AbstractRoom.super_.prototype.stop.apply(this, arguments);
     };
