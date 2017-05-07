@@ -20,8 +20,8 @@ define('Toilet', ['AbstractRoom'], function(AbstractRoom){
             humSensor:      'toilet.humSensor',
             fan:            'toilet.fan',
             
-            door:           'toilet.doo'
-        };
+            door:           'toilet.door'
+        }; 
         
         
         this.extRooms = [

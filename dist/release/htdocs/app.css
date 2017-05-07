@@ -76,6 +76,16 @@
     /*font-weight: bold;*/
     outline: none;
 } 
+
+.Status .map-container {
+    width: 100%;
+    height: 200px;
+}
+
+.Status .map {
+    background-image: url(modules/Status/htdocs/plan_100_new.png); 
+}
+
 html, body {
 	width: 100%;
 	height: 100%;
