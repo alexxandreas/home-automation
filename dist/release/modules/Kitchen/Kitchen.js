@@ -154,7 +154,7 @@ define('Kitchen', ['AbstractRoom', 'DeviceStorage'], function(AbstractRoom, Devi
           newValue = this.settings['tabletop' + light + this.state.switchMode];
         this.log('updateTabletop (' + newValue + '%)');
         
-        var devLight = DeviceStorage.getDevice(this.config.tabletopLight);
+        var devLight = DeviceStorage.getDevice(this.devices.tabletopLight);
         devLight && devLight.MHA.performCommand(this.name, 'exact', {level: newValue});
         
     };
