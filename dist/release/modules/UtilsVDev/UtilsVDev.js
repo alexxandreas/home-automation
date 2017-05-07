@@ -16,6 +16,10 @@ define('UtilsVDev', ['AbstractModule'], function(AbstractModule) {
         
         if (mha == 'door')
             return new DoorMHA(key, vDev);
+        else if (mha == 'virtualDoor')
+            return new VirtualDoorMHA(key, vDev);
+        else if (mha == 'tabletopSwitch')
+            return new TabletopSwitchMHA(key, vDev);
             
         return new DefaultMHA(key, vDev);
     };
@@ -348,6 +352,100 @@ define('UtilsVDev', ['AbstractModule'], function(AbstractModule) {
             return 'on' // открыта
         }
     }
+    
+    
+    
+    
+    
+    /**********************************************************/
+    /********************** VIRTUAL DOOR **********************/
+    /**********************************************************/
+        
+    function VirtualDoorMHA(key, vDev) {
+        VirtualDoorMHA.super_.call(this, config);
+        
+        this.closeTime = 5*1000; // время в мс, через которое дверь будет закрыта
+    }
+
+    inherits(VirtualDoorMHA, DefaultMHA);
+    
+    VirtualDoorMHA.prototype._getLevel = function() {
+        var level = this.vDev.get("metrics:level");
+        var mode = level > 10 ? 'on' : 'off';
+        
+        this.clearCloseDoorTimer();
+        
+        // если дверь открылась - сразу возвращаем результат
+        if (mode == 'on') {
+            this._closeTime = null;
+            return 'on';
+        }
+        
+        if (this._lastLevel == 'off') {
+            this._closeTime = null;
+            return 'off';
+        }
+        
+        if (!this._closeTime) {
+            this._closeTime = Date.now();
+            
+            this.closeDoorTimeout = setTimeout(
+                this.onCloseDoorTimer.bind(this), 
+                this.closeTime + 50
+            );
+        } else {
+            var timeFromClose = Date.now() - this._closeTime;
+            if (timeFromClose > this.closeTime){
+                this._closeTime = null;
+                return 'off';
+            } else {
+                this.closeDoorTimeout = setTimeout(
+                    this.onCloseDoorTimer.bind(this), 
+                    this.closeTime - timeFromClose + 50
+                );
+            }
+        }
+        
+        return 'on';
+    }
+    
+    VirtualDoorMHA.prototype.onCloseDoorTimer = function(){
+        this.clearCloseDoorTimer();
+        this.getLevel();
+    }
+    
+    VirtualDoorMHA.prototype.clearCloseDoorTimer = function(){
+        this.closeDoorTimeout && clearTimeout(this.closeDoorTimeout);
+        this.closeDoorTimeout = null;
+    }
+    
+    VirtualDoorMHA.prototype.destroy = function() {
+        this.clearCloseDoorTimer();
+        VirtualDoorMHA.super_.prototype.destroy.apply(this, arguments);
+    }
+    
+    
+    
+    
+    
+    /**********************************************************/
+    /********************* TabletopSwitch *********************/
+    /**********************************************************/
+        
+    function TabletopSwitchMHA(key, vDev) {
+        TabletopSwitchMHA.super_.call(this, config);
+    }
+
+    inherits(TabletopSwitchMHA, DefaultMHA);
+    
+    TabletopSwitchMHA.prototype._getLevel = function() {
+        var level = this.vDev.get("metrics:level");
+        var mode = level > 70 ? 'off' : level > 35 ? 'half' : 'on';
+        return mode;
+    }
+    
+    
+    
     
     
     

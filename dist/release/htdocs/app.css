@@ -83,8 +83,10 @@
 }
 
 .Status .map {
-    background-image: url(../modules/Status/htdocs/plan_100_new.png); 
+    /*background-image: url(../modules/Status/htdocs/plan_100_new.png); */
     position: relative;
+    background-size: contain;
+    background-repeat: no-repeat;
 }
 .Status .map-image {
     width: 100%;
@@ -107,6 +109,7 @@
     width: 0px;
     height: 0px;
     /*background-color: red;*/
+    font-size: 3vw;
     
     display: flex;
     flex-direction: row;

@@ -90,6 +90,29 @@ define('Kitchen', ['AbstractRoom', 'DeviceStorage'], function(AbstractRoom, Devi
     inherits(Kitchen, AbstractRoom);
 
 
+    // Установка начальных значений в соответствии с текущим состоянием выключателей / датчиков
+    Kitchen.prototype._setInitialState = function() {
+        Kitchen.super_.prototype._setInitialState.apply(this, arguments);
+        
+        this.state.switchMode = 'off';
+        var devSwitch = DeviceStorage.getDevice(this.config.tabletopSwitch);
+        if (devSwitch) {
+            var level = devSwitch.MHA.getLevel();
+            this.onTabletopSwitchChange(level);    
+        }
+        
+        
+        this.getTargets('tabletop').forEach(function(id) {
+          var vDev = this.getVDev(id);
+          vDev && vDev.performCommand('off');
+        }, this);
+        
+        this.state.switchMode = 'off';
+        var switchId = this.getTarget('switch');
+        if (!switchId) return;
+        this.onSwitchChange(switchId);
+    }
+    
     Kitchen.prototype.onTabletopSwitchChange = function(value){
         // var vDev = this.getVDev(id);
         // if (!vDev) return;
