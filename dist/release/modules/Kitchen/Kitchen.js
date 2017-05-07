@@ -95,7 +95,7 @@ define('Kitchen', ['AbstractRoom', 'DeviceStorage'], function(AbstractRoom, Devi
         Kitchen.super_.prototype._setInitialState.apply(this, arguments);
         
         this.state.switchMode = 'off';
-        var devSwitch = DeviceStorage.getDevice(this.config.tabletopSwitch);
+        var devSwitch = DeviceStorage.getDevice(this.devices.tabletopSwitch);
         if (devSwitch) {
             var level = devSwitch.MHA.getLevel();
             this.onTabletopSwitchChange(level);    
