@@ -183,7 +183,13 @@ define('DeviceStorage', ['AbstractModule', 'WebServer', 'UtilsVDev'],
          * Производит поиск и инициализацию устройства по ключу
          */
         DeviceStorage.prototype._initDevice = function(key) {
-            var vDevs = this._getDevicesByName(this.devs[key].name);
+            var devObj = this.devs[key];
+            if (!devObj){
+                this.log('Error: initDevice(' + key + '): device not determined');
+                return;
+            }
+            
+            var vDevs = this._getDevicesByName(devObj.name);
             if (vDevs.length == 0) {
                 this.log('Error: initDevice(' + key + '): not found: ' + JSON.stringify(this.devs[key].name));
                 //return null;
