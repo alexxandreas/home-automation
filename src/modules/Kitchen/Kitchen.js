@@ -19,9 +19,9 @@ define('Kitchen', ['AbstractRoom', 'DeviceStorage'], function(AbstractRoom, Devi
             tempSensor:     'kitchen.tempSensor',
             
             tabletopLight:  'kitchen.tabletopLight',
-            tabletopSwitch: 'kitchen.tabletopSwitch'
+            tabletopSwitch: 'kitchen.tabletopSwitch',
                 
-            //door:           'hallway.door'
+            door:           'kitchen.door'
         };
         
         
@@ -66,12 +66,12 @@ define('Kitchen', ['AbstractRoom', 'DeviceStorage'], function(AbstractRoom, Devi
         {
             switch220:      'bedroom.switch220edge'
         }];
-        
-        
+  
+       
         //this.settings = this.settings || {};
         this.settings.userModeTimeout = 15; // таймаут сброса пользовательского режима, мин. Таймер запускается после выключения света
-        this.settings.intMotionTimeout = 2; // таймаут выключения света после окончания движения ВНУТРИ, мин
-        this.settings.extMotionTimeout = 0.5; // таймаут выключения света после окончания движения СНАРУЖИ, мин
+        this.settings.intMotionTimeout = 15; // таймаут выключения света после окончания движения ВНУТРИ, мин
+        this.settings.extMotionTimeout = 2; // таймаут выключения света после окончания движения СНАРУЖИ, мин
         this.settings.lightOffTimeout = 15; // таймаут обязательного выключения света (когда не срабатывает датчик движения)
         this.settings.lastLightTimeout = 3; // таймаут сброса последнего света (12 или 220). Последний свет запоминается и включается при новом движении
         

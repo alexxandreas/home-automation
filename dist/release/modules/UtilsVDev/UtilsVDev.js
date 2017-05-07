@@ -12,6 +12,11 @@ define('UtilsVDev', ['AbstractModule'], function(AbstractModule) {
 
     // static
     UtilsVDev.createMHA = function(key, type, vDev) {
+        var mha = type && type.mha;
+        
+        if (mha == 'door')
+            return new DoorMHA(key, vDev);
+            
         return new DefaultMHA(key, vDev);
     };
 
@@ -19,6 +24,13 @@ define('UtilsVDev', ['AbstractModule'], function(AbstractModule) {
         vDev.MHA && vDev.MHA.destroy && vDev.MHA.destroy();
     };
 
+
+    UtilsVDev.prototype.stop = function() {
+        UtilsVDev.super_.prototype.stop.apply(this, arguments);
+    };
+    
+    
+    
 
     /**********************************************************/
     /************************ Default *************************/
@@ -314,11 +326,33 @@ define('UtilsVDev', ['AbstractModule'], function(AbstractModule) {
         delete this.vDev;
     };
 
+    
+    
+    
+    
+    /**********************************************************/
+    /************************** DOOR **************************/
+    /**********************************************************/
+        
+    function DoorMHA(key, vDev) {
+        DoorMHA.super_.call(this, config);
+    }
+
+    inherits(DoorMHA, DefaultMHA);
+    
+    DoorMHA.prototype._getLevel = function() {
+        var level = this.vDev.get("metrics:level");
+        if (level == 'on' || level > 50) {
+            return 'off'; // закрыта
+        } else {
+            return 'on' // открыта
+        }
+    }
+    
+    
+    
 
 
-    UtilsVDev.prototype.stop = function() {
-        UtilsVDev.super_.prototype.stop.apply(this, arguments);
-    };
 
 
     return UtilsVDev;

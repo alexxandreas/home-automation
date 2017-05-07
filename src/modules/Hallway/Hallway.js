@@ -16,8 +16,9 @@ define('Hallway', ['AbstractRoom'], function(AbstractRoom){
             light12:        'hallway.light12',
             motionSensor:   'hallway.motionSensor',
             lightSensor:    'hallway.lightSensor',
-            tempSensor:     'hallway.tempSensor'
-            //door:           'hallway.door'
+            tempSensor:     'hallway.tempSensor',
+            
+            door:           'hallway.door'
         };
         
         

@@ -18,7 +18,9 @@ define('Toilet', ['AbstractRoom'], function(AbstractRoom){
             lightSensor:    'toilet.lightSensor',
             tempSensor:     'toilet.tempSensor',
             humSensor:      'toilet.humSensor',
-            fan:            'toilet.fan'
+            fan:            'toilet.fan',
+            
+            door:           'toilet.doo'
         };
         
         

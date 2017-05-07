@@ -18,8 +18,9 @@ define('Bathroom', ['AbstractRoom', 'DeviceStorage'], function(AbstractRoom, Dev
             lightSensor:    'bathroom.lightSensor',
             tempSensor:     'bathroom.tempSensor',
             humSensor:      'bathroom.humSensor',
-            fan:            'toilet.fan'
-            //door:           'hallway.door'
+            fan:            'toilet.fan',
+            
+            door:           'bathroom.door'
         };
         
         
@@ -89,8 +90,9 @@ define('Bathroom', ['AbstractRoom', 'DeviceStorage'], function(AbstractRoom, Dev
         // var intHumiditySensor = intHumiditySensorId && this.getVDev(intHumiditySensorId);
         
         var extRoomsHumLevels = this.getExtRoomsHumState().rooms.reduce(function(levels, room) {
-            if (!room.level) return;
+            if (!room.level) return levels;
             levels.push(level);
+            return levels;
         }, []);
         
         if (!extRoomsHumLevels.length) return;

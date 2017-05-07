@@ -78,7 +78,7 @@ define('Status', ['AbstractModule', 'WebServer', 'UtilsRoomHelpers'], function(A
 	                var moduleTimers = module.timers._timers
     	            this.timers.forEach(function(timerName){
     	                if (!moduleTimers[timerName]) return;
-    	                data[moduleName].devices[timerName] = {
+    	                data[moduleName].timers[timerName] = {
     	                    timeout: moduleTimers[timerName].offTime - Date.now()
     	                }
     	            }, this);
