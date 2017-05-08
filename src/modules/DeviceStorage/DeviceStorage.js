@@ -98,7 +98,7 @@ define('DeviceStorage', ['AbstractModule', 'WebServer', 'UtilsVDev'],
                 'toilet.tempSensor': { name:  [dict.toilet, dict.sensor, dict.temp], type: this._deviceTypes.default}, //  Aeon
                 'toilet.humSensor': { name:  [dict.toilet, dict.sensor, dict.hum], type: this._deviceTypes.default}, //  Aeon
                 'toilet.fan': { name:  [dict.toilet, dict.fan], type: this._deviceTypes.default}, // 
-                'toilet.door': { name:  [dict.toilet, dict.door], type: this._deviceTypes.virtualDoor}, //  FGRGBWM-441  (x.3) (1110)
+                'toilet.door': { name:  [dict.toilet, dict.door], type: this._deviceTypes.door}, //  FGRGBWM-441  (x.3) (1110)
                 
                 'kitchen.switch220': { name:  [dict.kitchen, dict.light, dict.L220], type: this._deviceTypes.FGD211}, //  FGD-211
                 'kitchen.light12': { name:  [dict.kitchen, dict.light, dict.L12], type: this._deviceTypes.default}, //  FGRGBWM-441  (x.2) (1110)
@@ -107,7 +107,7 @@ define('DeviceStorage', ['AbstractModule', 'WebServer', 'UtilsVDev'],
                 'kitchen.tempSensor': { name:  [dict.kitchen, dict.sensor, dict.temp], type: this._deviceTypes.default}, //  FGMS-001
                 'kitchen.tabletopLight': { name:  [dict.kitchen, dict.light, dict.tabletop], type: this._deviceTypes.default}, //  FGRGBWM-441  (x.5)
                 'kitchen.tabletopSwitch': { name:  [dict.kitchen, dict.switch_, dict.tabletop], type: this._deviceTypes.tabletopSwitch}, //  FGRGBWM-441  (x.3) (0001)
-                'kitchen.door': { name: [dict.kitchen, dict.door], type: this._deviceTypes.door},
+                'kitchen.door': { name: [dict.kitchen, dict.door], type: this._deviceTypes.virtualDoor},
                 
                 'wardrobe.switch220': { name:  [dict.wardrobe, dict.light], type: this._deviceTypes.default}, // 
                 'wardrobe.door': { name:  [dict.wardrobe, dict.door], type: this._deviceTypes.door}, //  FGRGBWM-441  (x.4)
