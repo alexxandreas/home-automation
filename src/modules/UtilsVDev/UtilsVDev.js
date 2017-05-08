@@ -315,7 +315,7 @@ define('UtilsVDev', ['AbstractModule'], function(AbstractModule) {
                 return;
             }
 
-            this.run();
+            this._run();
         }).bind(this), timeout);
 
     };
