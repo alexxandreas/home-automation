@@ -111,26 +111,22 @@ define('Kitchen', ['AbstractRoom', 'DeviceStorage', 'UtilsRoomHelpers'], functio
     Kitchen.prototype.updateTabletop = function(){
         
         var lightState = this.getLightState();
-        if (lightState['220'].pendingLevel && (
-                lightState['220'].pendingLevel == 'on' || 
-                lightState['220'].pendingLevel > 0
-            ) || lightState['220'].level == 'on')
+        if (lightState['220'].nextLevel == 'on' || lightState['220'].nextLevel > 0)
             var light = 220;
-        else if (lightState['12'].pendingLevel && (
-                lightState['12'].pendingLevel == 'on' || 
-                lightState['12'].pendingLevel > 0
-            ) || lightState['12'].level == 'on')
+        else if (lightState['12'].nextLevel || lightState['12'].nextLevel > 0)
             var light = 12;
         
         var devSwitch = DeviceStorage.getDevice(this.devices.tabletopSwitch);
         var switchState = devSwitch && devSwitch.MHA.getLevel() || 'off';
+        
+        this.log()
         
         var newValue;
         if (!light || switchState == 'off')
           newValue = 0;
         else
           newValue = this.settings['tabletop' + light + switchState];
-        this.log('updateTabletop (' + newValue + '%)');
+        this.log('updateTabletop (' + newValue + '%): light = ' + light + ', switchState = ' + switchState);
         
         var devLight = DeviceStorage.getDevice(this.devices.tabletopLight);
         devLight && devLight.MHA.performCommand(this.name, 'exact', {level: newValue});

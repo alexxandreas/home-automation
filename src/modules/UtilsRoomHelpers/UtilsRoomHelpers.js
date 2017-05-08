@@ -19,7 +19,8 @@ define('UtilsRoomHelpers', ['AbstractModule', 'DeviceStorage'], function(Abstrac
      * Если устройство с ключем key есть - возвращает объект
      * {
      *      level: 'on' / 'off',
-     *      pendingLevel: 'on' / 'off' / level
+     *      pendingLevel: 'on' / 'off' / level, без конвертации к on/off
+     *      nextLevel: pendingLevel || level, без конвертации к on/off
      *      lastLevelChange : время с момента последнего изменения
      * }
      * Если устройства нет - возвращает объект
@@ -37,8 +38,10 @@ define('UtilsRoomHelpers', ['AbstractModule', 'DeviceStorage'], function(Abstrac
             var result = {
                 level: dev.MHA.getLevel(),
                 pendingLevel: dev.MHA.getPendingLevel(),
+                nextLevel: dev.MHA.getPendingLevel() || dev.MHA.getLevel(),
                 lastLevelChange: dev.MHA.lastLevelChange(true)
             }
+            
             if (convertToOnOff) {
                 if (result.level == 0)
                     result.level = 'off';
@@ -50,6 +53,7 @@ define('UtilsRoomHelpers', ['AbstractModule', 'DeviceStorage'], function(Abstrac
             var result = {
                 level: undefined,
                 pendingLevel: undefined,
+                nextLevel: undefined,
                 lastLevelChange: undefined,
                 deviceNotExists: true
             }

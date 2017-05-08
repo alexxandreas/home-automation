@@ -90,7 +90,7 @@
 }
 .Status .map-image {
     width: 100%;
-    visibility: hidden;
+    /*visibility: hidden;*/
 }
 
 .Status .map-controls {
