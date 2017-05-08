@@ -8,27 +8,25 @@
     //angular.module('WebApp').run(['StatusSrv', function(ApiSrv) {  }]);
     
     StatusSrv.$inject = [
-        '$http',
-        'PanelsSrv'
+        '$http'
     ];
     
     function StatusSrv(
-        $http,
-        PanelsSrv
+        $http
     ) {
         
         
-        function reload(){
-            return $http.get('modules/Status/api/status').then(function(response){
-                return response.data;
-            });
-        }
+        // function reload(){
+        //     return $http.get('modules/Status/api/status').then(function(response){
+        //         return response.data;
+        //     });
+        // }
         
         
-        var me = {
-            reload: reload
-        }
+        // var me = {
+        //     reload: reload
+        // }
         
-        return me;
+        // return me;
     }
 }());

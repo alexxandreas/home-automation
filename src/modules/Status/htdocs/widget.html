@@ -87,7 +87,8 @@
 		    width: 0px;
 		    height: 0px;
 		    /*background-color: red;*/
-		    font-size: 3vw;
+		    font-size: 2vw;
+	        font-family: Arial;
 		    
 		    display: flex;
 		    flex-direction: row;
@@ -105,7 +106,11 @@
 	<script type="text/javascript">
 		"use strict";
 		
-		angular.module('StatusApp', []);
+		angular.module('StatusApp', []).config(function($sceProvider) {
+		  // Completely disable SCE.  For demonstration purposes only!
+		  // Do not use in new projects or libraries.
+		  $sceProvider.enabled(false);
+		});
 		
 	    angular.module('StatusApp').controller('BodyCtrl', BodyCtrl);
 	
@@ -122,12 +127,28 @@
 	    ) {
 	    	
 	    	var json = '{"Hallway":{"devices":{"switch220":{"level":0,"nextLevel":0,"lastLevelChange":2889722},"light12":{"level":0,"nextLevel":0,"lastLevelChange":3215624},"motionSensor":{"level":"off","nextLevel":"off","lastLevelChange":2922765},"lightSensor":{"level":0,"nextLevel":0,"lastLevelChange":2884702},"tempSensor":{"level":23.9,"nextLevel":23.9,"lastLevelChange":244226},"door":{"level":"off","nextLevel":"off","lastLevelChange":3215242}},"timers":{}},"Bathroom":{"devices":{"switch220":{"level":0,"nextLevel":0,"lastLevelChange":3044500},"light12":{"level":0,"nextLevel":0,"lastLevelChange":3214121},"motionSensor":{"level":"off","nextLevel":"off","lastLevelChange":3214680},"lightSensor":{"level":3,"nextLevel":3,"lastLevelChange":14632},"tempSensor":{"level":25.3,"nextLevel":25.3,"lastLevelChange":14536},"humSensor":{"level":35,"nextLevel":35,"lastLevelChange":1484554},"door":{"level":"off","nextLevel":"off","lastLevelChange":3073852},"fan":{"level":"off","nextLevel":"off","lastLevelChange":3213660}},"timers":{}},"Toilet":{"devices":{"switch220":{"level":0,"nextLevel":0,"lastLevelChange":3014572},"light12":{"level":0,"nextLevel":0,"lastLevelChange":3214131},"motionSensor":{"level":"off","nextLevel":"off","lastLevelChange":3214042},"lightSensor":{"level":3,"nextLevel":3,"lastLevelChange":72440},"tempSensor":{"level":24.4,"nextLevel":24.4,"lastLevelChange":192360},"humSensor":{"level":22,"nextLevel":22,"lastLevelChange":1662539},"door":{"level":"on","nextLevel":"on","lastLevelChange":3054692},"fan":{"level":"off","nextLevel":"off","lastLevelChange":3213671}},"timers":{}},"Kitchen":{"devices":{"switch220":{"level":0,"nextLevel":0,"lastLevelChange":2954473},"light12":{"level":0,"nextLevel":0,"lastLevelChange":3213376},"motionSensor":{"level":"off","nextLevel":"off","lastLevelChange":3115928},"lightSensor":{"level":11,"nextLevel":11,"lastLevelChange":20089},"tempSensor":{"level":-76.1,"nextLevel":-76.1,"lastLevelChange":320804},"tabletopSwitch":{"level":"on","nextLevel":"on","lastLevelChange":3213016},"tabletopLight":{"level":0,"nextLevel":0,"lastLevelChange":2952160}},"timers":{}},"Corridor":{"devices":{"switch220":{"level":0,"nextLevel":0,"lastLevelChange":2890543},"light12":{"level":0,"nextLevel":0,"lastLevelChange":3215764},"motionSensor":{"level":"off","nextLevel":"off","lastLevelChange":2920838},"lightSensor":{"level":2,"nextLevel":2,"lastLevelChange":3215099},"tempSensor":{"level":-75.3,"nextLevel":-75.3,"lastLevelChange":3215008}},"timers":{}}}';
-	    	$scope.data = JSON.parse(json);
+	    	$scope.data = prepare(JSON.parse(json));
 	    	
 	    	$scope.items = [{
-	    		x: 50,
-	    		y: 50,
-	    		data: 'data.Kitchen.devices.switch220.level'
+	    		x: 55,
+	    		y: 33,
+	    		data: 'data.Hallway'
+    		},{
+	    		x: 66,
+	    		y: 16,
+	    		data: 'data.Bathroom'
+    		},{
+	    		x: 65,
+	    		y: 33,
+	    		data: 'data.Toilet'
+    		},{
+	    		x: 52,
+	    		y: 61,
+	    		data: 'data.Corridor'
+    		},{
+	    		x: 80,
+	    		y: 27,
+	    		data: 'data.Kitchen'
     		}];
 	    	
 	    	$scope.resolve = function( path, obj ) {
@@ -136,12 +157,76 @@
 			    }, obj || this );
 			}
 	    	
-	        reload();
+	    	function parseTime(time){
+	    		time = Math.round(time / 1000);
+	    		if (time > 60*60*24)
+	    			return Math.trunc(time / 60*60*24) + 'д';
+	    		else if (time > 60*60)
+	    			return Math.trunc(time / 60*60) + 'ч';
+    			else if (time > 60)
+	    			return Math.trunc(time / 60) + 'м';
+    			else 
+	    			return time + 'с';
+	    		
+	    		// var parts = [];
+    			// parts.unshift(time % 60 + 'с');
+	    		// if (time > 60){
+	    		// 	time = Math.trunc(time / 60) // в минутах
+	    		// 	parts.unshift(time % 60 + 'м');
+	    		// }
+	    		// if (time > 60) {
+	    		// 	time = Math.trunc(time / 60) // в часах
+	    		// 	parts.unshift(time % 24 + 'ч');
+	    		// }
+	    		// if (time > 24) {
+	    		// 	parts.unshift(time  + 'д');
+	    		// }
+	    		// return parts.join(' ');
+	    	}
+	    	
+	    	function prepare(data) {
+	    		var res = {};
+	    		Object.keys(data).forEach(function(key){
+	    			res[key] = [];
+	    			var item = data[key];
+	    			if (item.devices && item.devices.switch220) {
+	    				prepareLight('switch220', '220');
+	    				prepareLight('light12', '12');
+	    			}
+	    			
+	    			function prepareLight(light, name){
+	    				var text = [];
+	    				var dev = item.devices[light];
+	    				if (!dev) return;
+	    				//text.push(key + '&nbsp;');
+	    				if (dev.pendingLevel)
+	    					text.push('<span style="color:red">!</span>&nbsp;');
+	    				var deviceColor = (dev.nextLevel == 'on' || dev.nextLevel > 0) ? 'green' : 'red';
+	    				
+    					text.push('<span style="color:'+deviceColor+'">'+name+':</span>&nbsp;');
+    						
+	    				if (item.timers && item.timers.offTimer){
+	    					var time = item.timers.offTimer.timeout;
+	    					text.push('<span style="color:red">-'+parseTime(time)+'</span>&nbsp;');
+	    				} else {
+	    					var time = dev.lastLevelChange;
+	    					text.push('<span style="color:'+deviceColor+'">'+parseTime(time)+'</span>&nbsp;');
+	    				}
+	    				res[key].push(text.join(''));	
+	    			}
+	    			res[key] = res[key].join('<br>');
+	    		});
+	    		return res;
+	    		
+	    		
+	    	}
+	    	
+	        //reload();
 
 	        var reloadTimeout;
 	        function reload(){
 	            APISrv.reload().then(function(data){ 
-	            	$scope.data = data;
+	            	$scope.data = prepare(data);
 	            }).finally(function(){
 	                if (!$scope.$$destroyed) 
 	                    reloadTimeout = $timeout(reload, 1000);
@@ -211,9 +296,9 @@
 	      <div class="map-controls">
 	        
 	        <div class="map-control-container" ng-repeat="item in items"
-	        	ng-style="{'left': item.x+'%', 'right': item.y+'%'}">
+	        	ng-style="{'left': item.x+'%', 'top': item.y+'%'}">
 	          <!--<div calss="map-control">{{item.data}}</div>-->
-	          <div calss="map-control" >{{resolve(item.data)}}</div>
+	          <div calss="map-control" ng-bind-html="resolve(item.data)"></div>
 	        </div>
 	        
 	        

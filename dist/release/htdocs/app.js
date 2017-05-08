@@ -714,24 +714,24 @@ angular
         $mdDialog,
         StatusSrv
     ) {
-        $scope.statusData = "";
-        reload();
+        // $scope.statusData = "";
+        // reload();
 
-        var reloadTimeout;
-        function reload(){
-            StatusSrv.reload().then(function(data){ 
-                $scope.statusData = JSON.stringify(data, null, '  ');
-            }).finally(function(){
-                if (!$scope.$$destroyed) 
-                    reloadTimeout = $timeout(reload, 1000);
-            })
-        }
+        // var reloadTimeout;
+        // function reload(){
+        //     StatusSrv.reload().then(function(data){ 
+        //         $scope.statusData = JSON.stringify(data, null, '  ');
+        //     }).finally(function(){
+        //         if (!$scope.$$destroyed) 
+        //             reloadTimeout = $timeout(reload, 1000);
+        //     })
+        // }
 
-        $scope.$on("$destroy", function() {
-            if (reloadTimeout) {
-                $timeout.cancel(reloadTimeout);
-            }
-        });
+        // $scope.$on("$destroy", function() {
+        //     if (reloadTimeout) {
+        //         $timeout.cancel(reloadTimeout);
+        //     }
+        // });
         
         
     }
@@ -747,28 +747,26 @@ angular
     //angular.module('WebApp').run(['StatusSrv', function(ApiSrv) {  }]);
     
     StatusSrv.$inject = [
-        '$http',
-        'PanelsSrv'
+        '$http'
     ];
     
     function StatusSrv(
-        $http,
-        PanelsSrv
+        $http
     ) {
         
         
-        function reload(){
-            return $http.get('modules/Status/api/status').then(function(response){
-                return response.data;
-            });
-        }
+        // function reload(){
+        //     return $http.get('modules/Status/api/status').then(function(response){
+        //         return response.data;
+        //     });
+        // }
         
         
-        var me = {
-            reload: reload
-        }
+        // var me = {
+        //     reload: reload
+        // }
         
-        return me;
+        // return me;
     }
 }());
 (function () {
