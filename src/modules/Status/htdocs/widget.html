@@ -136,13 +136,12 @@
 			    }, obj || this );
 			}
 	    	
-	        //reload();
+	        reload();
 
 	        var reloadTimeout;
 	        function reload(){
 	            APISrv.reload().then(function(data){ 
-	                $scope.statusData = JSON.stringify(data, null, '  ');
-	                
+	            	$scope.data = data;
 	            }).finally(function(){
 	                if (!$scope.$$destroyed) 
 	                    reloadTimeout = $timeout(reload, 1000);
