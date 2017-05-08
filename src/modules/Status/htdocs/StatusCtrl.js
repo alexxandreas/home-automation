@@ -10,8 +10,8 @@
         '$timeout',
         '$window',
         '$sce',
-        '$mdDialog',
-        'StatusSrv'
+        '$mdDialog'
+        //'StatusSrv'
     ];
 
     function StatusCtrl(
@@ -21,8 +21,8 @@
         $timeout,
         $window,
         $sce,
-        $mdDialog,
-        StatusSrv
+        $mdDialog
+        //StatusSrv
     ) {
         // $scope.statusData = "";
         // reload();
