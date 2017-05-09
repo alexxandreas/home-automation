@@ -625,7 +625,7 @@ define('AbstractRoom', [
             this.log('onSwitch220SceneDownClick: кликнута кнопка Вниз. userMode=>12');
             this.state.userMode = '12';
             this.switchLight({mode:'on'});
-        } else if (lightState['12'].nextLevel == 'on') {
+        } else { //if (lightState['12'].nextLevel == 'on') {
             // 12 горит и не собирается тухнуть)
             this.log('onSwitch220SceneDownClick: кликнута кнопка Вниз. userMode=>off');
     	    this.state.userMode = 'off';
