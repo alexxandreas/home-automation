@@ -574,19 +574,32 @@ define('AbstractRoom', [
         // this.log('onSwitch220SceneUpClick');
         var lightState = this.getLightState(); 
         
-        if (lightState.summary.level == 'off'){
+        if (lightState['220'].level == 'off' || lightState['220'].lastLevelChange < 2*1000) {
+            // 220 еще не горит или только что включился - значит в момент нажатия он еще не горел
             this.log('onSwitch220SceneUpClick: кликнута кнопка Вверх. userMode=>220');
     	    this.state.userMode = '220';
             this.switchLight({mode:'on'});
-        } else if (lightState['12'].level == 'on') {
-            this.log('onSwitch220SceneUpClick: кликнута кнопка Вверх. userMode=>220');
-            this.state.userMode = '220';
-            this.switchLight({mode:'on'});
-        } else if (lightState['220'].level == 'on') {
+        } else {
             this.log('onSwitch220SceneUpClick: кликнута кнопка Вверх. userMode=>on');
     	    this.state.userMode = 'on';
     	    this.switchLight({mode:'on'});
         }
+        
+        
+        
+        // if (lightState.summary.level == 'off'){
+        //     this.log('onSwitch220SceneUpClick: кликнута кнопка Вверх. summary.level == off. userMode=>220');
+    	   // this.state.userMode = '220';
+        //     this.switchLight({mode:'on'});
+        // } else if (lightState['12'].level == 'on') {
+        //     this.log('onSwitch220SceneUpClick: кликнута кнопка Вверх. 12.level == on. userMode=>220');
+        //     this.state.userMode = '220';
+        //     this.switchLight({mode:'on'});
+        // } else if (lightState['220'].level == 'on') {
+        //     this.log('onSwitch220SceneUpClick: кликнута кнопка Вверх. 220.level == on. userMode=>on');
+    	   // this.state.userMode = 'on';
+    	   // this.switchLight({mode:'on'});
+        // }
         
         
     //     if (!this.state.light){
@@ -607,18 +620,30 @@ define('AbstractRoom', [
         this.log('onSwitch220SceneDownClick');
         var lightState = this.getLightState(); 
         
-        if (lightState.summary.level == 'off'){
-            this.log('onSwitch220SceneDownClick: кликнута кнопка Вниз. userMode=>off');
-    	    this.state.userMode = 'off';
-        } else if (lightState['12'].level == 'on'){
-            this.log('onSwitch220SceneDownClick: кликнута кнопка Вниз. userMode=>off');
-    	    this.state.userMode = 'off';
-    	    this.switchLight({mode:'off', force:true});
-        } else if (lightState['220'].level == 'on'){
+        if (lightState['220'].level == 'on' || lightState['220'].lastLevelChange < 2*1000) {
+            // 220 еще горит или только что погас - значит в момент нажатия он еще горел
             this.log('onSwitch220SceneDownClick: кликнута кнопка Вниз. userMode=>12');
             this.state.userMode = '12';
             this.switchLight({mode:'on'});
+        } else if (lightState['12'].nextLevel == 'on') {
+            // 12 горит и не собирается тухнуть)
+            this.log('onSwitch220SceneDownClick: кликнута кнопка Вниз. userMode=>off');
+    	    this.state.userMode = 'off';
+    	    this.switchLight({mode:'off', force:true});
         }
+        
+        // if (lightState.summary.level == 'off'){
+        //     this.log('onSwitch220SceneDownClick: кликнута кнопка Вниз. summary.level == off. userMode=>off');
+    	   // this.state.userMode = 'off';
+        // } else if (lightState['12'].level == 'on'){
+        //     this.log('onSwitch220SceneDownClick: кликнута кнопка Вниз. 12.level == on. userMode=>off');
+    	   // this.state.userMode = 'off';
+    	   // this.switchLight({mode:'off', force:true});
+        // } else if (lightState['220'].level == 'on'){
+        //     this.log('onSwitch220SceneDownClick: кликнута кнопка Вниз. 220.level == on. userMode=>12');
+        //     this.state.userMode = '12';
+        //     this.switchLight({mode:'on'});
+        // }
         
         
         
