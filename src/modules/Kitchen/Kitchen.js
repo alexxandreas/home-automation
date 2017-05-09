@@ -113,7 +113,7 @@ define('Kitchen', ['AbstractRoom', 'DeviceStorage', 'UtilsRoomHelpers'], functio
         var lightState = this.getLightState();
         if (lightState['220'].nextLevel == 'on' || lightState['220'].nextLevel > 0)
             var light = 220;
-        else if (lightState['12'].nextLevel || lightState['12'].nextLevel > 0)
+        else if (lightState['12'].nextLevel == 'on' || lightState['12'].nextLevel > 0)
             var light = 12;
         
         var devSwitch = DeviceStorage.getDevice(this.devices.tabletopSwitch);
