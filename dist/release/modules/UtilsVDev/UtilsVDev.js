@@ -20,6 +20,9 @@ define('UtilsVDev', ['AbstractModule'], function(AbstractModule) {
             return new VirtualDoorMHA(key, vDev);
         else if (mha == 'tabletopSwitch')
             return new TabletopSwitchMHA(key, vDev);
+        else if (mha == 'FGD211') 
+            return new FGD211MHA(key, vDev);    
+        
             
         return new DefaultMHA(key, vDev);
     };
@@ -48,7 +51,7 @@ define('UtilsVDev', ['AbstractModule'], function(AbstractModule) {
         // время последнего изменения значения
         this._lastLevelChange = Date.now();
 
-        this._levelChangeHandlers = [];   
+        this._eventHandlers = [];   
 
         // массив модулей, которые используют девайс в текущий момент
         // когда модуль включает девайс - он добавляется в этот массив
@@ -78,9 +81,13 @@ define('UtilsVDev', ['AbstractModule'], function(AbstractModule) {
             this._lastLevel = newLevel;
             this._lastLevelChange = Date.now();
             // вызываем всех подписчиков
-            this._levelChangeHandlers.forEach(function(obj) {
+            this._eventHandlers.forEach(function(obj) {
+                var event = {
+                    type: 'level',
+                    level: newLevel
+                };
                 try { // оборачиваем подписчики в try/catch, чтобы в случае ошибки не ломались другие модули
-                    obj.handler.call(obj.scope, newLevel);
+                    obj.handler.call(obj.scope, event);
                 }
                 catch (err) {
                     // TODO 
@@ -114,21 +121,23 @@ define('UtilsVDev', ['AbstractModule'], function(AbstractModule) {
             return this._lastLevelChange;
     };
 
-    // подписка на событие изменения значения
-    DefaultMHA.prototype.onLevelChange = function(handler, scope) {
-        this._levelChangeHandlers.push({
+    
+
+    DefaultMHA.prototype.onEvent = function(handler, scope) {
+        this._eventHandlers.push({
             handler: handler,
             scope: scope
         });
     };
-
+    
+    // подписка на событие изменения значения
     DefaultMHA.prototype._baseLevelChangeHandler = function() {
         this.getLevel();
     };
 
     // отписка от события изменения значения
-    DefaultMHA.prototype.offLevelChange = function(handler, scope) {
-        this._levelChangeHandlers = this._levelChangeHandlers.filter(function(obj) {
+    DefaultMHA.prototype.offEvent = function(handler, scope) {
+        this._eventHandlers = this._eventHandlers.filter(function(obj) {
             return (obj.handler != handler);
         });
     };
@@ -444,10 +453,91 @@ define('UtilsVDev', ['AbstractModule'], function(AbstractModule) {
         return mode;
     }
     
+
     
     
+    /**********************************************************/
+    /************************* FGD211 *************************/
+    /**********************************************************/
+        
+    function FGD211MHA(key, vDev) {
+        FGD211MHA.super_.apply(this, arguments);
+        
+        Object.keys(this._scenes).forEach(function(sceneId) {
+            this._initScene(key, sceneId);
+        }, this);
+        
+                
+        
+        
+    }
+
+    inherits(FGD211MHA, DefaultMHA);
+    
+    FGD211MHA.prototype._scenes = {
+        10: "UpClick", //"Switch from off to on",
+        11: "DownClick", //"Switch from on to off",
+        //12: "S1 holding down",
+        13: "UpDownRelease", //"S1/S2 releasing",
+        14: "UpDoubleClick", //"S1 double click",
+        //15: "S1 triple click",
+        //16: "S1 single click",
+        17: "UpHold", //"S1 Brighten",
+        18: "DownHold" //"S2 Dim"
+        //22: "S2 holding down",
+        //23: "S2 releasing",
+        //24: "S2 double click",
+        //25: "S2 triple click",
+        //26: "S2 single click"
+        
+    };
+    
+    FGD211MHA.prototype._initScene = function(sceneId) {
+        var realId = this._getRealId();
+        if (realId == null) return;
+
+        var sceneName = "ZWayVDev_zway_Remote_" + realId + "-0-0-" + sceneId + "-S";
+        
+        // var vDev = this.getVDev(sceneName);
+        // if (!vDev) {
+        //     this.log('Error: сцена ' + sceneId + ' для ' + key + ' не найдена');
+        // }
+        // else {
+        //     this._pushDevice(key + '_' + sceneId, this._deviceTypes.scene, vDev);
+        // }
+        
+        controller.devices.on(sceneName, 'change:metrics:level', this._baseSceneHandler.bind(this, sceneId));
+        
+    };
+    
+    FGD211MHA.prototype._baseSceneHandler = function(sceneId){
+        this._eventHandlers.forEach(function(obj) {
+            var event = {
+                type: 'scene',
+                sceneId: sceneId,
+                sceneName: this._scenes[sceneId]
+            };
+            try { // оборачиваем подписчики в try/catch, чтобы в случае ошибки не ломались другие модули
+                obj.handler.call(obj.scope, event);
+            }
+            catch (err) {
+                // TODO 
+                // this.log('Error in levelChangeHandler (' + key + ') ' + err.toString() + ' ' + err.stack);
+            }
+        }, this);
+    }
+    
+    /** Получение id физического устройства */
+    FGD211MHA.prototype._getRealId = function(vDevId) {
+        //var id = vDev.id;
+        var id = this.vDev.id;
+        var res = id.match(/\D*(\d*).*/); // все не-числа (число) все-остальное
+        if (res.length >= 2) return res[1];
+        return null;
+    };
     
     
+   
     
 
 

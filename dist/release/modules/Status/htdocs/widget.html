@@ -160,9 +160,9 @@
 	    	function parseTime(time){
 	    		time = Math.round(time / 1000);
 	    		if (time > 60*60*24)
-	    			return Math.trunc(time / 60*60*24) + 'д';
+	    			return Math.trunc(time / 60/60/24) + 'д';
 	    		else if (time > 60*60)
-	    			return Math.trunc(time / 60*60) + 'ч';
+	    			return Math.trunc(time / 60/60) + 'ч';
     			else if (time > 60)
 	    			return Math.trunc(time / 60) + 'м';
     			else 

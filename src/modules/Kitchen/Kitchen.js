@@ -81,7 +81,7 @@ define('Kitchen', ['AbstractRoom', 'DeviceStorage', 'UtilsRoomHelpers'], functio
         this.settings.tabletop12half = 40 // половинный уровень яркости столешницы при включенном 12
       
       
-        this.handlersConfig.tabletopSwitch = this.onTabletopSwitchChange;
+        this.handlersConfig.tabletopSwitch = this.onTabletopSwitchEvent;
         
       
         this.init();
@@ -98,7 +98,7 @@ define('Kitchen', ['AbstractRoom', 'DeviceStorage', 'UtilsRoomHelpers'], functio
         
     }
     
-    Kitchen.prototype.onTabletopSwitchChange = function(value){
+    Kitchen.prototype.onTabletopSwitchEvent = function(event){
         this.updateTabletop();
     };
 

@@ -27,7 +27,7 @@ define('UtilsDeviceHandlers', ['AbstractModule', 'DeviceStorage'], function(Abst
     inherits(UtilsDeviceHandlers, AbstractModule);
 
     // добавляет хендлер к девайсу с ключем key. 
-    // хендлер вешается только на MHA.onLevelChange
+    // хендлер вешается только на MHA.onEvent
     UtilsDeviceHandlers.prototype.addHandler = function(key, handler, scope) {
         this._deferredHandlers.push({
             key: key,
@@ -56,7 +56,7 @@ define('UtilsDeviceHandlers', ['AbstractModule', 'DeviceStorage'], function(Abst
                     self.log('Error in handler: ' + obj.key + ' ' + err.toString() + ' ' + err.stack);
                 }
             }
-            dev.MHA.onLevelChange(obj.handlerWrapper, this);
+            dev.MHA.onEvent(obj.handlerWrapper, this);
 
             this._handlers.push(obj);
 
@@ -86,7 +86,7 @@ define('UtilsDeviceHandlers', ['AbstractModule', 'DeviceStorage'], function(Abst
             if (!dev) return;
 
             //var handler = this._handlers[key];
-            dev.MHA.offLevelChange(obj.handlerWrapper, this);
+            dev.MHA.offEvent(obj.handlerWrapper, this);
             this.log('removeDeviceHandler: ' + dev.MHA.key);
         }, this);
         this._handlers = [];

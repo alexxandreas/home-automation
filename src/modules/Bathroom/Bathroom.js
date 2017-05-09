@@ -84,14 +84,14 @@ define('Bathroom', ['AbstractRoom', 'DeviceStorage'], function(AbstractRoom, Dev
 
     inherits(Bathroom, AbstractRoom);
 
-    Bathroom.prototype.onHumSensorChange = function(level){
+    Bathroom.prototype.onHumSensorEvent = function(event){
         //this.log('onHumidityChanged()');
         //var intHumiditySensorId = this.getTarget('intHumiditySensor');
         // var intHumiditySensor = intHumiditySensorId && this.getVDev(intHumiditySensorId);
         
         var extRoomsHumLevels = this.getExtRoomsHumState().rooms.reduce(function(levels, room) {
             if (!room.level) return levels;
-            levels.push(level);
+            levels.push(room.level);
             return levels;
         }, []);
         
@@ -100,13 +100,13 @@ define('Bathroom', ['AbstractRoom', 'DeviceStorage'], function(AbstractRoom, Dev
         
         
         if (this.getFanState().level == 'on') {
-            if (level - extRoomsHumLevel < this.settings.humidityOffDelta) {
+            if (event.level - extRoomsHumLevel < this.settings.humidityOffDelta) {
                 this.switchFan('off');
                 this.timers.stopTimer('fanStopTimer');
             }
         } else { // вентилятор выключен
             if (this.getLightState().summary.level === 'off') return;
-            if(level - extRoomsHumLevel > this.settings.humidityOnDelta) {
+            if(event.level - extRoomsHumLevel > this.settings.humidityOnDelta) {
                 this.switchFan('on');
             }
         }

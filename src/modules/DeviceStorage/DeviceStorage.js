@@ -17,22 +17,22 @@ define('DeviceStorage', ['AbstractModule', 'WebServer', 'UtilsVDev'],
         inherits(DeviceStorage, AbstractModule);
 
 
-        DeviceStorage.prototype._FGD211Scenes = {
-            10: "Switch from off to on",
-            11: "Switch from on to off",
-            //12: "S1 holding down",
-            13: "S1/S2 releasing",
-            14: "S1 double click",
-            //15: "S1 triple click",
-            //16: "S1 single click",
-            17: "S1 Brighten",
-            18: "S2 Dim"
-            //22: "S2 holding down",
-            //23: "S2 releasing",
-            //24: "S2 double click",
-            //25: "S2 triple click",
-            //26: "S2 single click"
-        };
+        // DeviceStorage.prototype._FGD211Scenes = {
+        //     10: "Switch from off to on",
+        //     11: "Switch from on to off",
+        //     //12: "S1 holding down",
+        //     13: "S1/S2 releasing",
+        //     14: "S1 double click",
+        //     //15: "S1 triple click",
+        //     //16: "S1 single click",
+        //     17: "S1 Brighten",
+        //     18: "S2 Dim"
+        //     //22: "S2 holding down",
+        //     //23: "S2 releasing",
+        //     //24: "S2 double click",
+        //     //25: "S2 triple click",
+        //     //26: "S2 single click"
+        // };
 
 
         DeviceStorage.prototype._deviceTypes = {
@@ -139,12 +139,12 @@ define('DeviceStorage', ['AbstractModule', 'WebServer', 'UtilsVDev'],
             this.log('initDevices');
             Object.keys(this.devs).forEach(function(key) {
                 this._initDevice(key);
-                var type = this.devs[key].type;
-                if (type == this._deviceTypes.FGD211) { 
-                    Object.keys(this._FGD211Scenes).forEach(function(sceneId) {
-                        this._initScene(key, sceneId);
-                    }, this);
-                }
+                // var type = this.devs[key].type;
+                // if (type == this._deviceTypes.FGD211) { 
+                //     Object.keys(this._FGD211Scenes).forEach(function(sceneId) {
+                //         this._initScene(key, sceneId);
+                //     }, this);
+                // }
             }, this);
             
         };
@@ -155,24 +155,24 @@ define('DeviceStorage', ['AbstractModule', 'WebServer', 'UtilsVDev'],
          * ! Возможно, текущий подход к именованию сцен будет работать 
          * ! только для FGD211
          */
-        DeviceStorage.prototype._initScene = function(key, sceneId) {
-            var vDev = this.getDevice(key);
-            if (!vDev) return;
+        // DeviceStorage.prototype._initScene = function(key, sceneId) {
+        //     var vDev = this.getDevice(key);
+        //     if (!vDev) return;
 
-            var realId = this._getRealId(vDev.id);
-            if (realId == null) return;
+        //     var realId = this._getRealId(vDev.id);
+        //     if (realId == null) return;
 
 
-            var sceneName = "ZWayVDev_zway_Remote_" + realId + "-0-0-" + sceneId + "-S";
-            var vDev = this.getVDev(sceneName);
-            if (!vDev) {
-                this.log('Error: сцена ' + sceneId + ' для ' + key + ' не найдена');
-            }
-            else {
-                this._pushDevice(key + '_' + sceneId, this._deviceTypes.scene, vDev);
-                //   this.devices[key + '_' + sceneId] = vDev;
-            }
-        };
+        //     var sceneName = "ZWayVDev_zway_Remote_" + realId + "-0-0-" + sceneId + "-S";
+        //     var vDev = this.getVDev(sceneName);
+        //     if (!vDev) {
+        //         this.log('Error: сцена ' + sceneId + ' для ' + key + ' не найдена');
+        //     }
+        //     else {
+        //         this._pushDevice(key + '_' + sceneId, this._deviceTypes.scene, vDev);
+        //         //   this.devices[key + '_' + sceneId] = vDev;
+        //     }
+        // };
 
 
         /** 
@@ -258,13 +258,13 @@ define('DeviceStorage', ['AbstractModule', 'WebServer', 'UtilsVDev'],
             if (!key)
                 return null;
             if (!this.devices[key]) {
-                var parts = key.split('_');
-                var devKey = parts[0];
-                var sceneId = parts[1];
-                if (sceneId === undefined)
+                //var parts = key.split('_');
+                //var devKey = parts[0];
+                //var sceneId = parts[1];
+                //if (sceneId === undefined)
                     this._initDevice(key);
-                else
-                    this._initScene(devKey, sceneId);
+                //else
+                //    this._initScene(devKey, sceneId);
             }
             
             if (!this.devices[key])
@@ -281,14 +281,14 @@ define('DeviceStorage', ['AbstractModule', 'WebServer', 'UtilsVDev'],
         };
 
 
-        /** Получение id физического устройства */
-        DeviceStorage.prototype._getRealId = function(vDevId) {
-            //var id = vDev.id;
-            var id = vDevId;
-            var res = id.match(/\D*(\d*).*/); // все не-числа (число) все-остальное
-            if (res.length >= 2) return res[1];
-            return null;
-        };
+        // /** Получение id физического устройства */
+        // DeviceStorage.prototype._getRealId = function(vDevId) {
+        //     //var id = vDev.id;
+        //     var id = vDevId;
+        //     var res = id.match(/\D*(\d*).*/); // все не-числа (число) все-остальное
+        //     if (res.length >= 2) return res[1];
+        //     return null;
+        // };
 
 
         DeviceStorage.prototype._initFrontend = function() {
