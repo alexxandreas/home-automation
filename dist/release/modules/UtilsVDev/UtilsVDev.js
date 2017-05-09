@@ -484,14 +484,14 @@ define('UtilsVDev', ['AbstractModule'], function(AbstractModule) {
         };
         
         
-        this._initScenes(key);
+        this._initScenes();
     }
 
     inherits(FGD211MHA, DefaultMHA);
     
-    FGD211MHA.prototype._initScenes = function(key) {
+    FGD211MHA.prototype._initScenes = function() {
         Object.keys(this._scenes).forEach(function(sceneId) {
-            this._initScene(key, sceneId);
+            this._initScene(sceneId);
         }, this); 
     }
     
