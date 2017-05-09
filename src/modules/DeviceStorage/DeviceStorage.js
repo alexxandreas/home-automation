@@ -40,7 +40,7 @@ define('DeviceStorage', ['AbstractModule', 'WebServer', 'UtilsVDev'],
             'door':     { mha: 'door' },
             'virtualDoor': { mha: 'virtualDoor' },
             'tabletopSwitch': {mha: 'tabletopSwitch' },
-            'FGD211':   { mha: 'default' },
+            'FGD211':   { mha: 'FGD211' },
             'scene':    { mha: 'default' }
         };
 

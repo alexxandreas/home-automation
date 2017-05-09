@@ -66,6 +66,8 @@ define('UtilsVDev', ['AbstractModule'], function(AbstractModule) {
         this._lastLevel = this.getLevel();
         
         this._pendingLevel = undefined;
+        
+        this._baseLevelChangeHandler = this.getLevel().bind(this);
 
         controller.devices.on(vDev.id, 'change:metrics:level', this._baseLevelChangeHandler);
     }
@@ -131,9 +133,9 @@ define('UtilsVDev', ['AbstractModule'], function(AbstractModule) {
     };
     
     // подписка на событие изменения значения
-    DefaultMHA.prototype._baseLevelChangeHandler = function() {
-        this.getLevel();
-    };
+    // DefaultMHA.prototype._baseLevelChangeHandler = function() {
+    //     this.getLevel();
+    // };
 
     // отписка от события изменения значения
     DefaultMHA.prototype.offEvent = function(handler, scope) {
@@ -463,34 +465,35 @@ define('UtilsVDev', ['AbstractModule'], function(AbstractModule) {
     function FGD211MHA(key, vDev) {
         FGD211MHA.super_.apply(this, arguments);
         
-        Object.keys(this._scenes).forEach(function(sceneId) {
-            this._initScene(key, sceneId);
-        }, this);
+        this._scenes = {
+            10: {name: "UpClick"}, //"Switch from off to on",
+            11: {name: "DownClick"}, //"Switch from on to off",
+            //12: "S1 holding down",
+            13: {name: "UpDownRelease"}, //"S1/S2 releasing",
+            14: {name: "UpDoubleClick"}, //"S1 double click",
+            //15: "S1 triple click",
+            //16: "S1 single click",
+            17: {name: "UpHold"}, //"S1 Brighten",
+            18: {name: "DownHold"} //"S2 Dim"
+            //22: "S2 holding down",
+            //23: "S2 releasing",
+            //24: "S2 double click",
+            //25: "S2 triple click",
+            //26: "S2 single click"
+            
+        };
         
-                
         
-        
+        this._initScenes(key);
     }
 
     inherits(FGD211MHA, DefaultMHA);
     
-    FGD211MHA.prototype._scenes = {
-        10: "UpClick", //"Switch from off to on",
-        11: "DownClick", //"Switch from on to off",
-        //12: "S1 holding down",
-        13: "UpDownRelease", //"S1/S2 releasing",
-        14: "UpDoubleClick", //"S1 double click",
-        //15: "S1 triple click",
-        //16: "S1 single click",
-        17: "UpHold", //"S1 Brighten",
-        18: "DownHold" //"S2 Dim"
-        //22: "S2 holding down",
-        //23: "S2 releasing",
-        //24: "S2 double click",
-        //25: "S2 triple click",
-        //26: "S2 single click"
-        
-    };
+    FGD211MHA.prototype._initScenes = function(key) {
+        Object.keys(this._scenes).forEach(function(sceneId) {
+            this._initScene(key, sceneId);
+        }, this); 
+    }
     
     FGD211MHA.prototype._initScene = function(sceneId) {
         var realId = this._getRealId();
@@ -506,7 +509,12 @@ define('UtilsVDev', ['AbstractModule'], function(AbstractModule) {
         //     this._pushDevice(key + '_' + sceneId, this._deviceTypes.scene, vDev);
         // }
         
-        controller.devices.on(sceneName, 'change:metrics:level', this._baseSceneHandler.bind(this, sceneId));
+        var handler = this._baseSceneHandler.bind(this, sceneId);
+        
+        this._scenes[sceneId].sceneName = sceneName;
+        this._scenes[sceneId].handler = handler
+        
+        controller.devices.on(sceneName, 'change:metrics:level', handler);
         
     };
     
@@ -515,7 +523,7 @@ define('UtilsVDev', ['AbstractModule'], function(AbstractModule) {
             var event = {
                 type: 'scene',
                 sceneId: sceneId,
-                sceneName: this._scenes[sceneId]
+                name: this._scenes[sceneId].name
             };
             try { // оборачиваем подписчики в try/catch, чтобы в случае ошибки не ломались другие модули
                 obj.handler.call(obj.scope, event);
@@ -536,7 +544,14 @@ define('UtilsVDev', ['AbstractModule'], function(AbstractModule) {
         return null;
     };
     
-    
+    FGD211MHA.prototype.destroy = function() {
+        Object.keys(this._scenes).forEach(function(sceneId) {
+            if (this._scenes[sceneId].handler)
+                controller.devices.off(this._scenes[sceneId].sceneName, 'change:metrics:level', this._scenes[sceneId].handler);
+        }, this); 
+        
+        FGD211MHA.super_.prototype.destroy.apply(this, arguments);
+    }
    
     
 

@@ -480,7 +480,7 @@ define('AbstractRoom', [
             else 
                 this.onSwitch220Off(event.level);
         } else if (event.type == 'scene'){
-            var handler = 'onSwitch220Scene' + event.sceneName;
+            var handler = 'onSwitch220Scene' + event.name;
             this[handler] && this[handler].call(this);
         }
     };
