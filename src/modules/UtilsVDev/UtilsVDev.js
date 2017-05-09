@@ -466,15 +466,15 @@ define('UtilsVDev', ['AbstractModule'], function(AbstractModule) {
         FGD211MHA.super_.apply(this, arguments);
         
         this._scenes = {
-            10: {name: "UpClick"}, //"Switch from off to on",
-            11: {name: "DownClick"}, //"Switch from on to off",
+            '10': {name: "UpClick"}, //"Switch from off to on",
+            '11': {name: "DownClick"}, //"Switch from on to off",
             //12: "S1 holding down",
-            13: {name: "UpDownRelease"}, //"S1/S2 releasing",
-            14: {name: "UpDoubleClick"}, //"S1 double click",
+            '13': {name: "UpDownRelease"}, //"S1/S2 releasing",
+            '14': {name: "UpDoubleClick"}, //"S1 double click",
             //15: "S1 triple click",
             //16: "S1 single click",
-            17: {name: "UpHold"}, //"S1 Brighten",
-            18: {name: "DownHold"} //"S2 Dim"
+            '17': {name: "UpHold"}, //"S1 Brighten",
+            '18': {name: "DownHold"} //"S2 Dim"
             //22: "S2 holding down",
             //23: "S2 releasing",
             //24: "S2 double click",
