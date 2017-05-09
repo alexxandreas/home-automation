@@ -67,7 +67,7 @@ define('UtilsVDev', ['AbstractModule'], function(AbstractModule) {
         
         this._pendingLevel = undefined;
         
-        this._baseLevelChangeHandler = this.getLevel().bind(this);
+        this._baseLevelChangeHandler = this.getLevel.bind(this);
 
         controller.devices.on(vDev.id, 'change:metrics:level', this._baseLevelChangeHandler);
     }
