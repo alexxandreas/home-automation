@@ -48,8 +48,8 @@ define('Wardrobe', ['AbstractRoom'], function(AbstractRoom){
     inherits(Wardrobe, AbstractRoom);
 
     Wardrobe.prototype.onExtRoomDoorEvent = function(extRoom, event) {
-        //this.log('onDooonExtRoomDoorEventrEvent: ' + level);
-        this[event.level == 'on' ? 'onExtRoomDoorOpen' : 'onExtRoomDoorClose'].call(this, extRoom);
+        this.log('onExtRoomDoorEvent');
+        //this[event.level == 'on' ? 'onExtRoomDoorOpen' : 'onExtRoomDoorClose'].call(this, extRoom);
         
         var doorsState = this.getExtRoomsDoorsState().summary.levelOnOff;
         if (doorsState == 'on')
