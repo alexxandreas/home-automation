@@ -111,9 +111,9 @@ define('Kitchen', ['AbstractRoom', 'DeviceStorage', 'UtilsRoomHelpers'], functio
     Kitchen.prototype.updateTabletop = function(){
         
         var lightState = this.getLightState();
-        if (lightState['220'].nextLevel == 'on' || lightState['220'].nextLevel > 0)
+        if (lightState.switch220.nextLevelOnOff == 'on')
             var light = 220;
-        else if (lightState['12'].nextLevel == 'on' || lightState['12'].nextLevel > 0)
+        else if (lightState.light12.nextLevelOnOff == 'on')
             var light = 12;
         
         var devSwitch = DeviceStorage.getDevice(this.devices.tabletopSwitch);

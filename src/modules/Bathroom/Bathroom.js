@@ -75,8 +75,8 @@ define('Bathroom', ['AbstractRoom', 'DeviceStorage'], function(AbstractRoom, Dev
         this.settings.lightOffTimeout = 15; // таймаут обязательного выключения света (когда не срабатывает датчик движения)
         this.settings.lastLightTimeout = 3; // таймаут сброса последнего света (12 или 220). Последний свет запоминается и включается при новом движении
         
-        this.settings.humidityOnDelta = 40, // разница во влажности для ВКЛЮЧЕНИЯ вентилятора
-        this.settings.humidityOffDelta = 30, // разница во влажности для ВЫКЛЮЧЕНИЯ вентилятора
+        this.settings.humidityOnDelta = 30, // разница во влажности для ВКЛЮЧЕНИЯ вентилятора
+        this.settings.humidityOffDelta = 20, // разница во влажности для ВЫКЛЮЧЕНИЯ вентилятора
         this.settings.fanMaxTimeout = 5     // максимальная продолжинельность работы вентилятора после выключения света, мин
 
         this.init();
@@ -90,14 +90,18 @@ define('Bathroom', ['AbstractRoom', 'DeviceStorage'], function(AbstractRoom, Dev
         //var intHumiditySensorId = this.getTarget('intHumiditySensor');
         // var intHumiditySensor = intHumiditySensorId && this.getVDev(intHumiditySensorId);
         
-        var extRoomsHumLevels = this.getExtRoomsHumState().rooms.reduce(function(levels, room) {
-            if (!room.level) return levels;
-            levels.push(room.level);
-            return levels;
-        }, []);
+        var extRoomsHumLevels = this.getExtRoomsHumState().rooms.reduce(function(result, room) {
+            if (!room.level) return result;
+            result.sumLevels += room.level;
+            result.count++;
+            return result;
+        }, {
+            sumLevels: 0,
+            count: 0
+        });
         
-        if (!extRoomsHumLevels.length) return;
-        var extRoomsHumLevel = extRoomsHumLevels.reduce(function(a, b) { return a + b; }, 0) / extRoomsHumLevels.length;
+        if (!extRoomsHumLevels.count) return;
+        var extRoomsHumLevel = extRoomsHumLevels.sumLevels / extRoomsHumLevels.count;
         
         
         if (this.getFanState().level == 'on') {
@@ -106,7 +110,7 @@ define('Bathroom', ['AbstractRoom', 'DeviceStorage'], function(AbstractRoom, Dev
                 this.timers.stopTimer('fanStopTimer');
             }
         } else { // вентилятор выключен
-            if (this.getLightState().summary.level === 'off') return;
+            if (this.getLightState().summary.levelOnOff === 'off') return;
             if(event.level - extRoomsHumLevel > this.settings.humidityOnDelta) {
                 this.switchFan('on');
             }

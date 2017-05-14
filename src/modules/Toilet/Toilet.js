@@ -115,7 +115,7 @@ define('Toilet', ['AbstractRoom'], function(AbstractRoom){
         
         this.timers.stopTimer('fanStopTimer');
         
-        if (this.getExtRoomsDoorsState().summary.level === 'on')
+        if (this.getExtRoomsDoorsState().summary.levelOnOff === 'on')
             return; // при открытой двери вентилятор не включаем
         
         if (this.getFanState().level === 'on') return;
@@ -166,7 +166,7 @@ define('Toilet', ['AbstractRoom'], function(AbstractRoom){
         Toilet.super_.prototype.onExtRoomDoorClose.apply(this, arguments);
         
         this.timers.stopTimer('fanStopTimer');
-        if (this.getLightState().summary.level === 'off') 
+        if (this.getLightState().summary.levelOnOff === 'off') 
             return; // при выключенном свете вентилятор не включаем
         if (this.getFanState().level === 'on')
             return;
