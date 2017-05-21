@@ -98,6 +98,10 @@ define('AbstractRoom', [
 
 
         this.suitableLightConfig = {
+            switch220: [{
+               start: 6.00,
+               end: 23.59
+            }],
             dayInterval: {
                 hStart: 6,
                 mStart: 0,
@@ -127,6 +131,12 @@ define('AbstractRoom', [
             humSensor: this.onHumSensorEvent,
             //door: this.onDoorEvent
         }
+        
+        // Параметры, которые сохраняются в файл при изменении
+        this.defaultParameters = {
+            switch220Level: 99, // уровень яркости, на который включается 220 свет
+            light12level: 99 // уровень яркости, на который включается 12 свет
+        }
 
     }
 
@@ -148,6 +158,10 @@ define('AbstractRoom', [
             //intMTimeout: 0, // Date.now(); - время изменения значения движения внутри
 
             light: null, // свет (null, '12', '220')
+            
+            light12DimDirection: 'off', // направление диммирования 12 света при удержании кнопки Вниз
+            light12Dimming: false,
+            switch220Dimming: false,
 
             // Если движение снаружи началось после окончания движения внутри - 
             // значит снаружи другой человек. Не реагируем на внешний датчик движения
@@ -231,49 +245,70 @@ define('AbstractRoom', [
     // подбор подходящего по обстоятельствам света (основной 220, или подсветка 12)
     AbstractRoom.prototype.getSuitableLight = function() {
         // TODO переписать
-        return;
-
+        
+        var result;
         var conf = this.suitableLightConfig;
-        if (conf.dayInterval) {
-            // Если сейчас день (с 8 до 21) - вернуть '220'. [08:00 22:00]
-            var dayInterval = [formatTime(conf.dayInterval.hStart, conf.dayInterval.mStart), formatTime(conf.dayInterval.hEnd, conf.dayInterval.mEnd)];
-            var date = new Date();
-            var now = formatTime(date.getHours(), date.getMinutes());
-            if (dayInterval[0] <= now && dayInterval[1] >= now) {
-                this.log('getSuitableLight: 220 (время = ' + now + ' попало в дневной интервал [' + dayInterval[0] + ', ' + dayInterval[1] + '])');
-                return '220';
-            }
-        }
+        
+        // switch220: [{
+        //       start: '6.00',
+        //       end: '23.59'
+        //     }],
+        if (conf.switch220 && conf.switch220.length) {
+            conf.switch220.forEach(function(interval){
+                var date = new Date();
+                var now = formatTime(date.getHours(), date.getMinutes());
+                if (interval.start <= now && interval.end >= now)
+                this.log('getSuitableLight: 220 (время = ' + now + ' попало в дневной интервал [' + interval.start + ', ' + interval.end + '])');
+                result = '220';
+            }, this);
+        } 
+        
+        // if (conf.dayInterval) {
+        //     // Если сейчас день (с 8 до 21) - вернуть '220'. [08:00 22:00]
+        //     var dayInterval = [formatTime(conf.dayInterval.hStart, conf.dayInterval.mStart), formatTime(conf.dayInterval.hEnd, conf.dayInterval.mEnd)];
+        //     var date = new Date();
+        //     var now = formatTime(date.getHours(), date.getMinutes());
+        //     if (dayInterval[0] <= now && dayInterval[1] >= now) {
+        //         this.log('getSuitableLight: 220 (время = ' + now + ' попало в дневной интервал [' + dayInterval[0] + ', ' + dayInterval[1] + '])');
+        //         return '220';
+        //     }
+        // }
+        
+        if (result)
+            return result;
 
-        if ((conf.minIlluminationLevel || conf.minIlluminationLevel === 0) && conf.lightSensorTarget) {
-            // Если уровень освещенности в помещении больше 10 Lux - вернуть 220.
-            var lightSensorId = this.getTarget(conf.lightSensorTarget);
-            var lightSensor = lightSensorId && this.getVDev(lightSensorId);
-            if (lightSensor) {
-                var illuminationLevel = lightSensor.get("metrics:level");
-                if (conf.minIlluminationLevel < illuminationLevel) {
-                    this.log('getSuitableLight: 220 (уровень освещености = ' + illuminationLevel + ', минимальный для 220 = ' + conf.minIlluminationLevel + ')');
-                    return '220';
-                }
+        if (conf.minIlluminationLevel != undefined) {
+            var illuminationLevel = this.getIlluminationState();
+            if (!illuminationLevel.deviceNotExists && conf.minIlluminationLevel < illuminationLevel.level) {
+                this.log('getSuitableLight: 220 (уровень освещености = ' + illuminationLevel.level + ', минимальный для 220 = ' + conf.minIlluminationLevel + ')');
+                return '220'; 
             }
         }
+        
+
+        // && conf.lightSensorTarget) {
+        //     // Если уровень освещенности в помещении больше 10 Lux - вернуть 220.
+        //     var lightSensorId = this.getTarget(conf.lightSensorTarget);
+        //     var lightSensor = lightSensorId && this.getVDev(lightSensorId);
+        //     if (lightSensor) {
+        //         var illuminationLevel = lightSensor.get("metrics:level");
+        //         if (conf.minIlluminationLevel < illuminationLevel) {
+        //             this.log('getSuitableLight: 220 (уровень освещености = ' + illuminationLevel + ', минимальный для 220 = ' + conf.minIlluminationLevel + ')');
+        //             return '220';
+        //         }
+        //     }
+        // }
 
         // Если хотя бы в одной соседней комнате горит '220' - вернуть '220'.
-        if (conf.ext220Targets) {
-            if (!this.getTargets(conf.ext220Targets).length || this.getTargets(conf.ext220Targets).some(function(id) {
-                    var vDev = this.getVDev(id);
-                    return vDev && vDev.get("metrics:level") > 0;
-                }, this)) {
-                this.log('getSuitableLight: 220 (внешний 220 свет включен)');
-                return '220';
-            }
-            /*if (!this.getTargets(conf.ext220Targets).length || this.getTargets(conf.ext220Targets).some(function(dev){
-            return dev.vDev && dev.vDev.get("metrics:level") > 0;
-            })) {
-            this.log('getSuitableLight: 220 (внешний 220 свет включен)');
-            return '220';
-            }*/
-        }
+        // if (conf.ext220Targets) {
+        //     if (!this.getTargets(conf.ext220Targets).length || this.getTargets(conf.ext220Targets).some(function(id) {
+        //             var vDev = this.getVDev(id);
+        //             return vDev && vDev.get("metrics:level") > 0;
+        //         }, this)) {
+        //         this.log('getSuitableLight: 220 (внешний 220 свет включен)');
+        //         return '220';
+        //     }
+        // }
 
         // если есть 12В устройства - то 12В
         /*if (conf.int12Targets){
@@ -284,28 +319,22 @@ define('AbstractRoom', [
         return '12';
         }
         }*/
-        if (this.is12TargetsExists()) {
-            this.log('getSuitableLight: 12');
-            return '12';
-        }
+        // if (this.is12TargetsExists()) {
+        //     this.log('getSuitableLight: 12');
+        //     return '12';
+        // }
 
-        this.log('getSuitableLight: 220 (12В устройства не найдены)');
-        return '220';
+        //this.log('getSuitableLight: 220 (12В устройства не найдены)');
+        //return '220';
+        this.log('getSuitableLight: 12');
+        return '12';
 
         function formatTime(h, m) {
-            return (h < 10 ? '0' + h : h) + ':' + (m < 10 ? '0' + m : m);
+            // return (h < 10 ? '0' + h : h) + ':' + (m < 10 ? '0' + m : m);
+            return h + m/100;
         }
     };
 
-
-
-    AbstractRoom.prototype.is12TargetsExists = function() {
-        var conf = this.suitableLightConfig;
-        return conf.int12Targets && this.getTargets(conf.int12Targets).length && this.getTargets(conf.int12Targets).some(function(id) {
-            return !!this.getVDev(id);
-            //return !!dev.vDev;
-        }, this);
-    };
 
 
     /**********************************************************/
@@ -317,11 +346,18 @@ define('AbstractRoom', [
     };
 
     AbstractRoom.prototype.getMotionState = function() {
-        return UtilsRoomHelpers.getMotionState(this.devices.motionSensor);
+        //return UtilsRoomHelpers.getMotionState(this.devices.motionSensor);
+        return UtilsRoomHelpers.getDeviceData(this.devices.motionSensor);
     };
     
     AbstractRoom.prototype.getFanState = function() {
-        return UtilsRoomHelpers.getFanState(this.devices.fan);
+        //return UtilsRoomHelpers.getFanState(this.devices.fan);
+        return UtilsRoomHelpers.getDeviceData(this.devices.fan);
+    };
+    
+    AbstractRoom.prototype.getIlluminationState = function() {
+        //return UtilsRoomHelpers.getFanState(this.devices.fan);
+        return UtilsRoomHelpers.getDeviceData(this.devices.lightSensor);
     };
 
     AbstractRoom.prototype.getExtRoomsMotionState = function() {
@@ -351,87 +387,131 @@ define('AbstractRoom', [
     // options.light: null, '12', '220' - режим света. если не указан - автовыбор
     AbstractRoom.prototype.switchLight = function(options) {
 
+        var lightConfig = {
+            switch220: {
+                command: 'off',
+                args: undefined,
+                vDev: DeviceStorage.getDevice(this.devices.switch220)
+            },
+            light12: {
+                command: 'off',
+                args: undefined,
+                vDev: DeviceStorage.getDevice(this.devices.light12)
+            },
+        }
+
         if (options.mode == 'on') { // включить
 
-            //var currentLightState = this.getLightState();
-            var newLightState = {
-                '220': 'off',
-                '12': 'off'
-            };
-
+            // var newLightState = {
+            //     '220': 'off',
+            //     '12': 'off'
+            // };
+            
             // если указали конкретный свет - включаем его
-            if (options.light == '12' || options.light == '220') {
-                //var light = options.light;
-                newLightState[options.light] = 'on';
+            // if (options.light == '12' || options.light == '220') {
+            //     newLightState[options.light] = 'on';
+            // }
+            if (options.light == '220') {
+                lightConfig.switch220.command = 'on';
+            } 
+            else if (options.light == '12') {
+                lightConfig.light12.command = 'on';
             }
 
             // учитываем userMode
-            else if (this.state.userMode == '220' || this.state.userMode == '12') {
-                //var light = this.state.userMode;
-                newLightState[this.state.userMode] = 'on';
+            else if (this.state.userMode == '220') {
+                lightConfig.switch220.command = 'on';
+                //newLightState[this.state.userMode] = 'on';
+            }
+            else if (this.state.userMode == '12') {
+                lightConfig.light12.command = 'on';
             }
             else if (this.state.userMode == 'on') {
-                newLightState['220'] = 'on';
-                newLightState['12'] = 'on';
+                // newLightState['220'] = 'on';
+                // newLightState['12'] = 'on';
+                lightConfig.switch220.command = 'on';
+                lightConfig.light12.command = 'on';
             }
 
             // учитываем последний включенный свет
-            else if (this.state.lastLight) {
-                newLightState[this.state.lastLight] = 'on';
+            // else if (this.state.lastLight) {
+            //     newLightState[this.state.lastLight] = 'on';
+            // }
+            else if (this.state.lastLight == '220') {
+                lightConfig.switch220.command = 'on';
             }
-
+            else if (this.state.lastLight == '12') {
+                lightConfig.light12.command = 'on';
+            }
+            
             // если в соседней комнате горит 220 - тоже включаем 220
             else if (this.getExtRooms220State().summary.levelOnOff == 'on') {
-                newLightState['220'] = 'on';
+                //newLightState['220'] = 'on';
+                lightConfig.switch220.command = 'on';
             } 
             
             // свет 220 в соседней комнате был выключен менее 10 секунд назад
             else if (this.getExtRooms220State().summary.lastLevelChange < 10*1000) {
-                newLightState['220'] = 'on';
+                // newLightState['220'] = 'on';
+                lightConfig.switch220.command = 'on';
             }
-
-            //   else if (this.getNextRoom() && this.getNextRoom().api.getCurrentLight() == '12'){
-            //     var light = '12';
-            //   }
-
-            // учитываем последний включенный свет
-            //   else if (this.state.lastLight) {
-            //     var light =this.state.lastLight;
-            //   } 
-
+            
             // определяем подходящий свет
             // else { 
             //     var light = this.getSuitableLight();
             // }
             else {
-                newLightState['220'] = 'on';
+                var light = this.getSuitableLight();
+                if (light == '12'){
+                    lightConfig.light12.command = 'on';
+                } else {
+                    lightConfig.switch220.command = 'on';
+                }
+                //newLightState['220'] = 'on';
             }
 
-            if (newLightState['220'] == 'on')
-                this.state.lastLight = '220';
-            else if (newLightState['12'] == 'on')
+            if (lightConfig.light12.command == 'on' && !lightConfig.light12.vDev){
+                lightConfig.light12.command = 'off';
+                lightConfig.switch220.command = 'on';
+            }
+            
+
+            // if (lightConfig.switch220.command == 'on')
+            //     this.state.lastLight = '220';
+            // else if (lightConfig.light12.command == 'on')
+            //     this.state.lastLight = '12';
+            
+            if (lightConfig.light12.command == 'on'){
                 this.state.lastLight = '12';
+                lightConfig.light12.command = 'exact';
+                lightConfig.light12.args = {level: this.getParameter('light12Level')};
+            }
+            if (lightConfig.switch220.command == 'on'){
+                this.state.lastLight = '220';
+                lightConfig.switch220.command = 'exact';
+                lightConfig.switch220.args = {level: this.getParameter('switch220Level')};
+            }
+  
+            // var dev220 = DeviceStorage.getDevice(this.devices.switch220);
+            // var dev12 = DeviceStorage.getDevice(this.devices.light12);
 
-            var dev220 = DeviceStorage.getDevice(this.devices.switch220);
-            var dev12 = DeviceStorage.getDevice(this.devices.light12);
+            // if (newLightState['220'] == 'on'){
+            //     dev220 && dev220.MHA.performCommand(this.name, 'exact', this.getParameter('switch220Level'));
+            // } else {
+            //     dev220 && dev220.MHA.performCommand(this.name, 'off');
+            // }
+            
+            lightConfig.switch220.vDev && lightConfig.switch220.vDev.MHA.performCommand(this.name, lightConfig.switch220.command, lightConfig.switch220.args);
+            lightConfig.light12.vDev && lightConfig.light12.vDev.MHA.performCommand(this.name, lightConfig.light12.command, lightConfig.light12.args);
+            
+            
+            //dev220 && dev220.MHA.performCommand(this.name, newLightState['220']);
+            //dev12 && dev12.MHA.performCommand(this.name, newLightState['12']);
+            delete lightConfig.switch220.vDev;
+            delete lightConfig.light12.vDev;
 
-            dev220 && dev220.MHA.performCommand(this.name, newLightState['220']);
-            dev12 && dev12.MHA.performCommand(this.name, newLightState['12']);
+            this.log('switchLight ( ' + JSON.stringify(options) + ' ): newLightState: ' + JSON.stringify(lightConfig));
 
-            this.log('switchLight ( ' + JSON.stringify(options) + ' ): newLightState: ' + JSON.stringify(newLightState));
-
-            //   //this.log('switchLight: this.state.light = ' + this.state.light + ', light = ' + light);
-            //   if (this.state.light != light){ // если такой свет еще не включен
-            //       turn.call(this, light, 'on');
-            //       this.state.lastLight = light;
-            //       if (this.state.light){ // если включен другой свет
-            //           turn.call(this, this.state.light,'off');
-            //           this.state.light = light;
-            //       } else {
-            //           this.state.light = light;
-            //           this.onLightOn.call(this); 
-            //       }
-            //   }
 
             if (this.getMotionState().level == 'off') {
                 this.timers.startTimer('offTimer',
@@ -449,11 +529,15 @@ define('AbstractRoom', [
 
             this.log('switchLight ( ' + JSON.stringify(options) + ' ): newLightState: all off');
 
-            var dev220 = DeviceStorage.getDevice(this.devices.switch220);
-            var dev12 = DeviceStorage.getDevice(this.devices.light12);
+            // var dev220 = DeviceStorage.getDevice(this.devices.switch220);
+            // var dev12 = DeviceStorage.getDevice(this.devices.light12);
 
-            dev220 && dev220.MHA.performCommand(this.name, 'off');
-            dev12 && dev12.MHA.performCommand(this.name, 'off');
+            // dev220 && dev220.MHA.performCommand(this.name, 'off');
+            // dev12 && dev12.MHA.performCommand(this.name, 'off');
+            
+            lightConfig.switch220.vDev && lightConfig.switch220.vDev.MHA.performCommand(this.name, lightConfig.switch220.command, lightConfig.switch220.args);
+            lightConfig.light12.vDev && lightConfig.light12.vDev.MHA.performCommand(this.name, lightConfig.light12.command, lightConfig.light12.args);
+            
 
             if (this.state.userMode) // таймер сброса запускаем только когда свет потух
                 this.timers.startTimer('userMode', this.settings.userModeTimeout * 60, this.onUserModeTimer, this);
@@ -676,9 +760,7 @@ define('AbstractRoom', [
     // 	}
     };
 
-    AbstractRoom.prototype.onSwitch220SceneUpDownRelease = function() {
-        this.log('onSwitch220SceneUpDownRelease');
-    };
+    
 
     AbstractRoom.prototype.onSwitch220SceneUpDoubleClick = function() {
         this.log('onSwitch220SceneUpDoubleClick');
@@ -690,7 +772,52 @@ define('AbstractRoom', [
 
     AbstractRoom.prototype.onSwitch220SceneDownHold = function() {
         this.log('onSwitch220SceneDownHold');
+        var lightState = this.getLightState(); 
+        
+        if (lightState.switch220.levelOnOff == 'off' || lightState.switch220.lastLevelChange < 2*1000) {
+            // 220 еще не горит или только что включился - значит в момент нажатия он еще не горел
+            if (lightState.light12.nextLevelOnOff == 'on') {
+                // 12 включен - можно диммировать
+                this.switchLight({mode: 'on', light: '12'}); // выключаем 220. пока так
+                this.state.light12Dimming = true;
+                this.startDim({
+                    direction: this.state.light12DimDirection,
+                    currentLevel: lightState.light12.level,
+                    minLevel: 1,
+                    maxLevel: 99,
+                    callback: function(level){ 
+                        this.setParameter('light12Level', level);
+                        this.switchLight({mode: 'on', light: '12'}); 
+                    }
+                });
+            }
+        }
     };
+    
+    AbstractRoom.prototype.onSwitch220SceneUpDownRelease = function() {
+        this.log('onSwitch220SceneUpDownRelease');
+        if (this.state.light12Dimming) {
+            this.state.light12Dimming = false;
+            this.stopDim();
+            this.state.light12DimDirection = this.state.light12DimDirection == 'off' ? 'on' : 'off';
+            var level = this.getLightState().light12.level;
+            this.setParameter('light12Level', level);
+        }
+        if (this.state.switch220Dimming) {
+            this.state.switch220Dimming = false;
+            var level = this.getLightState().switch220.level;
+            this.setParameter('switch220Level', level);
+        }
+    };
+    
+    
+    AbstractRoom.prototype.setParameter = function(name, value) {
+    
+    }
+    
+    AbstractRoom.prototype.getParameter = function(name) {
+    
+    }
 
             
 
@@ -829,7 +956,84 @@ define('AbstractRoom', [
         this.log('onLastLightTimer: Сброс lastLight по таймеру: ' + this.state.lastLight + '=>null');
         this.state.lastLight = null;
     };
-
+    
+    
+    /**
+     * Запускает диммирование по несколько процентов вверх или вниз
+     * options.direction: 'on' / 'off'
+     * options.currentLevel: 0..100
+     * [options.minLevel]: 0..100
+     * [options.maxLevel]: 0..100
+     * options.callback: function(level)
+     * 
+     */
+    AbstractRoom.prototype.startDim = function(options) {
+        this.log('startDim(' + (this.state.rgbDimUp ? 'startUp' : 'startDown') + ')');
+        this.stopDim();
+        
+        var timeout = 1;
+        var level = options.currentLevel;
+        var maxLevel = options.maxLevel || 100;
+        var minLevel = options.minLevel || 0;
+        
+        onTimer.call(this);
+        
+        function onTimer(){
+            if (options.direction == 'on') {
+                //this.state.useMinBr = false;
+                //if (this.state.rgbBr == 100) return;
+                if (level >= maxLevel) return;
+                var newLevel = Math.min(level+10, maxLevel)
+                this.log('change brightness: ' + level + ' -> ' + newLevel);
+                // this.log('change brightness: ' + this.state.rgbBr + ' -> ' + Math.min(this.state.rgbBr+10, 100));
+                level = newLevel;
+                options.callback.call(this, level);
+                //this.onRGB();
+                this.timers.startTimer('dimTimer', timeout, onTimer, this);
+            } else {
+                //var minBr = this.getMinBr(this.colors[this.state.colorIndex]);
+                
+                if (this.state.rgbBr <= minLevel) {
+                    //this.state.useMinBr = true;
+                    return;
+                }
+                var newLevel = Math.max(level, minLevel);
+                this.log('change brightness: ' + level + ' -> ' + newLevel);
+                level = newLevel;
+                // if (this.state.rgbBr == minBr)
+                //   this.state.useMinBr = true;
+                options.callback.call(this, level);
+                //this.onRGB();
+                this.timers.startTimer('dimTimer', timeout, onTimer, this);
+            }
+        }
+    };
+    
+    AbstractRoom.prototype.stopDim = function() {
+        this.timers.stopTimer('dimTimer');  
+    };
+    
+    
+    AbstractRoom.prototype.getParameter = function(key){
+        if (!this._parametersLoaded)
+            this._loadParameters();
+        if (this._parameters[key] !== undefined)
+            return this._parameters[key];
+        return this.defaultParameters[key];
+    }
+        
+    AbstractRoom.prototype.setParameter = function(key, data){
+        if (!this._parametersLoaded)
+            this._loadParameters();
+        this._parameters[key] = data;
+        this.saveData('parameters', this._parameters);
+    }
+    
+    AbstractRoom.prototype._loadParameters = function(){
+        this._parameters = this.loadData('parameters') || {};
+        this._parametersLoaded = true;
+    }
+    
 
     AbstractRoom.prototype.stop = function() {
         this.handlers.stop();

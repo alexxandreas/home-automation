@@ -36,7 +36,7 @@ define('UtilsRoomHelpers', ['AbstractModule', 'DeviceStorage'], function(Abstrac
      *      deviceNotExists: true
      * }
      */
-    UtilsRoomHelpers.getDeviceData = function(key, convertToOnOff) {
+    UtilsRoomHelpers.getDeviceData = function(key) {
         var dev = DeviceStorage.getDevice(key);
 
         if (dev) {
