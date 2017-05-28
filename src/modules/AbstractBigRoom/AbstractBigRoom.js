@@ -104,17 +104,6 @@ define('AbstractBigRoom', ['AbstractRoom', 'DeviceStorage', 'UtilsRoomHelpers'],
     };
     
     
-    
-    
-    if (this.state['220center'] == 'on' && this.state['220edge'] == 'on'){
-      this.onRGB(this.state.daylightColor, 100);
-    } else if (this.state['220center'] == 'on' || this.state['220edge'] == 'on') {
-      this.onRGB(this.state.daylightColor, 50);
-    //} else if (is220on) {
-    } else {
-      this.offRGB();
-    }
-    
     /**********************************************************/
     /********************** RGB commands **********************/
     /**********************************************************/
