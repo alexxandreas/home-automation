@@ -734,18 +734,18 @@ define('AbstractRoom', [
         
         if (lightState.switch220.levelOnOff == 'on' && lightState.switch220.lastLevelChange > 2*1000) {
             // 220 горит давно (если он был выключен - то диммирование вниз его включит, но время будет меньше 2с)
-            this.switchLight({mode: 'on', light: '220'});
+            //this.switchLight({mode: 'on', light: '220'});
             this.state.switch220Dimming = true;
-            this.startDim({
-                direction: 'off',
-                currentLevel: lightState.switch220.level,
-                minLevel: 1,
-                maxLevel: 99,
-                callback: function(level){ 
-                    this.setParameter('switch12Level', level);
-                    this.switchLight({mode: 'on', light: '220'});
-                }
-            });
+            // this.startDim({
+            //     direction: 'off',
+            //     currentLevel: lightState.switch220.level,
+            //     minLevel: 1,
+            //     maxLevel: 99,
+            //     callback: function(level){ 
+            //         this.setParameter('switch12Level', level);
+            //         this.switchLight({mode: 'on', light: '220'});
+            //     }
+            // });
         }
     };
     
@@ -760,7 +760,7 @@ define('AbstractRoom', [
         }
         if (this.state.switch220Dimming) {
             this.state.switch220Dimming = false;
-            this.stopDim();
+            //this.stopDim();
             var level = this.getLightState().switch220.level;
             this.setParameter('switch220Level', level);
         }
