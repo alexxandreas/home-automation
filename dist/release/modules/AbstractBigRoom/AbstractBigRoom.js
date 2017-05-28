@@ -140,9 +140,10 @@ define('AbstractBigRoom', ['AbstractRoom', 'DeviceStorage', 'UtilsRoomHelpers'],
             br = Math.max(minBr, rgbLevel);
         }
         
-        if (br === 0) { // use minimum brightness
-            br = minBr;
-        }
+        // if (br === 0) { // use minimum brightness
+        //     this.log('using min brightness');
+        //     br = minBr;
+        // }
         
         var col = {
           red: Math.round(Math.ceil(color[0] * (br+0.1) / 100)),
