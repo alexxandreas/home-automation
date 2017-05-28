@@ -952,7 +952,7 @@ define('AbstractRoom', [
                     //this.state.useMinBr = true;
                     return;
                 }
-                var newLevel = Math.max(level, minLevel);
+                var newLevel = Math.max(level-10, minLevel);
                 this.log('change brightness: ' + level + ' -> ' + newLevel);
                 level = newLevel;
                 // if (this.state.rgbBr == minBr)
