@@ -34,10 +34,10 @@ define('Corridor', ['AbstractRoom'], function(AbstractRoom){
             //motionSensor:   'toilet.motionSensor',
             //door:           'toilet.door'
         }, 
-        // корридор
+        // прихожая
         {
-            switch220:      'corridor.switch220',
-            motionSensor:   'corridor.motionSensor'
+            switch220:      'hallway.switch220',
+            motionSensor:   'hallway.motionSensor'
         }, 
         // кухня
         {

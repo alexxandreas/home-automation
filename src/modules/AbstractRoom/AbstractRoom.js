@@ -128,7 +128,7 @@ define('AbstractRoom', [
         // Параметры, которые сохраняются в файл при изменении
         this.defaultParameters = {
             switch220Level: 99, // уровень яркости, на который включается 220 свет
-            light12level: 99 // уровень яркости, на который включается 12 свет
+            light12Level: 99 // уровень яркости, на который включается 12 свет
         }
 
     }
@@ -693,21 +693,8 @@ define('AbstractRoom', [
 
     AbstractRoom.prototype.onSwitch220SceneUpHold = function() {
         this.log('onSwitch220SceneUpHold');
-        var lightState = this.getLightState(); 
-        
-        //if (lightState.switch220.levelOnOff == 'on')
-        this.switchLight({mode: 'on', light: '220'});
+    
         this.state.switch220Dimming = true;
-        this.startDim({
-            direction: 'on',
-            currentLevel: lightState.switch220.level,
-            minLevel: 1,
-            maxLevel: 99,
-            callback: function(level){ 
-                this.setParameter('switch12Level', level);
-                this.switchLight({mode: 'on', light: '220'}); 
-            }
-        });
     };
 
     AbstractRoom.prototype.onSwitch220SceneDownHold = function() {
@@ -735,18 +722,7 @@ define('AbstractRoom', [
         
         if (lightState.switch220.levelOnOff == 'on' && lightState.switch220.lastLevelChange > 2*1000) {
             // 220 горит давно (если он был выключен - то диммирование вниз его включит, но время будет меньше 2с)
-            //this.switchLight({mode: 'on', light: '220'});
             this.state.switch220Dimming = true;
-            // this.startDim({
-            //     direction: 'off',
-            //     currentLevel: lightState.switch220.level,
-            //     minLevel: 1,
-            //     maxLevel: 99,
-            //     callback: function(level){ 
-            //         this.setParameter('switch12Level', level);
-            //         this.switchLight({mode: 'on', light: '220'});
-            //     }
-            // });
         }
     };
     
