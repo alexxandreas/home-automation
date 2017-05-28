@@ -215,7 +215,7 @@ define('AbstractBigRoom', ['AbstractRoom', 'DeviceStorage', 'UtilsRoomHelpers'],
         if (!this.state.rgbDimming) return;
         
         this.state.rgbDimming = false;
-        //this.stopRGBDim();
+        this.stopDim();
         this.state.rgbDimDirection = this.state.rgbDimDirection == 'off' ? 'on' : 'off';
         //var level = this.getLightState().rgb.level;
         //this.setParameter('RGBLevel', level);

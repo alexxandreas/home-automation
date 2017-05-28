@@ -21,7 +21,9 @@ define('UtilsVDev', ['AbstractModule'], function(AbstractModule) {
         else if (mha == 'tabletopSwitch')
             return new TabletopSwitchMHA(key, vDev);
         else if (mha == 'FGD211') 
-            return new FGD211MHA(key, vDev);    
+            return new FGD211MHA(key, vDev);  
+        else if (mha == 'rgb')
+            return new RGBMHA(key, vDev);
         
             
         return new DefaultMHA(key, vDev);
@@ -237,61 +239,82 @@ define('UtilsVDev', ['AbstractModule'], function(AbstractModule) {
 
         log("");
 
+        
         var action;
         var check;
 
+        var actionCommand;
+
         if (command == 'on') {
-            action = function() {
-                this.vDev.performCommand('on');
-            };
-            check = function() {
-                //log('check: level: ' + this.getLevel());
-                return this.getLevel() === 'on' || this.getLevel() > 0;
-            };
-            this._pendingLevel = 'on';
+            actionCommand = this._getOnCommand();
         }
         else if (command == 'off') {
-            action = function() {
-                this.vDev.performCommand('off');
-            };
-            check = function() {
-                //log('check: level: ' + this.getLevel());
-                return this.getLevel() === 'off' || this.getLevel() === 0;
-            };
-            this._pendingLevel = 'off';
+            actionCommand = this._getOffCommand();
         }
         else if (command == 'exact') {
-            action = function() {
-                this.vDev.performCommand('exact', args);
-            };
-            check = function() {
-                if (args.level) {
-                    return this.getLevel() == args.level;
-                }
-                else {
-                    return this.getLevel() !== 'off' && this.getLevel() !== 0;
-                }
-            };
-            this._pendingLevel = args.level ? args.level : args;
+            actionCommand = this._getExactCommand(args);
         }
+        
 
-
-        if (!isPrevAction && check.call(this)) { // если проверка проходит сразу и небыло предыдущего действия - не запускаем 
-            delete this._pendingLevel;
-            //log()
+        if (!isPrevAction && actionCommand.check.call(this)) { // если проверка проходит сразу и небыло предыдущего действия - не запускаем 
             return;
         }
+        
+        this._pendingLevel = actionCommand.pendingLevel;
 
         this._actionObj = {
-            action: action,
-            check: check,
+            action: actionCommand.action,
+            check: actionCommand.check,
             startTime: Date.now(),
             log: log
         };
 
         this._run();
     };
-
+    
+    
+    DefaultMHA.prototype._getOnCommand = function(){
+        return {
+            action:function() {
+                this.vDev.performCommand('on');
+            },
+            check: function() {
+                return this.getLevel() === 'on' || this.getLevel() > 0;
+            },
+            pendingLevel: 'on'
+        }
+    };
+    
+    DefaultMHA.prototype._getOffCommand = function(){
+        return {
+            action: function() {
+                this.vDev.performCommand('off');
+            },
+            check: function() {
+                return this.getLevel() === 'off' || this.getLevel() === 0;
+            },
+            pendingLevel: 'off'
+        }
+    };
+    
+    DefaultMHA.prototype._getExactCommand = function(args){
+        return {
+            action: function() {
+                this.vDev.performCommand('exact', args);
+            },
+            check: function() {
+                if (args.level) {
+                    return this.getLevel() == args.level;
+                }
+                else {
+                    return this.getLevel() !== 'off' && this.getLevel() !== 0;
+                }
+            },
+            pendingLevel: args.level ? args.level : args
+        }
+    };
+    
+   
     DefaultMHA.prototype._run = function() {
 
         //if (!self.actions[name]) return;
@@ -341,6 +364,38 @@ define('UtilsVDev', ['AbstractModule'], function(AbstractModule) {
         delete this.vDev;
     };
 
+    
+    
+    
+    
+    
+    /**********************************************************/
+    /************************** RGB ***************************/
+    /**********************************************************/
+    
+    function RGBMHA(key, vDev) {
+        RGBMHA.super_.apply(this, arguments);
+    }
+
+    inherits(RGBMHA, DefaultMHA);
+    
+    RGBMHA.prototype._getExactCommand = function(args){
+        return {
+            action: function() {
+                this.vDev.performCommand('exact', args);
+            },
+            check: function() {
+                if (args.level) {
+                    return this.getLevel() == args.level;
+                }
+                else {
+                    return this.getLevel() !== 'off' && this.getLevel() !== 0;
+                }
+            },
+            pendingLevel: args.level ? args.level : args
+        }
+    };
+    
     
     
     
