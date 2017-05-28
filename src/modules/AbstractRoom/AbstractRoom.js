@@ -117,13 +117,6 @@ define('AbstractRoom', [
         this.handlersConfig = {
             switch220: this.onSwitch220Event,
             
-            // switch220_10: this.onSwitch220SceneUpClick,
-            // switch220_11: this.onSwitch220SceneDownClick,
-            // switch220_13: this.onSwitch220SceneUpDownRelease,
-            // switch220_14: this.onSwitch220SceneUpDoubleClick,
-            // switch220_17: this.onSwitch220SceneUpHold,
-            // switch220_18: this.onSwitch220SceneDownHold,
-            
             //light12:        this.onLight12Event,
             motionSensor: this.onMotionSensorEvent,
             lightSensor: this.onLightSensorEvent,
@@ -186,13 +179,7 @@ define('AbstractRoom', [
         // var handlers = {
         //     switch220: this.onSwitch220Event,
             
-        //     switch220_10: this.onSwitch220SceneUpClick,
-        //     switch220_11: this.onSwitch220SceneDownClick,
-        //     switch220_13: this.onSwitch220SceneUpDownRelease,
-        //     switch220_14: this.onSwitch220SceneUpDoubleClick,
-        //     switch220_17: this.onSwitch220SceneUpHold,
-        //     switch220_18: this.onSwitch220SceneDownHold,
-            
+       
         //     //light12:        this.onLight12Event,
         //     motionSensor: this.onMotionSensorEvent,
         //     lightSensor: this.onLightSensorEvent,
@@ -675,35 +662,6 @@ define('AbstractRoom', [
     	    this.switchLight({mode:'on'});
         }
         
-        
-        
-        // if (lightState.summary.level == 'off'){
-        //     this.log('onSwitch220SceneUpClick: кликнута кнопка Вверх. summary.level == off. userMode=>220');
-    	   // this.state.userMode = '220';
-        //     this.switchLight({mode:'on'});
-        // } else if (lightState['12'].level == 'on') {
-        //     this.log('onSwitch220SceneUpClick: кликнута кнопка Вверх. 12.level == on. userMode=>220');
-        //     this.state.userMode = '220';
-        //     this.switchLight({mode:'on'});
-        // } else if (lightState['220'].level == 'on') {
-        //     this.log('onSwitch220SceneUpClick: кликнута кнопка Вверх. 220.level == on. userMode=>on');
-    	   // this.state.userMode = 'on';
-    	   // this.switchLight({mode:'on'});
-        // }
-        
-        
-    //     if (!this.state.light){
-    // 	  this.log('onButtonUp: кликнута кнопка Вверх. userMode=>220');
-    // 	  this.state.userMode = '220';
-    // 	  this.switchLight({mode:'on', force:true, light:'220'});
-    // 	} else if (this.state.light == '12'){
-    // 	  this.log('onButtonUp: кликнута кнопка Вверх. userMode=>220');
-    // 	  this.state.userMode = '220';
-    // 	  this.switchLight({mode:'on', force:true, light:'220'});
-    // 	} else if (this.state.light == '220'){
-    // 	  this.log('onButtonUp: кликнута кнопка Вверх. userMode=>on');
-    // 	  this.state.userMode = 'on';
-    // 	}
     };
 
     AbstractRoom.prototype.onSwitch220SceneDownClick = function() {
@@ -721,53 +679,34 @@ define('AbstractRoom', [
     	    this.state.userMode = 'off';
     	    this.switchLight({mode:'off', force:true});
         }
-        
-        // if (lightState.summary.level == 'off'){
-        //     this.log('onSwitch220SceneDownClick: кликнута кнопка Вниз. summary.level == off. userMode=>off');
-    	   // this.state.userMode = 'off';
-        // } else if (lightState['12'].level == 'on'){
-        //     this.log('onSwitch220SceneDownClick: кликнута кнопка Вниз. 12.level == on. userMode=>off');
-    	   // this.state.userMode = 'off';
-    	   // this.switchLight({mode:'off', force:true});
-        // } else if (lightState['220'].level == 'on'){
-        //     this.log('onSwitch220SceneDownClick: кликнута кнопка Вниз. 220.level == on. userMode=>12');
-        //     this.state.userMode = '12';
-        //     this.switchLight({mode:'on'});
-        // }
-        
-        
-        
-        return;
-        
-    //     if (!this.state.light){
-    // 	  this.log('onButtonDown: кликнута кнопка Вниз. userMode=>off');
-    // 	  this.state.userMode = 'off';
-    // 	} else if (this.state.light == '12'){
-    // 	  this.log('onButtonDown: кликнута кнопка Вниз. userMode=>off');
-    // 	  this.state.userMode = 'off';
-    // 	  this.switchLight({mode:'off', force:true});
-    // 	} else if (this.state.light == '220'){
-    //       if (this.is12TargetsExists()){
-    //         this.log('onButtonDown: кликнута кнопка Вниз. userMode=>12');
-    //         this.state.userMode = '12';
-    //         this.switchLight({mode:'on', force:true, light:'12'});
-    //       } else {
-    //         this.log('onButtonDown: кликнута кнопка Вниз. 12В устройства не найдены. userMode=>off');
-    //         this.state.userMode = 'off';
-    //         this.switchLight({mode:'off', force:true});
-    //       }
-    	  
-    // 	}
+       
     };
 
     
 
     AbstractRoom.prototype.onSwitch220SceneUpDoubleClick = function() {
         this.log('onSwitch220SceneUpDoubleClick');
+        this.state.userMode = '220';
+        this.switchLight({mode:'on'});
     };
 
     AbstractRoom.prototype.onSwitch220SceneUpHold = function() {
         this.log('onSwitch220SceneUpHold');
+        var lightState = this.getLightState(); 
+        
+        //if (lightState.switch220.levelOnOff == 'on')
+        this.switchLight({mode: 'on', light: '220'});
+        this.state.switch220Dimming = true;
+        this.startDim({
+            direction: 'on',
+            currentLevel: lightState.switch220.level,
+            minLevel: 1,
+            maxLevel: 99,
+            callback: function(level){ 
+                this.setParameter('switch12Level', level);
+                this.switchLight({mode: 'on', light: '220'}); 
+            }
+        });
     };
 
     AbstractRoom.prototype.onSwitch220SceneDownHold = function() {
@@ -791,6 +730,22 @@ define('AbstractRoom', [
                     }
                 });
             }
+        }
+        
+        if (lightState.switch220.levelOnOff == 'on' && lightState.switch220.lastLevelChange > 2*1000) {
+            // 220 горит давно (если он был выключен - то диммирование вниз его включит, но время будет меньше 2с)
+            this.switchLight({mode: 'on', light: '220'});
+            this.state.switch220Dimming = true;
+            this.startDim({
+                direction: 'off',
+                currentLevel: lightState.switch220.level,
+                minLevel: 1,
+                maxLevel: 99,
+                callback: function(level){ 
+                    this.setParameter('switch12Level', level);
+                    this.switchLight({mode: 'on', light: '220'});
+                }
+            });
         }
     };
     
