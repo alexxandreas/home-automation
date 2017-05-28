@@ -959,9 +959,12 @@ define('AbstractRoom', [
         var data;
         if (!this._parametersLoaded)
             this._loadParameters();
-        if (this._parameters[key] !== undefined)
-            data = this._parameters[key];
-        data = this.defaultParameters[key];
+            
+        data = this._parameters[key];
+        
+        if (data === undefined)
+            data = this.defaultParameters[key];
+            
         this.log('getParameter('+key+'): ' + JSON.stringify(data));
         return data;
     }

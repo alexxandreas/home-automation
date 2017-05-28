@@ -200,7 +200,7 @@ define('AbstractBigRoom', ['AbstractRoom', 'DeviceStorage', 'UtilsRoomHelpers'],
         this.state.rgbDimming = true;
         this.startDim({
             direction: this.state.rgbDimDirection,
-            currentLevel: lightState.rgb.level,
+            currentLevel: this.getParameter('RGBLevel'),
             minLevel: 0,
             maxLevel: 99,
             callback: function(level){ 
@@ -216,8 +216,8 @@ define('AbstractBigRoom', ['AbstractRoom', 'DeviceStorage', 'UtilsRoomHelpers'],
         this.state.rgbDimming = false;
         //this.stopRGBDim();
         this.state.rgbDimDirection = this.state.rgbDimDirection == 'off' ? 'on' : 'off';
-        var level = this.getLightState().rgb.level;
-        this.setParameter('RGBLevel', level);
+        //var level = this.getLightState().rgb.level;
+        //this.setParameter('RGBLevel', level);
     };
     
     // включение RBG при включенном 220
