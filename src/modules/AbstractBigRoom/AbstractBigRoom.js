@@ -419,6 +419,6 @@ define('AbstractBigRoom', ['AbstractRoom', 'DeviceStorage', 'UtilsRoomHelpers'],
         AbstractBigRoom.super_.prototype.stop.apply(this, arguments);
     };
 
-    return new AbstractBigRoom();
+    return AbstractBigRoom;
 });
 
