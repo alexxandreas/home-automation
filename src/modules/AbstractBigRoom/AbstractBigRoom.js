@@ -123,14 +123,14 @@ define('AbstractBigRoom', ['AbstractRoom', 'DeviceStorage', 'UtilsRoomHelpers'],
         //this.state.lastColor = color;
         
     
-        if (!br){
-          var minBr = this.getMinBr(color);
-          if (this.state.useMinBr)
-            this.state.rgbBr = minBr;
-          else 
-            this.state.rgbBr = Math.max(minBr, this.state.rgbBr);
-          br = this.state.rgbBr;
-        }
+        // if (!br){
+        //   var minBr = this.getMinBr(color);
+        //   if (this.state.useMinBr)
+        //     this.state.rgbBr = minBr;
+        //   else 
+        //     this.state.rgbBr = Math.max(minBr, this.state.rgbBr);
+        //   br = this.state.rgbBr;
+        // }
         
         var minBr = this.getMinBr(color);
         var rgbLevel = this.getParameter('RGBLevel');
