@@ -156,6 +156,9 @@ define('AbstractRoom', [
             light12Dimming: false,
             switch220Dimming: false,
 
+
+
+
             // Если движение снаружи началось после окончания движения внутри - 
             // значит снаружи другой человек. Не реагируем на внешний датчик движения
             extMotions: {}, // id_внешнего_датчика_движения -> {value: ('on'/'off'), ignore: (true/false), changeTime: Date.now()}
@@ -904,7 +907,12 @@ define('AbstractRoom', [
         this.log('startDim(' + (options.direction == 'on' ? 'startUp' : 'startDown') + ')');
         this.stopDim();
         
-        var timeout = 1;
+        //var timeout = 1; // время в с, через которое будет повторное изенение яркости
+        //var deltaLevel = 10; // дельта, на которую меняется яркость за одну итерацию
+        
+        var timeout = 0.5; // время в с, через которое будет повторное изенение яркости
+        var deltaLevel = 5; // дельта, на которую меняется яркость за одну итерацию
+        
         var level = options.currentLevel;
         var maxLevel = options.maxLevel || 100;
         var minLevel = options.minLevel || 0;
@@ -916,7 +924,7 @@ define('AbstractRoom', [
                 //this.state.useMinBr = false;
                 //if (this.state.rgbBr == 100) return;
                 if (level >= maxLevel) return;
-                var newLevel = Math.min(level+10, maxLevel)
+                var newLevel = Math.min(level+deltaLevel, maxLevel)
                 this.log('change brightness: ' + level + ' -> ' + newLevel);
                 // this.log('change brightness: ' + this.state.rgbBr + ' -> ' + Math.min(this.state.rgbBr+10, 100));
                 level = newLevel;
@@ -930,7 +938,7 @@ define('AbstractRoom', [
                     //this.state.useMinBr = true;
                     return;
                 }
-                var newLevel = Math.max(level-10, minLevel);
+                var newLevel = Math.max(level-deltaLevel, minLevel);
                 this.log('change brightness: ' + level + ' -> ' + newLevel);
                 level = newLevel;
                 // if (this.state.rgbBr == minBr)

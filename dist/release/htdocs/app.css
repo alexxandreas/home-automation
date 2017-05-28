@@ -18,6 +18,19 @@
 .DeviceStorage .greenButon {
     background-color: green;
 }
+.Logger {
+    
+}
+
+.Logger textarea {
+    height:100%; 
+    /*width:100%; */
+    margin: 5px;
+    font-family: monospace; 
+    font-size: 12px; 
+    /*font-weight: bold;*/
+    outline: none;
+} 
 .RemoteConsole {
     
 }
@@ -50,19 +63,6 @@
 }
 
 
-.Logger {
-    
-}
-
-.Logger textarea {
-    height:100%; 
-    /*width:100%; */
-    margin: 5px;
-    font-family: monospace; 
-    font-size: 12px; 
-    /*font-weight: bold;*/
-    outline: none;
-} 
 .Status {
     
 }

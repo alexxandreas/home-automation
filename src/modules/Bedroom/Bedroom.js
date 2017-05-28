@@ -3,7 +3,7 @@ global config, inherits, controller, MHA
 */
 
 // Прихожая
-define('Bedroom', ['AbstractRoom', 'DeviceStorage'], function(AbstractRoom, DeviceStorage){
+define('Bedroom', ['AbstractBigRoom', 'DeviceStorage'], function(AbstractBigRoom, DeviceStorage){
    
    function Bedroom(config) {
         Bedroom.super_.call(this, config);
@@ -29,9 +29,6 @@ define('Bedroom', ['AbstractRoom', 'DeviceStorage'], function(AbstractRoom, Devi
             // door:           'bathroom.door'
             
         };
-        
-        this.handlersConfig.switch220center = this.onSwitch220centerEvent;
-        this.handlersConfig.switch220edge = this.onSwitch220edgeEvent;
         
         
         // this.extRooms = [
@@ -89,17 +86,16 @@ define('Bedroom', ['AbstractRoom', 'DeviceStorage'], function(AbstractRoom, Devi
         // this.settings.humidityOffDelta = 20, // разница во влажности для ВЫКЛЮЧЕНИЯ вентилятора
         // this.settings.fanMaxTimeout = 5     // максимальная продолжинельность работы вентилятора после выключения света, мин
 
+        
+
         this.init();
-      
+        
+        
     } 
 
-    inherits(Bedroom, AbstractRoom);
+    inherits(Bedroom, AbstractBigRoom);
     
     
-
-    
-
-
 
 
     Bedroom.prototype.init = function(){
