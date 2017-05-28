@@ -760,6 +760,7 @@ define('AbstractRoom', [
         }
         if (this.state.switch220Dimming) {
             this.state.switch220Dimming = false;
+            this.stopDim();
             var level = this.getLightState().switch220.level;
             this.setParameter('switch220Level', level);
         }
@@ -923,7 +924,7 @@ define('AbstractRoom', [
      * 
      */
     AbstractRoom.prototype.startDim = function(options) {
-        this.log('startDim(' + (this.state.rgbDimUp ? 'startUp' : 'startDown') + ')');
+        this.log('startDim(' + (options.direction == 'on' ? 'startUp' : 'startDown') + ')');
         this.stopDim();
         
         var timeout = 1;
