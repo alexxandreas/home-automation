@@ -52,8 +52,9 @@ define('AbstractBigRoom', ['AbstractRoom', 'DeviceStorage', 'UtilsRoomHelpers'],
     inherits(AbstractBigRoom, AbstractRoom);
     
     AbstractBigRoom.prototype.init = function(){
+        this.log('init0');
         AbstractBigRoom.super_.prototype.init.apply(this, arguments);
-        
+        this.log('init1');
         this.state.rgbDimming = false;
         this.state.rgbDimDirection = 'off'; // направление диммирования 12 света при удержании кнопки Вниз
         this.state.daylightColor = [15, 15, 100];
@@ -63,7 +64,7 @@ define('AbstractBigRoom', ['AbstractRoom', 'DeviceStorage', 'UtilsRoomHelpers'],
         this.defaultParameters.RGBLevel = 99;
         this.defaultParameters.colorIndex = 0;
         
-        
+        this.log('init2');
         // this.state['220center'] = 'off'; //  ('on', 'off')
         // this.state['220edge'] = 'off'; //  ('on', 'off')
         // this.state.rgb = 'off'; //  ('on', 'off')

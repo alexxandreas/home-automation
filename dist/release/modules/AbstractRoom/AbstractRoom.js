@@ -956,11 +956,14 @@ define('AbstractRoom', [
     
     
     AbstractRoom.prototype.getParameter = function(key){
+        var data;
         if (!this._parametersLoaded)
             this._loadParameters();
         if (this._parameters[key] !== undefined)
-            return this._parameters[key];
-        return this.defaultParameters[key];
+            data = this._parameters[key];
+        data = this.defaultParameters[key];
+        this.log('getParameter('+key+'): ' + JSON.stringify(data));
+        return data;
     }
         
     AbstractRoom.prototype.setParameter = function(key, data){
@@ -968,6 +971,7 @@ define('AbstractRoom', [
             this._loadParameters();
         this._parameters[key] = data;
         this.saveData('parameters', this._parameters);
+        this.log('setParameter('+key+', ' + JSON.stringify(data) + ')');
     }
     
     AbstractRoom.prototype._loadParameters = function(){
