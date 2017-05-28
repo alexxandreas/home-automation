@@ -109,7 +109,7 @@ define('AbstractBigRoom', ['AbstractRoom', 'DeviceStorage', 'UtilsRoomHelpers'],
     /**********************************************************/
     
     AbstractBigRoom.prototype.onRGB = function(color, br) {
-        
+        this.log('onRGB(): ' + JSON.stringify(arguments));
         //color = color || this.state.lastColor;
         if (!color){
           color =  this.colors[this.getParameter('colorIndex')];
