@@ -38,6 +38,395 @@ angular
 (function () {
     "use strict";
     angular.module('WebApp')
+        .controller('DeviceStorageCtrl', DeviceStorageCtrl);
+
+    DeviceStorageCtrl.$inject = [
+        '$scope',
+        '$http',
+        '$timeout',
+        'DeviceStorageSrv'
+    ];
+
+    function DeviceStorageCtrl(
+        $scope,
+        $http,
+        $timeout,
+        DeviceStorageSrv
+    ) {
+        $scope.allDevices = {};
+        
+        $scope.devices = {};
+        //$interval(reload, 1000);
+        reload();
+        
+        
+        var reloadTimeout;
+        function reload(){
+            DeviceStorageSrv.reload().then(function(data){
+                data.forEach(function(dev){
+                    $scope.allDevices[dev.key] = $scope.allDevices[dev.key] || {};
+                    angular.extend($scope.allDevices[dev.key], dev);
+                });
+                $scope.devices = $scope.allDevices;
+            }).finally(function(){
+                if (!$scope.$$destroyed) 
+                    reloadTimeout = $timeout(reload, 1000);
+            })
+        }
+        
+        $scope.getValueButtonClass = function(device){
+            if (device.level === 0 || device.level.toString().toLowerCase() === 'off')
+                return 'redButon';
+            else if (device.level === 99 || device.level.toString().toLowerCase() === 'on')
+                return 'greenButon';
+            return 'yellowButon';
+        }
+        
+        $scope.formatTime = function(ms){
+            var sec = Math.round(ms/1000);
+            var min = Math.trunc(sec / 60);
+            var hour = Math.trunc(min / 60);
+            var day = Math.trunc(hour / 24);
+            var text = '';
+            if (day > 0 || text) text += day + 'd ';
+            if (hour > 0 || text) text += (hour % 24) + 'h ';
+            if (min > 0 || text) text += (min % 60) + 'm ';
+            if (sec > 0 || text) text += (sec % 60) + 's';
+            return text;
+        }
+        
+        $scope.$on("$destroy", function() {
+            if (reloadTimeout) {
+                $timeout.cancel(reloadTimeout);
+            }
+        });
+        
+    }
+
+}());
+(function () {
+    "use strict";
+    angular.module('WebApp')
+        .factory('DeviceStorageSrv', DeviceStorageSrv);
+
+
+    // инициализируем сервис
+    //angular.module('WebApp').run(['DeviceStorageSrv', function(ApiSrv) {  }]);
+    
+    DeviceStorageSrv.$inject = [
+        '$http',
+    ];
+    
+    function DeviceStorageSrv(
+        $http
+    ) {
+        
+        
+        function reload(){
+            return $http.get('modules/DeviceStorage/api/state').then(function(response){
+                return response.data;
+            });
+        }
+        
+        var me = {
+            reload: reload
+        };
+        
+        return me;
+    }
+}());
+(function () {
+    "use strict";
+    angular.module('WebApp')
+        .controller('LoggerCtrl', LoggerCtrl);
+
+    LoggerCtrl.$inject = [
+        '$scope',
+        '$rootScope',
+        '$http',
+        '$timeout',
+        '$window',
+        '$sce',
+        '$mdDialog',
+        'LoggerSrv'
+    ];
+
+    function LoggerCtrl(
+        $scope,
+        $rootScope,
+        $http,
+        $timeout,
+        $window,
+        $sce,
+        $mdDialog,
+        LoggerSrv
+    ) {
+        
+        $scope.logData = "";
+        reload();
+
+        var reloadTimeout;
+        function reload(){
+            LoggerSrv.reload().then(function(data){
+                //data.forEach(function(dev){                });
+                $scope.logData = data.map(function(item){
+                    var date = new Date(item.time);
+                    return '[' + date.toLocaleDateString() + ' ' + date.toLocaleTimeString() + '] ' + item.data;
+                }).join('\n');
+            }).finally(function(){
+                if (!$scope.$$destroyed) 
+                    reloadTimeout = $timeout(reload, 2000);
+            })
+        }
+
+        $scope.$on("$destroy", function() {
+            if (reloadTimeout) {
+                $timeout.cancel(reloadTimeout);
+            }
+        });
+        
+    }
+
+}());
+(function () {
+    "use strict";
+    angular.module('WebApp')
+        .factory('LoggerSrv', LoggerSrv);
+
+
+    // инициализируем сервис
+    //angular.module('WebApp').run(['LoggerSrv', function(ApiSrv) {  }]);
+    
+    LoggerSrv.$inject = [
+        '$http',
+        'PanelsSrv'
+    ];
+    
+    function LoggerSrv(
+        $http,
+        PanelsSrv
+    ) {
+        
+        var lastTime = 0;
+        var logArray = [];
+        
+        function reload(){
+            return $http.get('modules/Logger/api/getLog/' + lastTime).then(function(response){
+                var arr = response.data;
+                logArray = logArray.concat(arr).slice(-1000);
+                lastTime = logArray[logArray.length-1].time;
+                return logArray;
+            });
+        }
+        
+        
+        
+        var me = {
+            reload: reload
+        };
+        
+        return me;
+    }
+}());
+(function () {
+    "use strict";
+    angular.module('WebApp')
+        .controller('RemoteConsoleCtrl', RemoteConsoleCtrl);
+
+    RemoteConsoleCtrl.$inject = [
+        '$scope',
+        '$http',
+        '$timeout',
+        '$mdDialog',
+        'RemoteConsoleSrv'
+    ];
+
+    function RemoteConsoleCtrl(
+        $scope,
+        $http,
+        $timeout,
+        $mdDialog,
+        RemoteConsoleSrv
+    ) {
+        
+        $scope.input = "(function(){\n\n})()";
+        $scope.output = "";
+        $scope.status = "";
+        
+        RemoteConsoleSrv.getHistory().then(function(history){
+            if (history.length > 0){
+                $scope.loadFromHistory(history[history.length-1]);
+            }
+        });
+        
+        $scope.loadFromHistory = function(item){
+            $scope.input = item.src;
+            $scope.output = item.result;
+        };
+        
+        $scope.showHistory = function(){
+            RemoteConsoleSrv.getHistory().then(function(history){
+                $mdDialog.show({
+                  controller: DialogController,
+                  //templateUrl: 'dialog1.tmpl.html',
+                  templateUrl: '/views/RemoteConsole/htdocs/RemoteConsoleHistory.html',
+                  parent: angular.element(document.body),
+                  //targetEvent: ev,
+                  locals: {
+                        title: "История запросов",
+                        history: history
+                        //message: $sce.trustAsHtml('<pre><code>'+message+'</code></pre>')
+                  },
+                  clickOutsideToClose:true,
+                  fullscreen: true // Only for -xs, -sm breakpoints.
+                })
+                .then(function(answer) {
+                  //$scope.status = 'You said the information was "' + answer + '".';
+                }, function() {
+                  //$scope.status = 'You cancelled the dialog.';
+                });
+                var parentScope = $scope;
+                function DialogController($scope, $mdDialog, $sce, title, history) {
+                    
+                    $scope.title = title;
+                    $scope.history = history;
+                    
+                    // $scope.hide = function() {
+                    //   $mdDialog.hide();
+                    // };
+                    $scope.makeHTML = function(value){
+                        return $sce.trustAsHtml('<pre><code>'+value+'</code></pre>')
+                    }
+                
+                    $scope.cancel = function() {
+                      $mdDialog.cancel();
+                    };
+                
+                    $scope.openHistoryItem = function(item) {
+                      parentScope.loadFromHistory(item);
+                      $mdDialog.cancel();
+                    };
+                }
+            });
+        };
+        
+        var time;
+        
+        $scope.keyUp = function(event){
+            if (event.which==13 && event.ctrlKey) $scope.run();
+        }
+        
+        $scope.run = function(){
+            
+            time = new Date().getTime();
+            $scope.status = 'running...';
+        	//var tnode = document.getElementById("JStiming");
+            //tnode.innerHTML = "running...";
+        	
+            //var code = document.getElementById("JSprogram").value;
+            RemoteConsoleSrv.run($scope.input).then(function(data){
+                $scope.output = data;
+            }, function(response){ })
+            .finally(function(){
+                $scope.status = ""+(new Date().getTime()-time)/1000 + ' sec';
+            });
+            
+        	
+        }
+        
+    }
+
+}());
+
+
+(function() {
+    "use strict";
+    angular.module('WebApp')
+        .factory('RemoteConsoleSrv', RemoteConsoleSrv);
+
+
+    // инициализируем сервис
+    //angular.module('WebApp').run(['RemoteConsoleSrv', function(ApiSrv) {  }]);
+
+    RemoteConsoleSrv.$inject = [
+        '$http',
+        '$q'
+    ];
+
+    function RemoteConsoleSrv(
+        $http,
+        $q
+    ) {
+
+        var history = [];
+        var historyLoaded = false;
+
+        function run(str) {
+            var encoded = encodeURIComponent(str);
+            //return $http.get('modules/RemoteConsole/api/eval/' + encoded)
+            return $http({
+                url: 'modules/RemoteConsole/api/eval/' + encoded,
+                method: 'GET'
+                    // transformResponse: function(value) {
+                    //     return value;
+                    // }
+            }).then(function(response) {
+                    if (typeof response.data == 'string') {
+                        var data = response.data;
+                    }
+                    else {
+                        var data = JSON.stringify(response.data, null, '  ');
+                    }
+                    history.push({
+                        src: str,
+                        result: data ? data.substr(0, 200) : ''
+                    });
+                    return data;
+                },
+                function(response) {
+                    var data = response && response.data || response
+                    if (typeof data != 'string') {
+                        data = JSON.stringify(data, null, '  ');
+                    }
+                    history.push({
+                        src: str,
+                        result: data
+                    });
+                    return data;
+                });
+        }
+
+
+        function getHistory() {
+            return $q(function(resolve, reject) {
+                if (historyLoaded) {
+                    resolve(history);
+                }
+                else {
+                    $http.get('modules/RemoteConsole/api/history').then(function(response) {
+                        history = response.data;
+                        historyLoaded = true;
+                        resolve(history);
+                    }, function(response) {
+                        historyLoaded = true;
+                        resolve(history);
+                    })
+                }
+            })
+        }
+
+        var me = {
+            run: run,
+            getHistory: getHistory
+        };
+
+        return me;
+    }
+}());
+
+(function () {
+    "use strict";
+    angular.module('WebApp')
         .controller('ControlPanelCtrl', ControlPanelCtrl);
 
     ControlPanelCtrl.$inject = [
@@ -302,199 +691,6 @@ angular
 (function () {
     "use strict";
     angular.module('WebApp')
-        .controller('DeviceStorageCtrl', DeviceStorageCtrl);
-
-    DeviceStorageCtrl.$inject = [
-        '$scope',
-        '$http',
-        '$timeout',
-        'DeviceStorageSrv'
-    ];
-
-    function DeviceStorageCtrl(
-        $scope,
-        $http,
-        $timeout,
-        DeviceStorageSrv
-    ) {
-        $scope.allDevices = {};
-        
-        $scope.devices = {};
-        //$interval(reload, 1000);
-        reload();
-        
-        
-        var reloadTimeout;
-        function reload(){
-            DeviceStorageSrv.reload().then(function(data){
-                data.forEach(function(dev){
-                    $scope.allDevices[dev.key] = $scope.allDevices[dev.key] || {};
-                    angular.extend($scope.allDevices[dev.key], dev);
-                });
-                $scope.devices = $scope.allDevices;
-            }).finally(function(){
-                if (!$scope.$$destroyed) 
-                    reloadTimeout = $timeout(reload, 1000);
-            })
-        }
-        
-        $scope.getValueButtonClass = function(device){
-            if (device.level === 0 || device.level.toString().toLowerCase() === 'off')
-                return 'redButon';
-            else if (device.level === 99 || device.level.toString().toLowerCase() === 'on')
-                return 'greenButon';
-            return 'yellowButon';
-        }
-        
-        $scope.formatTime = function(ms){
-            var sec = Math.round(ms/1000);
-            var min = Math.trunc(sec / 60);
-            var hour = Math.trunc(min / 60);
-            var day = Math.trunc(hour / 24);
-            var text = '';
-            if (day > 0 || text) text += day + 'd ';
-            if (hour > 0 || text) text += (hour % 24) + 'h ';
-            if (min > 0 || text) text += (min % 60) + 'm ';
-            if (sec > 0 || text) text += (sec % 60) + 's';
-            return text;
-        }
-        
-        $scope.$on("$destroy", function() {
-            if (reloadTimeout) {
-                $timeout.cancel(reloadTimeout);
-            }
-        });
-        
-    }
-
-}());
-(function () {
-    "use strict";
-    angular.module('WebApp')
-        .factory('DeviceStorageSrv', DeviceStorageSrv);
-
-
-    // инициализируем сервис
-    //angular.module('WebApp').run(['DeviceStorageSrv', function(ApiSrv) {  }]);
-    
-    DeviceStorageSrv.$inject = [
-        '$http',
-    ];
-    
-    function DeviceStorageSrv(
-        $http
-    ) {
-        
-        
-        function reload(){
-            return $http.get('modules/DeviceStorage/api/state').then(function(response){
-                return response.data;
-            });
-        }
-        
-        var me = {
-            reload: reload
-        };
-        
-        return me;
-    }
-}());
-(function () {
-    "use strict";
-    angular.module('WebApp')
-        .controller('LoggerCtrl', LoggerCtrl);
-
-    LoggerCtrl.$inject = [
-        '$scope',
-        '$rootScope',
-        '$http',
-        '$timeout',
-        '$window',
-        '$sce',
-        '$mdDialog',
-        'LoggerSrv'
-    ];
-
-    function LoggerCtrl(
-        $scope,
-        $rootScope,
-        $http,
-        $timeout,
-        $window,
-        $sce,
-        $mdDialog,
-        LoggerSrv
-    ) {
-        
-        $scope.logData = "";
-        reload();
-
-        var reloadTimeout;
-        function reload(){
-            LoggerSrv.reload().then(function(data){
-                //data.forEach(function(dev){                });
-                $scope.logData = data.map(function(item){
-                    var date = new Date(item.time);
-                    return '[' + date.toLocaleDateString() + ' ' + date.toLocaleTimeString() + '] ' + item.data;
-                }).join('\n');
-            }).finally(function(){
-                if (!$scope.$$destroyed) 
-                    reloadTimeout = $timeout(reload, 2000);
-            })
-        }
-
-        $scope.$on("$destroy", function() {
-            if (reloadTimeout) {
-                $timeout.cancel(reloadTimeout);
-            }
-        });
-        
-    }
-
-}());
-(function () {
-    "use strict";
-    angular.module('WebApp')
-        .factory('LoggerSrv', LoggerSrv);
-
-
-    // инициализируем сервис
-    //angular.module('WebApp').run(['LoggerSrv', function(ApiSrv) {  }]);
-    
-    LoggerSrv.$inject = [
-        '$http',
-        'PanelsSrv'
-    ];
-    
-    function LoggerSrv(
-        $http,
-        PanelsSrv
-    ) {
-        
-        var lastTime = 0;
-        var logArray = [];
-        
-        function reload(){
-            return $http.get('modules/Logger/api/getLog/' + lastTime).then(function(response){
-                var arr = response.data;
-                logArray = logArray.concat(arr).slice(-1000);
-                lastTime = logArray[logArray.length-1].time;
-                return logArray;
-            });
-        }
-        
-        
-        
-        var me = {
-            reload: reload
-        };
-        
-        return me;
-    }
-}());
-(function () {
-    "use strict";
-    angular.module('WebApp')
         .controller('StatusCtrl', StatusCtrl);
 
     StatusCtrl.$inject = [
@@ -574,202 +770,6 @@ angular
         return null;
     }
 }());
-(function () {
-    "use strict";
-    angular.module('WebApp')
-        .controller('RemoteConsoleCtrl', RemoteConsoleCtrl);
-
-    RemoteConsoleCtrl.$inject = [
-        '$scope',
-        '$http',
-        '$timeout',
-        '$mdDialog',
-        'RemoteConsoleSrv'
-    ];
-
-    function RemoteConsoleCtrl(
-        $scope,
-        $http,
-        $timeout,
-        $mdDialog,
-        RemoteConsoleSrv
-    ) {
-        
-        $scope.input = "(function(){\n\n})()";
-        $scope.output = "";
-        $scope.status = "";
-        
-        RemoteConsoleSrv.getHistory().then(function(history){
-            if (history.length > 0){
-                $scope.loadFromHistory(history[history.length-1]);
-            }
-        });
-        
-        $scope.loadFromHistory = function(item){
-            $scope.input = item.src;
-            $scope.output = item.result;
-        };
-        
-        $scope.showHistory = function(){
-            RemoteConsoleSrv.getHistory().then(function(history){
-                $mdDialog.show({
-                  controller: DialogController,
-                  //templateUrl: 'dialog1.tmpl.html',
-                  templateUrl: '/views/RemoteConsole/htdocs/RemoteConsoleHistory.html',
-                  parent: angular.element(document.body),
-                  //targetEvent: ev,
-                  locals: {
-                        title: "История запросов",
-                        history: history
-                        //message: $sce.trustAsHtml('<pre><code>'+message+'</code></pre>')
-                  },
-                  clickOutsideToClose:true,
-                  fullscreen: true // Only for -xs, -sm breakpoints.
-                })
-                .then(function(answer) {
-                  //$scope.status = 'You said the information was "' + answer + '".';
-                }, function() {
-                  //$scope.status = 'You cancelled the dialog.';
-                });
-                var parentScope = $scope;
-                function DialogController($scope, $mdDialog, $sce, title, history) {
-                    
-                    $scope.title = title;
-                    $scope.history = history;
-                    
-                    // $scope.hide = function() {
-                    //   $mdDialog.hide();
-                    // };
-                    $scope.makeHTML = function(value){
-                        return $sce.trustAsHtml('<pre><code>'+value+'</code></pre>')
-                    }
-                
-                    $scope.cancel = function() {
-                      $mdDialog.cancel();
-                    };
-                
-                    $scope.openHistoryItem = function(item) {
-                      parentScope.loadFromHistory(item);
-                      $mdDialog.cancel();
-                    };
-                }
-            });
-        };
-        
-        var time;
-        
-        $scope.keyUp = function(event){
-            if (event.which==13 && event.ctrlKey) $scope.run();
-        }
-        
-        $scope.run = function(){
-            
-            time = new Date().getTime();
-            $scope.status = 'running...';
-        	//var tnode = document.getElementById("JStiming");
-            //tnode.innerHTML = "running...";
-        	
-            //var code = document.getElementById("JSprogram").value;
-            RemoteConsoleSrv.run($scope.input).then(function(data){
-                $scope.output = data;
-            }, function(response){ })
-            .finally(function(){
-                $scope.status = ""+(new Date().getTime()-time)/1000 + ' sec';
-            });
-            
-        	
-        }
-        
-    }
-
-}());
-
-
-(function() {
-    "use strict";
-    angular.module('WebApp')
-        .factory('RemoteConsoleSrv', RemoteConsoleSrv);
-
-
-    // инициализируем сервис
-    //angular.module('WebApp').run(['RemoteConsoleSrv', function(ApiSrv) {  }]);
-
-    RemoteConsoleSrv.$inject = [
-        '$http',
-        '$q'
-    ];
-
-    function RemoteConsoleSrv(
-        $http,
-        $q
-    ) {
-
-        var history = [];
-        var historyLoaded = false;
-
-        function run(str) {
-            var encoded = encodeURIComponent(str);
-            //return $http.get('modules/RemoteConsole/api/eval/' + encoded)
-            return $http({
-                url: 'modules/RemoteConsole/api/eval/' + encoded,
-                method: 'GET'
-                    // transformResponse: function(value) {
-                    //     return value;
-                    // }
-            }).then(function(response) {
-                    if (typeof response.data == 'string') {
-                        var data = response.data;
-                    }
-                    else {
-                        var data = JSON.stringify(response.data, null, '  ');
-                    }
-                    history.push({
-                        src: str,
-                        result: data ? data.substr(0, 200) : ''
-                    });
-                    return data;
-                },
-                function(response) {
-                    var data = response && response.data || response
-                    if (typeof data != 'string') {
-                        data = JSON.stringify(data, null, '  ');
-                    }
-                    history.push({
-                        src: str,
-                        result: data
-                    });
-                    return data;
-                });
-        }
-
-
-        function getHistory() {
-            return $q(function(resolve, reject) {
-                if (historyLoaded) {
-                    resolve(history);
-                }
-                else {
-                    $http.get('modules/RemoteConsole/api/history').then(function(response) {
-                        history = response.data;
-                        historyLoaded = true;
-                        resolve(history);
-                    }, function(response) {
-                        historyLoaded = true;
-                        resolve(history);
-                    })
-                }
-            })
-        }
-
-        var me = {
-            run: run,
-            getHistory: getHistory
-        };
-
-        return me;
-    }
-}());
-
 (function () {
     "use strict";
     angular.module('WebApp')

@@ -687,6 +687,7 @@ define('AbstractRoom', [
     AbstractRoom.prototype.onSwitch220SceneUpDoubleClick = function() {
         this.log('onSwitch220SceneUpDoubleClick');
         this.state.userMode = '220';
+        this.setParameter('switch220Level', '99');
         this.switchLight({mode:'on'});
     };
 
