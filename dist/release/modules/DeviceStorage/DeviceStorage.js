@@ -100,8 +100,8 @@ define('DeviceStorage', ['AbstractModule', 'WebServer', 'UtilsVDev', 'UtilsHWDev
                 
                 'bathroom.switch220': { name:  [dict.bathroom, dict.light, dict.L220], type: this._deviceTypes.FGD211, hw: this.hwDevs['bathroom.FGD211']}, //  FGD211
                 'bathroom.motionSensor': { name:  [dict.bathroom, dict.sensor, dict.motion], type: this._deviceTypes.default, hw: this.hwDevs['bathroom.AEONMS']}, //  Aeon
-                'bathroom.lightSensor': { name:  [dict.bathroom, dict.sensor, dict.light], type: this._deviceTypes.default}, hw: this.hwDevs['bathroom.AEONMS']}, //  Aeon
-                'bathroom.tempSensor': { name:  [dict.bathroom, dict.sensor, dict.temp], type: this._deviceTypes.default}, hw: this.hwDevs['bathroom.AEONMS']}, //  Aeon
+                'bathroom.lightSensor': { name:  [dict.bathroom, dict.sensor, dict.light], type: this._deviceTypes.default, hw: this.hwDevs['bathroom.AEONMS']}, //  Aeon
+                'bathroom.tempSensor': { name:  [dict.bathroom, dict.sensor, dict.temp], type: this._deviceTypes.default, hw: this.hwDevs['bathroom.AEONMS']}, //  Aeon
                 'bathroom.humSensor': { name:  [dict.bathroom, dict.sensor, dict.hum], type: this._deviceTypes.default, hw: this.hwDevs['bathroom.AEONMS']}, //  Aeon
                 'bathroom.door': { name:  [dict.bathroom, dict.door], type: this._deviceTypes.door, hw: this.hwDevs['toilet.FGRGBWM441']}, //  FGRGBWM441  (x.2) (1110)
                 
