@@ -83,19 +83,19 @@ define('UtilsHWDev', ['AbstractModule'], function(AbstractModule) {
     UtilsHWDev.HWDev.prototype.getConfigParam = function(paramId, callback) {
         var self = this;
         try {
-            var value = this._getParam(paramId);
+            //var value = this._getParam(paramId);
 
-            if (value != null) {
-                callback.call(self, value, true);
-            } else {
+            //if (value != null) {
+            //    callback.call(self, value, true);
+            //} else {
                 zway.devices[this.id].instances[0].commandClasses[112].Get(paramId, function(){
-                    value = self._getParam(paramId);
-                    callback.call(self, value, true);
+                    var newValue = self._getParam(paramId);
+                    callback.call(self, newValue, true);
                 }, function(){
-                    value = self._getParam(paramId);
-                    callback.call(self, value, false);
+                    var newValue = self._getParam(paramId);
+                    callback.call(self, newValue, false);
                 })
-            }
+            //}
         } catch (err) {
             callback.call(self, null, false);  
         }
@@ -111,12 +111,19 @@ define('UtilsHWDev', ['AbstractModule'], function(AbstractModule) {
                 // callback.call(self, value);
             // } else {
                 zway.devices[this.id].instances[0].commandClasses[112].Set(paramId, value, 0, function(){
-                    value = self._getParam(paramId);
-                    callback.call(self, value, true);
+                    //value = self._getParam(paramId);
+                    //callback.call(self, value, true);
+                    self.getConfigParam.call(paramId, function(value, isError){
+                        callback.call(self, value, true);
+                    })
                 }, function(){
-                    value = self._getParam(paramId);
-                    callback.call(self, value, false);
+                    //value = self._getParam(paramId);
+                    //callback.call(self, value, false);
+                    self.getConfigParam.call(paramId, function(value, isError){
+                        callback.call(self, value, false);
+                    })
                 })
+                
             // }
         } catch (err) {
             callback.call(self, null, false);  
@@ -206,7 +213,8 @@ define('UtilsHWDev', ['AbstractModule'], function(AbstractModule) {
             } else {
                 // проверка не прошла
                 this.log('setCallback(' + currentParam.paramId + '): value ' + value + ', configValue ' + currentParam.configValue + (isError ? ' error' : ''));
-                applyNext.call(this);
+                setTimeout(applyNext.bind(this), 100);
+                //applyNext.call(this);
             }
         }
     
