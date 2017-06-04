@@ -213,7 +213,7 @@ define('UtilsHWDev', ['AbstractModule'], function(AbstractModule) {
             } else {
                 // проверка не прошла
                 this.log('setCallback(' + currentParam.paramId + '): value ' + value + ', configValue ' + currentParam.configValue + (isError ? ' error' : ''));
-                setTimeout(applyNext.bind(this), 100);
+                setTimeout(applyNext.bind(this), 1000);
                 //applyNext.call(this);
             }
         }
@@ -249,11 +249,11 @@ define('UtilsHWDev', ['AbstractModule'], function(AbstractModule) {
                 name: 'The percentage of dimming step at automation control'
             },
             9: {
-                value: 5,
+                value: 3,
                 name: 'Time of manually moving the Dimmer between the extreme dimming values (in 10 ms)'
             },
             10: {
-                value: 3, 
+                value: 1, 
                 name: 'Time of Automatic moving the Dimmer between the extreme dimming values'
             }, 
             11: {

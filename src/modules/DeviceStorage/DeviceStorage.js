@@ -155,6 +155,12 @@ define('DeviceStorage', ['AbstractModule', 'WebServer', 'UtilsVDev', 'UtilsHWDev
                 this._initDevice(key);
             }, this);
             
+            // инитим железные устройства после таймаута
+            setTimeout((function(){
+                Object.keys(this.hwDevs).forEach(function(key) {
+                    this.hwDevs[key].applyConfigParams();
+                }, this);
+            }).bind(this), 5*1000);
         };
 
 
