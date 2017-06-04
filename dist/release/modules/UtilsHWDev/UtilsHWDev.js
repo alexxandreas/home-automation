@@ -86,18 +86,18 @@ define('UtilsHWDev', ['AbstractModule'], function(AbstractModule) {
             var value = this._getParam(paramId);
 
             if (value != null) {
-                callback.call(self, value);
+                callback.call(self, value, true);
             } else {
                 zway.devices[this.id].instances[0].commandClasses[112].Get(paramId, function(){
                     value = self._getParam(paramId);
-                    callback.call(self, value);
+                    callback.call(self, value, true);
                 }, function(){
                     value = self._getParam(paramId);
-                    callback.call(self, value);
+                    callback.call(self, value, false);
                 })
             }
         } catch (err) {
-            callback.call(self, null);  
+            callback.call(self, null, false);  
         }
         
     };
@@ -112,14 +112,14 @@ define('UtilsHWDev', ['AbstractModule'], function(AbstractModule) {
             // } else {
                 zway.devices[this.id].instances[0].commandClasses[112].Set(paramId, value, 0, function(){
                     value = self._getParam(paramId);
-                    callback.call(self, value);
+                    callback.call(self, value, true);
                 }, function(){
                     value = self._getParam(paramId);
-                    callback.call(self, value);
+                    callback.call(self, value, false);
                 })
             // }
         } catch (err) {
-            callback.call(self, null);  
+            callback.call(self, null, false);  
         }
     };
     
@@ -186,34 +186,30 @@ define('UtilsHWDev', ['AbstractModule'], function(AbstractModule) {
             this.getConfigParam(currentParam.paramId, getCallback);
         }
         
-        function getCallback(value) {
+        function getCallback(value, isError) {
             if (value == currentParam.configValue) {
                 // проверка прошла - проверяем дальше
-                this.log('getCallback(' + currentParam.paramId + '): value ' + currentParam.configValue + ' success');
+                this.log('getCallback(' + currentParam.paramId + '): value ' + value + ' success');
                 applyNext.call(this);
             } else {
                 // проверка не прошла
-                this.log('getCallback(' + currentParam.paramId + '): value ' + currentParam.configValue + ', configValue ' + currentParam.configValue);
+                this.log('getCallback(' + currentParam.paramId + '): value ' + value + ', configValue ' + currentParam.configValue + (isError ? ' error' : ''));
                 this.setConfigParam(currentParam.paramId, currentParam.configValue, setCallback);
             }
         }
         
-        function setCallback(value) {
+        function setCallback(value, isError) {
             if (value == currentParam.configValue) {
                 // проверка прошла - проверяем дальше
-                this.log('setCallback(' + currentParam.paramId + '): value ' + currentParam.configValue + ' success');
+                this.log('setCallback(' + currentParam.paramId + '): value ' + value + ' success');
                 applyNext.call(this);
             } else {
                 // проверка не прошла
-                this.log('setCallback(' + currentParam.paramId + '): value ' + currentParam.configValue + ', configValue ' + currentParam.configValue);
+                this.log('setCallback(' + currentParam.paramId + '): value ' + value + ', configValue ' + currentParam.configValue + (isError ? ' error' : ''));
                 applyNext.call(this);
             }
         }
-        
-        
-        
-        
-        
+    
     };
     
     

@@ -136,7 +136,7 @@ define('Bathroom', ['AbstractRoom', 'DeviceStorage'], function(AbstractRoom, Dev
             var devHum = DeviceStorage.getDevice(this.devices.humSensor);
             var currentHum = devHum && devHum.MHA.getLevel();
             if (currentHum)
-                this.onHumSensorChange(currentHum);
+                this.onHumSensorEvent({level:currentHum});
         }
     };
     
