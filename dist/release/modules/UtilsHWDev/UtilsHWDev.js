@@ -173,7 +173,7 @@ define('UtilsHWDev', ['AbstractModule'], function(AbstractModule) {
         //var paramsIds = Object.keys(this.configParams).sort();
         if (!this.configParams.length) return;
         
-        var configParamsIndex = -1;
+        var configParamsIndex = 0;
         var currentParam;
         
         applyNext.call(this);
