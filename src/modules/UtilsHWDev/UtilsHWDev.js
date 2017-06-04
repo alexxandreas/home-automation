@@ -49,13 +49,17 @@ define('UtilsHWDev', ['AbstractModule'], function(AbstractModule) {
      * config.configParams = {1:10, 2:15}
      */
     UtilsHWDev.HWDev = function(config){
+        config = config || {};
         
         // в configParams попадают только те параметры, у которых 
         // задано value (по умолчанию, либо через конфиг)
         this.configParams = {};
         Object.keys(this.defaultConfigParams).forEach(function(key){
-            var value = config.configParams[key];
-            if (value === undefined) value = this.defaultConfigParams[key].value;
+            var value;
+            if (config.configParams)
+                value = config.configParams[key];
+            if (value === undefined) 
+                value = this.defaultConfigParams[key].value;
             
             if (value == null) return;
             this.configParams[key] = value;
@@ -117,7 +121,7 @@ define('UtilsHWDev', ['AbstractModule'], function(AbstractModule) {
     /**********************************************************/
 
     UtilsHWDev.FGD211 = function(config){
-        config = config || {};
+        
         
         this.defaultConfigParams = {
             1: {
