@@ -195,12 +195,6 @@ define('UtilsVDev', ['AbstractModule'], function(AbstractModule) {
                     command = 'exact';
                     args.level = Math.max(args.level || 0, obj.args.level);
                 }
-                else if (obj.args.red !== undefined || obj.args.green !== undefined || obj.args.blue != undefined) {
-                    command = 'exact';
-                    args.red = Math.max(args.red || 0, obj.args.red);
-                    args.green = Math.max(args.green || 0, obj.args.green);
-                    args.blue = Math.max(args.blue || 0, obj.args.blue);
-                }
             }
             else if (obj.command == 'on' && command != 'exact') { // включаем безусловно
                 command = 'on';
@@ -379,15 +373,56 @@ define('UtilsVDev', ['AbstractModule'], function(AbstractModule) {
 
     inherits(RGBMHA, DefaultMHA);
     
+    /**
+     *  Возвращает установленный цвет в формате {"r": 90, "g": 45, "b": 45}
+     */
+    RGBMHA.prototype.getColor = function() {
+        return this.vDev.get("metrics:color");
+    }
+    
+    // вызывает обновление состояние устройства в соответствии с текущими _usedBy
+    DefaultMHA.prototype._updateState = function() {
+        var initiators = Object.keys(this._usedBy);
+
+        var command = 'off';
+        var args = {};
+
+        initiators.forEach(function(initiator) {
+            var obj = this._usedBy[initiator];
+            if (obj.command == 'exact' && obj.args) {
+                if (obj.args.level != undefined && obj.args.level != 0) { // указан level
+                    command = 'exact';
+                    args.level = Math.max(args.level || 0, obj.args.level);
+                }
+                else if (obj.args.red !== undefined || obj.args.green !== undefined || obj.args.blue != undefined) {
+                    command = 'exact';
+                    args.red = Math.max(args.red || 0, obj.args.red);
+                    args.green = Math.max(args.green || 0, obj.args.green);
+                    args.blue = Math.max(args.blue || 0, obj.args.blue);
+                }
+            }
+            else if (obj.command == 'on' && command != 'exact') { // включаем безусловно
+                command = 'on';
+            }
+        }, this);
+
+        this._action(command, args);
+    };
+    
     RGBMHA.prototype._getExactCommand = function(args){
         return {
             action: function() {
                 this.vDev.performCommand('exact', args);
             },
+            
             check: function() {
                 if (args.level) {
                     return this.getLevel() == args.level;
                 }
+                else if (args.red != undefined || args.green != undefined || args.blue != undefined){
+                    var color = this.getColor();
+                    return color.r == args.red && color.g == args.green && color.b == args.blue;
+                } 
                 else {
                     return this.getLevel() !== 'off' && this.getLevel() !== 0;
                 }
