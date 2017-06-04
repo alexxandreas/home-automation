@@ -59,7 +59,7 @@ define('UtilsHWDev', ['AbstractModule'], function(AbstractModule) {
             
             if (value == null) return;
             this.configParams[key] = value;
-        });
+        }, this);
         
         this.id = config.id
     };
@@ -72,7 +72,7 @@ define('UtilsHWDev', ['AbstractModule'], function(AbstractModule) {
         // see zway.pdf :: command class: Configuration
         //return 
         try {
-            var value = getValue(num);
+            var value = getValue(this.id, num);
             // if (value == null) {
             //     zway.devices[this.id].instances[0].commandClasses[112].Get(num, function(){
             //         value = getValue(num);
@@ -86,8 +86,8 @@ define('UtilsHWDev', ['AbstractModule'], function(AbstractModule) {
         
         return value;
         
-        function getValue(num){
-            return zway.devices[this.id].instances[0].commandClasses[112].data[num].val.value;
+        function getValue(devId, paramId){
+            return zway.devices[devId].instances[0].commandClasses[112].data[paramId].val.value;
         }
     };
     
@@ -104,7 +104,7 @@ define('UtilsHWDev', ['AbstractModule'], function(AbstractModule) {
                 configValue: this.configParams[key],
                 passed: value == this.configParams[key]
             }
-        });
+        }, this);
         return checklist;
     };
     
