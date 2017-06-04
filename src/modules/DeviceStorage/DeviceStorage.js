@@ -234,7 +234,11 @@ define('DeviceStorage', ['AbstractModule', 'WebServer', 'UtilsVDev', 'UtilsHWDev
         DeviceStorage.prototype._pushDevice = function(key, type, vDev) {
             this.devices[key] = vDev;
             UtilsVDev.createMHA(key, type, vDev);
-            this.initHWDev(key);
+            try {
+                this.initHWDev(key);
+            } catch (err) {
+                this.log("Unable to init hardware device: " + key);
+            }
             //this.log('device ' + key + ' added');
         };
 
