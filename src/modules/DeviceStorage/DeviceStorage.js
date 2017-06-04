@@ -237,7 +237,7 @@ define('DeviceStorage', ['AbstractModule', 'WebServer', 'UtilsVDev', 'UtilsHWDev
             try {
                 this.initHWDev(key);
             } catch (err) {
-                this.log("Unable to init hardware device: " + key);
+                this.log("Error: Unable to init hardware device: " + key + "\n" + err.stack);
             }
             //this.log('device ' + key + ' added');
         };
