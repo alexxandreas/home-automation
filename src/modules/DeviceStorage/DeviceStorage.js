@@ -270,8 +270,10 @@ define('DeviceStorage', ['AbstractModule', 'WebServer', 'UtilsVDev', 'UtilsHWDev
         };
         
         DeviceStorage.prototype.initHWDev = function(key) {
+            
             var hwDev = this.devs[key].hw;
             //if (hwDev.inited) return
+            this.log('initHWDev(' + key + '): hwDev found: ' + !!hwDev);
             
             var vDev = this.getDevice(key);
             
