@@ -190,7 +190,7 @@ define('UtilsHWDev', ['AbstractModule'], function(AbstractModule) {
             if (value == currentParam.configValue) {
                 // проверка прошла - проверяем дальше
                 this.log('getCallback(' + currentParam.paramId + '): value ' + currentParam.configValue + ' success');
-                applyNext();
+                applyNext.call(this);
             } else {
                 // проверка не прошла
                 this.log('getCallback(' + currentParam.paramId + '): value ' + currentParam.configValue + ', configValue ' + currentParam.configValue);
@@ -202,11 +202,11 @@ define('UtilsHWDev', ['AbstractModule'], function(AbstractModule) {
             if (value == currentParam.configValue) {
                 // проверка прошла - проверяем дальше
                 this.log('setCallback(' + currentParam.paramId + '): value ' + currentParam.configValue + ' success');
-                applyNext();
+                applyNext.call(this);
             } else {
                 // проверка не прошла
                 this.log('setCallback(' + currentParam.paramId + '): value ' + currentParam.configValue + ', configValue ' + currentParam.configValue);
-                applyNext();
+                applyNext.call(this);
             }
         }
         
