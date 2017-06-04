@@ -113,13 +113,13 @@ define('UtilsHWDev', ['AbstractModule'], function(AbstractModule) {
                 zway.devices[this.id].instances[0].commandClasses[112].Set(paramId, value, 0, function(){
                     //value = self._getParam(paramId);
                     //callback.call(self, value, true);
-                    self.getConfigParam.call(paramId, function(value, isError){
+                    self.getConfigParam.call(self, paramId, function(value, isError){
                         callback.call(self, value, true);
                     })
                 }, function(){
                     //value = self._getParam(paramId);
                     //callback.call(self, value, false);
-                    self.getConfigParam.call(paramId, function(value, isError){
+                    self.getConfigParam.call(self, paramId, function(value, isError){
                         callback.call(self, value, false);
                     })
                 })
