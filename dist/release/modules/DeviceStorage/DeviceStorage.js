@@ -55,86 +55,86 @@ define('DeviceStorage', ['AbstractModule', 'WebServer', 'UtilsVDev', 'UtilsHWDev
             
             this.hwDevs = {
                 'hallway.FGD211': new UtilsHWDev.FGD211(),
-                'hallway.FGRGBWM-441': {},
-                'hallway.FGMS-001': {},
+                'hallway.FGRGBWM441': new UtilsHWDev.FGRGBWM441(),
+                'hallway.FGMS001': new UtilsHWDev.FGMS001(),
                 
                 'corridor.FGD211': new UtilsHWDev.FGD211(),
-                'corridor.FGMS-001': {},
+                'corridor.FGMS001': new UtilsHWDev.FGMS001(),
                 
                 'bathroom.FGD211': new UtilsHWDev.FGD211(),
-                'bathroom.AEON-MS': {},
-                'bathroom.TZ66D': {},
+                'bathroom.AEONMS': new UtilsHWDev.AEONMS(),
+                'bathroom.TZ66D': new UtilsHWDev.TZ66D(),
                 
                 
                 'toilet.FGD211': new UtilsHWDev.FGD211(),
-                'toilet.AEON-MS': {},
-                'toilet.FGRGBWM-441': {},
+                'toilet.AEONMS': new UtilsHWDev.AEONMS(),
+                'toilet.FGRGBWM441': new UtilsHWDev.FGRGBWM441(),
                 
                 'kitchen.FGD211': new UtilsHWDev.FGD211(),
-                'kitchen.FGRGBWM-441': {},
-                'kitchen.FGMS-001': {},
+                'kitchen.FGRGBWM441': new UtilsHWDev.FGRGBWM441(),
+                'kitchen.FGMS001': new UtilsHWDev.FGMS001(),
                 
-                'wardrobe.TZ66D': {},
+                'wardrobe.TZ66D': new UtilsHWDev.TZ66D(),
                 
                 'bedroom.FGD211-center': new UtilsHWDev.FGD211(),
                 'bedroom.FGD211-edge': new UtilsHWDev.FGD211(),
-                'bedroom.FGRGBWM-441': {},
+                'bedroom.FGRGBWM441': new UtilsHWDev.FGRGBWM441(),
                 
                 'hall.FGD211-center': new UtilsHWDev.FGD211(),
                 'hall.FGD211-edge': new UtilsHWDev.FGD211(),
-                'hall.FGRGBWM-441': {}
+                'hall.FGRGBWM441': new UtilsHWDev.FGRGBWM441()
             }
             
             this.devs = {
                 'hallway.switch220': { name: [dict.hallway, dict.light, dict.L220], type: this._deviceTypes.FGD211, hw: this.hwDevs['hallway.FGD211']}, //  FGD211
-                'hallway.light12': { name:  [dict.hallway, dict.light, dict.L12], type: this._deviceTypes.default, hw: this.hwDevs['hallway.FGRGBWM-441']}, //  FGRGBWM-441  (x.2) (1110)
-                'hallway.motionSensor': { name:  [dict.hallway, dict.sensor, dict.motion], type: this._deviceTypes.default, hw: this.hwDevs['hallway.FGMS-001']}, //  FGMS-001
-                'hallway.lightSensor': { name:  [dict.hallway, dict.sensor, dict.light], type: this._deviceTypes.default, hw: this.hwDevs['hallway.FGMS-001']}, //  FGMS-001
-                'hallway.tempSensor': { name:  [dict.hallway, dict.sensor, dict.temp], type: this._deviceTypes.default, hw: this.hwDevs['hallway.FGMS-001']}, //  FGMS-001
-                'hallway.door': { name:  [dict.hallway, dict.door], type: this._deviceTypes.door, hw: this.hwDevs['hallway.FGRGBWM-441']}, //  FGRGBWM-441  (x.3 или x.5)
+                'hallway.light12': { name:  [dict.hallway, dict.light, dict.L12], type: this._deviceTypes.default, hw: this.hwDevs['hallway.FGRGBWM441']}, //  FGRGBWM441  (x.2) (1110)
+                'hallway.motionSensor': { name:  [dict.hallway, dict.sensor, dict.motion], type: this._deviceTypes.default, hw: this.hwDevs['hallway.FGMS001']}, //  FGMS001
+                'hallway.lightSensor': { name:  [dict.hallway, dict.sensor, dict.light], type: this._deviceTypes.default, hw: this.hwDevs['hallway.FGMS001']}, //  FGMS001
+                'hallway.tempSensor': { name:  [dict.hallway, dict.sensor, dict.temp], type: this._deviceTypes.default, hw: this.hwDevs['hallway.FGMS001']}, //  FGMS001
+                'hallway.door': { name:  [dict.hallway, dict.door], type: this._deviceTypes.door, hw: this.hwDevs['hallway.FGRGBWM441']}, //  FGRGBWM441  (x.3 или x.5)
                 
                 'corridor.switch220': { name:  [dict.corridor, dict.light, dict.L220], type: this._deviceTypes.FGD211, hw: this.hwDevs['corridor.FGD211']}, //  FGD211
-                'corridor.motionSensor': { name:  [dict.corridor, dict.sensor, dict.motion], type: this._deviceTypes.default, hw: this.hwDevs['corridor.FGMS-001']}, //  FGMS-001
-                'corridor.lightSensor': { name:  [dict.corridor, dict.sensor, dict.light], type: this._deviceTypes.default, hw: this.hwDevs['corridor.FGMS-001']}, //  FGMS-001
-                'corridor.tempSensor': { name:  [dict.corridor, dict.sensor, dict.temp], type: this._deviceTypes.default, hw: this.hwDevs['corridor.FGMS-001']}, //  FGMS-001
+                'corridor.motionSensor': { name:  [dict.corridor, dict.sensor, dict.motion], type: this._deviceTypes.default, hw: this.hwDevs['corridor.FGMS001']}, //  FGMS001
+                'corridor.lightSensor': { name:  [dict.corridor, dict.sensor, dict.light], type: this._deviceTypes.default, hw: this.hwDevs['corridor.FGMS001']}, //  FGMS001
+                'corridor.tempSensor': { name:  [dict.corridor, dict.sensor, dict.temp], type: this._deviceTypes.default, hw: this.hwDevs['corridor.FGMS001']}, //  FGMS001
                 
                 'bathroom.switch220': { name:  [dict.bathroom, dict.light, dict.L220], type: this._deviceTypes.FGD211, hw: this.hwDevs['bathroom.FGD211']}, //  FGD211
-                'bathroom.motionSensor': { name:  [dict.bathroom, dict.sensor, dict.motion], type: this._deviceTypes.default, hw: this.hwDevs['bathroom.AEON-MS']}, //  Aeon
-                'bathroom.lightSensor': { name:  [dict.bathroom, dict.sensor, dict.light], type: this._deviceTypes.default}, hw: this.hwDevs['bathroom.AEON-MS'], //  Aeon
-                'bathroom.tempSensor': { name:  [dict.bathroom, dict.sensor, dict.temp], type: this._deviceTypes.default}, hw: this.hwDevs['bathroom.AEON-MS'], //  Aeon
-                'bathroom.humSensor': { name:  [dict.bathroom, dict.sensor, dict.hum], type: this._deviceTypes.default, hw: this.hwDevs['bathroom.AEON-MS']}, //  Aeon
-                'bathroom.door': { name:  [dict.bathroom, dict.door], type: this._deviceTypes.door, hw: this.hwDevs['toilet.FGRGBWM-441']}, //  FGRGBWM-441  (x.2) (1110)
+                'bathroom.motionSensor': { name:  [dict.bathroom, dict.sensor, dict.motion], type: this._deviceTypes.default, hw: this.hwDevs['bathroom.AEONMS']}, //  Aeon
+                'bathroom.lightSensor': { name:  [dict.bathroom, dict.sensor, dict.light], type: this._deviceTypes.default}, hw: this.hwDevs['bathroom.AEONMS'], //  Aeon
+                'bathroom.tempSensor': { name:  [dict.bathroom, dict.sensor, dict.temp], type: this._deviceTypes.default}, hw: this.hwDevs['bathroom.AEONMS'], //  Aeon
+                'bathroom.humSensor': { name:  [dict.bathroom, dict.sensor, dict.hum], type: this._deviceTypes.default, hw: this.hwDevs['bathroom.AEONMS']}, //  Aeon
+                'bathroom.door': { name:  [dict.bathroom, dict.door], type: this._deviceTypes.door, hw: this.hwDevs['toilet.FGRGBWM441']}, //  FGRGBWM441  (x.2) (1110)
                 
                 'toilet.switch220': { name:  [dict.toilet, dict.light, dict.L220], type: this._deviceTypes.FGD211, hw: this.hwDevs['toilet.FGD211']}, //  FGD211
-                'toilet.light12': { name:  [dict.toilet, dict.light, dict.L12], type: this._deviceTypes.default, hw: this.hwDevs['toilet.FGRGBWM-441']}, //  FGRGBWM-441  (x.5) (1110)
-                'toilet.motionSensor': { name:  [dict.toilet, dict.sensor, dict.motion], type: this._deviceTypes.default, hw: this.hwDevs['toilet.AEON-MS']}, //  Aeon
-                'toilet.lightSensor': { name:  [dict.toilet, dict.sensor, dict.light], type: this._deviceTypes.default, hw: this.hwDevs['toilet.AEON-MS']}, //  Aeon
-                'toilet.tempSensor': { name:  [dict.toilet, dict.sensor, dict.temp], type: this._deviceTypes.default, hw: this.hwDevs['toilet.AEON-MS']}, //  Aeon
-                'toilet.humSensor': { name:  [dict.toilet, dict.sensor, dict.hum], type: this._deviceTypes.default, hw: this.hwDevs['toilet.AEON-MS']}, //  Aeon
+                'toilet.light12': { name:  [dict.toilet, dict.light, dict.L12], type: this._deviceTypes.default, hw: this.hwDevs['toilet.FGRGBWM441']}, //  FGRGBWM441  (x.5) (1110)
+                'toilet.motionSensor': { name:  [dict.toilet, dict.sensor, dict.motion], type: this._deviceTypes.default, hw: this.hwDevs['toilet.AEONMS']}, //  Aeon
+                'toilet.lightSensor': { name:  [dict.toilet, dict.sensor, dict.light], type: this._deviceTypes.default, hw: this.hwDevs['toilet.AEONMS']}, //  Aeon
+                'toilet.tempSensor': { name:  [dict.toilet, dict.sensor, dict.temp], type: this._deviceTypes.default, hw: this.hwDevs['toilet.AEONMS']}, //  Aeon
+                'toilet.humSensor': { name:  [dict.toilet, dict.sensor, dict.hum], type: this._deviceTypes.default, hw: this.hwDevs['toilet.AEONMS']}, //  Aeon
                 'toilet.fan': { name:  [dict.toilet, dict.fan], type: this._deviceTypes.default, hw: this.hwDevs['bathroom.TZ66D']}, // 
-                'toilet.door': { name:  [dict.toilet, dict.door], type: this._deviceTypes.door, hw: this.hwDevs['toilet.FGRGBWM-441']}, //  FGRGBWM-441  (x.3) (1110)
+                'toilet.door': { name:  [dict.toilet, dict.door], type: this._deviceTypes.door, hw: this.hwDevs['toilet.FGRGBWM441']}, //  FGRGBWM441  (x.3) (1110)
                 
                 'kitchen.switch220': { name:  [dict.kitchen, dict.light, dict.L220], type: this._deviceTypes.FGD211, hw: this.hwDevs['kitchen.FGD211']}, //  FGD211
-                'kitchen.light12': { name:  [dict.kitchen, dict.light, dict.L12], type: this._deviceTypes.default, hw: this.hwDevs['kitchen.FGRGBWM-441']}, //  FGRGBWM-441  (x.2) (1110)
-                'kitchen.motionSensor': { name:  [dict.kitchen, dict.sensor, dict.motion], type: this._deviceTypes.default, hw: this.hwDevs['kitchen.FGMS-001']}, //  FGMS-001
-                'kitchen.lightSensor': { name:  [dict.kitchen, dict.sensor, dict.light], type: this._deviceTypes.default, hw: this.hwDevs['kitchen.FGMS-001']}, //  FGMS-001
-                'kitchen.tempSensor': { name:  [dict.kitchen, dict.sensor, dict.temp], type: this._deviceTypes.default, hw: this.hwDevs['kitchen.FGMS-001']}, //  FGMS-001
-                'kitchen.tabletopLight': { name:  [dict.kitchen, dict.light, dict.tabletop], type: this._deviceTypes.default, hw: this.hwDevs['kitchen.FGRGBWM-441']}, //  FGRGBWM-441  (x.5)
-                'kitchen.tabletopSwitch': { name:  [dict.kitchen, dict.switch_, dict.tabletop], type: this._deviceTypes.tabletopSwitch, hw: this.hwDevs['kitchen.FGRGBWM-441']}, //  FGRGBWM-441  (x.3) (0001)
-                'kitchen.door': { name: [dict.kitchen, dict.door], type: this._deviceTypes.virtualDoo, hw: this.hwDevs['kitchen.FGRGBWM-441']},
+                'kitchen.light12': { name:  [dict.kitchen, dict.light, dict.L12], type: this._deviceTypes.default, hw: this.hwDevs['kitchen.FGRGBWM441']}, //  FGRGBWM441  (x.2) (1110)
+                'kitchen.motionSensor': { name:  [dict.kitchen, dict.sensor, dict.motion], type: this._deviceTypes.default, hw: this.hwDevs['kitchen.FGMS001']}, //  FGMS001
+                'kitchen.lightSensor': { name:  [dict.kitchen, dict.sensor, dict.light], type: this._deviceTypes.default, hw: this.hwDevs['kitchen.FGMS001']}, //  FGMS001
+                'kitchen.tempSensor': { name:  [dict.kitchen, dict.sensor, dict.temp], type: this._deviceTypes.default, hw: this.hwDevs['kitchen.FGMS001']}, //  FGMS001
+                'kitchen.tabletopLight': { name:  [dict.kitchen, dict.light, dict.tabletop], type: this._deviceTypes.default, hw: this.hwDevs['kitchen.FGRGBWM441']}, //  FGRGBWM441  (x.5)
+                'kitchen.tabletopSwitch': { name:  [dict.kitchen, dict.switch_, dict.tabletop], type: this._deviceTypes.tabletopSwitch, hw: this.hwDevs['kitchen.FGRGBWM441']}, //  FGRGBWM441  (x.3) (0001)
+                'kitchen.door': { name: [dict.kitchen, dict.door], type: this._deviceTypes.virtualDoo, hw: this.hwDevs['kitchen.FGRGBWM441']},
                 
                 'wardrobe.switch220': { name:  [dict.wardrobe, dict.light], type: this._deviceTypes.default, hw: this.hwDevs['wardrobe.TZ66D']}, // 
-                'wardrobe.door': { name:  [dict.wardrobe, dict.door], type: this._deviceTypes.door, hw: this.hwDevs['hallway.FGRGBWM-441']}, //  FGRGBWM-441  (x.4)
+                'wardrobe.door': { name:  [dict.wardrobe, dict.door], type: this._deviceTypes.door, hw: this.hwDevs['hallway.FGRGBWM441']}, //  FGRGBWM441  (x.4)
                 
                 'bedroom.switch220center': { name:  [dict.bedroom, dict.light, dict.center], type: this._deviceTypes.FGD211, hw: this.hwDevs['bedroom.FGD211-center']}, //  FGD211
                 'bedroom.switch220edge': { name:  [dict.bedroom, dict.light, dict.edge], type: this._deviceTypes.FGD211, hw: this.hwDevs['bedroom.FGD211-edge']}, //  FGD211
-                'bedroom.rgb': { name:  [dict.bedroom, dict.light, dict.rgb], type: this._deviceTypes.rgb, hw: this.hwDevs['bedroom.FGRGBWM-441']}, //  FGRGBWM-441 (switchRGBW) (1110 1110 1110)
-                'bedroom.w': { name:  [dict.bedroom, dict.light, dict.L12], type: this._deviceTypes.default, hw: this.hwDevs['bedroom.FGRGBWM-441']}, //  FGRGBWM-441 (x.5) (1110)
+                'bedroom.rgb': { name:  [dict.bedroom, dict.light, dict.rgb], type: this._deviceTypes.rgb, hw: this.hwDevs['bedroom.FGRGBWM441']}, //  FGRGBWM441 (switchRGBW) (1110 1110 1110)
+                'bedroom.w': { name:  [dict.bedroom, dict.light, dict.L12], type: this._deviceTypes.default, hw: this.hwDevs['bedroom.FGRGBWM441']}, //  FGRGBWM441 (x.5) (1110)
                 
                 'hall.switch220center': { name:  [dict.hall, dict.light, dict.center], type: this._deviceTypes.FGD211, hw: this.hwDevs['hall.FGD211-center']}, //  FGD211
                 'hall.switch220edge': { name:  [dict.hall, dict.light, dict.edge], type: this._deviceTypes.FGD211, hw: this.hwDevs['hall.FGD211-edge']}, //  FGD211
-                'hall.rgb': { name:  [dict.hall, dict.light, dict.rgb], type: this._deviceTypes.rgb, hw: this.hwDevs['hall.FGRGBWM-441']}, //  FGRGBWM-441 (switchRGBW) (1110 1110 1110)
-                'hall.w': { name: [dict.hall, dict.light, dict.L12], type: this._deviceTypes.default, hw: this.hwDevs['hall.FGRGBWM-441']}, // FGRGBWM-441 (x.5) (1110)
+                'hall.rgb': { name:  [dict.hall, dict.light, dict.rgb], type: this._deviceTypes.rgb, hw: this.hwDevs['hall.FGRGBWM441']}, //  FGRGBWM441 (switchRGBW) (1110 1110 1110)
+                'hall.w': { name: [dict.hall, dict.light, dict.L12], type: this._deviceTypes.default, hw: this.hwDevs['hall.FGRGBWM441']}, // FGRGBWM441 (x.5) (1110)
             };
 
             
@@ -267,7 +267,7 @@ define('DeviceStorage', ['AbstractModule', 'WebServer', 'UtilsVDev', 'UtilsHWDev
         
         DeviceStorage.prototype.initHWDev = function(key) {
             var hwDev = this.devs[key].hw;
-            if (hwDev.inited) return
+            //if (hwDev.inited) return
             
             var vDev = this.getDevice(key);
             
@@ -280,7 +280,7 @@ define('DeviceStorage', ['AbstractModule', 'WebServer', 'UtilsVDev', 'UtilsHWDev
             // see zway.pdf :: command class: Configuration
             //return zway.devices[21].instances[0].commandClasses[112]
             
-            hwDev.inited = true;
+            //hwDev.inited = true;
         };
         
         /** Получение id физического устройства */

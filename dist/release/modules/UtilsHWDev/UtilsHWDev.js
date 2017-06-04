@@ -117,7 +117,7 @@ define('UtilsHWDev', ['AbstractModule'], function(AbstractModule) {
     
 
     /**********************************************************/
-    /************************* HWDev **************************/
+    /************************* FGD211 *************************/
     /**********************************************************/
 
     UtilsHWDev.FGD211 = function(config){
@@ -214,7 +214,92 @@ define('UtilsHWDev', ['AbstractModule'], function(AbstractModule) {
     
     
     
+    /**********************************************************/
+    /*********************** FGRGBWM441 ***********************/
+    /**********************************************************/
+
+    UtilsHWDev.FGRGBWM441 = function(config){
+        
+        
+        this.defaultConfigParams = {
+            // 1: {
+            //     value: 0,
+            //     name: 'Activate / deactivate functions ALL ON / ALL OFF'
+            //     //def: 255,
+            // }
+        };
+        
+        UtilsHWDev.FGRGBWM441.super_.call(this, config);
+    }
     
+    inherits(UtilsHWDev.FGRGBWM441, UtilsHWDev.HWDev);
+    
+    
+    
+    /**********************************************************/
+    /************************* FGMS001 ************************/
+    /**********************************************************/
+
+    UtilsHWDev.FGMS001 = function(config){
+        
+        
+        this.defaultConfigParams = {
+            // 1: {
+            //     value: 0,
+            //     name: 'Activate / deactivate functions ALL ON / ALL OFF'
+            //     //def: 255,
+            // }
+        };
+        
+        UtilsHWDev.FGMS001.super_.call(this, config);
+    }
+    
+    inherits(UtilsHWDev.FGMS001, UtilsHWDev.HWDev);
+    
+    
+    
+
+    /**********************************************************/
+    /************************** AEONMS ************************/
+    /**********************************************************/
+
+    UtilsHWDev.AEONMS = function(config){
+        
+        
+        this.defaultConfigParams = {
+            // 1: {
+            //     value: 0,
+            //     name: 'Activate / deactivate functions ALL ON / ALL OFF'
+            //     //def: 255,
+            // }
+        };
+        
+        UtilsHWDev.AEONMS.super_.call(this, config);
+    }
+    
+    inherits(UtilsHWDev.AEONMS, UtilsHWDev.HWDev);
+    
+    
+    
+    /**********************************************************/
+    /************************** TZ66D *************************/
+    /**********************************************************/
+
+    UtilsHWDev.TZ66D = function(config){
+        
+        
+        this.defaultConfigParams = {
+            // 1: {
+            //     value: 0,
+            //     name: 'Activate / deactivate functions ALL ON / ALL OFF'
+            //     //def: 255,
+            // }
+        };
+        
+        UtilsHWDev.TZ66D.super_.call(this, config);
+    }
+    
+    inherits(UtilsHWDev.TZ66D, UtilsHWDev.HWDev);
     
     
     
