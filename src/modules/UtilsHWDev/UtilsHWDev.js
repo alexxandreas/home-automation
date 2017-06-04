@@ -89,10 +89,10 @@ define('UtilsHWDev', ['AbstractModule'], function(AbstractModule) {
                 callback.call(self, value);
             } else {
                 zway.devices[this.id].instances[0].commandClasses[112].Get(paramId, function(){
-                    value = this._getParam(paramId);
+                    value = self._getParam(paramId);
                     callback.call(self, value);
                 }, function(){
-                    value = this._getParam(paramId);
+                    value = self._getParam(paramId);
                     callback.call(self, value);
                 })
             }
@@ -111,10 +111,10 @@ define('UtilsHWDev', ['AbstractModule'], function(AbstractModule) {
                 // callback.call(self, value);
             // } else {
                 zway.devices[this.id].instances[0].commandClasses[112].Set(paramId, value, 0, function(){
-                    value = this._getParam(paramId);
+                    value = self._getParam(paramId);
                     callback.call(self, value);
                 }, function(){
-                    value = this._getParam(paramId);
+                    value = self._getParam(paramId);
                     callback.call(self, value);
                 })
             // }
