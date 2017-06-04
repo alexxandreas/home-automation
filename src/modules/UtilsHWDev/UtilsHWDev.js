@@ -68,27 +68,34 @@ define('UtilsHWDev', ['AbstractModule'], function(AbstractModule) {
         this.id = config.id
     };
     
+    UtilsHWDev.HWDev.prototype.log = function(data) {
+        return MHA.prefixLog('HWDev(' + this.id + ')', data);
+    };
+    
     UtilsHWDev.HWDev.prototype.setId = function(id) {
         this.id = id;
     };
     
-    UtilsHWDev.HWDev.prototype.getConfigParam = function(num) {
-        // see zway.pdf :: command class: Configuration
-        //return 
+    UtilsHWDev.HWDev.prototype.getConfigParam = function(paramId, callback) {
         try {
-            var value = getValue(this.id, num);
-            // if (value == null) {
-            //     zway.devices[this.id].instances[0].commandClasses[112].Get(num, function(){
-            //         value = getValue(num);
-            //     }, function(){
-            //         value = getValue(num);
-            //     })
-            // }
+            var value = getValue(this.id, paramId);
+            this.log('getConfigParam('+paramId+'). value = ' + value);
+            if (value != null) {
+                callback(value);
+            } else {
+                zway.devices[this.id].instances[0].commandClasses[112].Get(paramId, function(){
+                    value = getValue(paramId);
+                    callback(value);
+                }, function(){
+                    value = getValue(paramId);
+                    callback(value);
+                })
+            }
         } catch (err) {
-            
+            callback(null);  
         }
         
-        return value;
+        
         
         function getValue(devId, paramId){
             return zway.devices[devId].instances[0].commandClasses[112].data[paramId].val.value;
@@ -99,17 +106,39 @@ define('UtilsHWDev', ['AbstractModule'], function(AbstractModule) {
         
     };
     
-    UtilsHWDev.HWDev.prototype.checkConfigParam = function() {
-        var checklist = {};
+    UtilsHWDev.HWDev.prototype.checkConfigParams = function(callback) {
+        var configParams = this.configParams;
+        
+        
+        var checklist = Object.keys(this.configParams).reduce(function(res, key){
+            res[key] = {
+                configValue: configParams[key],
+                passed: false
+            };
+            return res;
+        }, {});
+        
         Object.keys(this.configParams).forEach(function(key){
-            var value = this.getConfigParam(key);
-            checklist[key] = {
-                value: value,
-                configValue: this.configParams[key],
-                passed: value == this.configParams[key]
-            }
+            this.log('checkConfigParams('+key+') start');
+            this.getConfigParam(key, (function(value) {
+                checklist[key] = {
+                    value: value,
+                    checked: true,
+                    passed: value == checklist[key].configValue
+                }
+                
+                var isAllChecked = Object.keys(checklist).each(function(key){
+                    return checklist[key].checked;
+                });
+                
+                this.log('checkConfigParams('+key+') callback. isAllChecked = ' + isAllChecked);
+                
+                if (isAllChecked){
+                    callback(checklist);
+                }
+            }).bind(this));
         }, this);
-        return checklist;
+        //return checklist;
     };
     
     
@@ -121,7 +150,6 @@ define('UtilsHWDev', ['AbstractModule'], function(AbstractModule) {
     /**********************************************************/
 
     UtilsHWDev.FGD211 = function(config){
-        
         
         this.defaultConfigParams = {
             1: {

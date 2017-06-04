@@ -586,7 +586,7 @@ define('UtilsVDev', ['AbstractModule'], function(AbstractModule) {
     }
     
     FGD211MHA.prototype._initScene = function(sceneId) {
-        this.log('initScene(' + sceneId + ': ' + this._scenes[sceneId].name + ')')
+        //this.log('initScene(' + sceneId + ': ' + this._scenes[sceneId].name + ')')
         var realId = this._getRealId();
         if (realId == null) return;
 

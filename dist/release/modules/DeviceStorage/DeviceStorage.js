@@ -273,7 +273,7 @@ define('DeviceStorage', ['AbstractModule', 'WebServer', 'UtilsVDev', 'UtilsHWDev
             
             var hwDev = this.devs[key].hw;
             //if (hwDev.inited) return
-            this.log('initHWDev(' + key + '): hwDev found: ' + !!hwDev);
+            //this.log('initHWDev(' + key + '): hwDev found: ' + !!hwDev);
             
             var vDev = this.getDevice(key);
             
