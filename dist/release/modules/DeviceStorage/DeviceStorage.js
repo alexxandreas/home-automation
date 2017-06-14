@@ -23,7 +23,8 @@ define('DeviceStorage', ['AbstractModule', 'WebServer', 'UtilsVDev', 'UtilsHWDev
             'tabletopSwitch': {mha: 'tabletopSwitch' },
             'FGD211':       { mha: 'FGD211' },
             'rgb':          { mha: 'rgb' },
-            'scene':        { mha: 'default' }
+            'scene':        { mha: 'default' },
+            'switchOnOff':  { mha: 'switchOnOff' }
         };
 
         DeviceStorage.prototype._initDevices = function() {
@@ -54,12 +55,18 @@ define('DeviceStorage', ['AbstractModule', 'WebServer', 'UtilsVDev', 'UtilsHWDev
             };
             
             this.hwDevs = {
-                'hallway.FGD211': new UtilsHWDev.FGD211(),
-                'hallway.FGRGBWM441': new UtilsHWDev.FGRGBWM441(),
-                'hallway.FGMS001': new UtilsHWDev.FGMS001(),
+                'hallway.FGD211': new UtilsHWDev.FGD211({configParams:{1:0}}),
+                'hallway.FGRGBWM441': new UtilsHWDev.FGRGBWM441({configParams:{
+                    14: 61166
+                }}),
+                'hallway.FGMS001': new UtilsHWDev.FGMS001({configParams:{
+                    42: 500
+                }}),
                 
                 'corridor.FGD211': new UtilsHWDev.FGD211(),
-                'corridor.FGMS001': new UtilsHWDev.FGMS001(),
+                'corridor.FGMS001': new UtilsHWDev.FGMS001({configParams:{
+                    42: 50
+                }}),
                 
                 'bathroom.FGD211': new UtilsHWDev.FGD211(),
                 'bathroom.AEONMS': new UtilsHWDev.AEONMS(),
@@ -68,21 +75,34 @@ define('DeviceStorage', ['AbstractModule', 'WebServer', 'UtilsVDev', 'UtilsHWDev
                 
                 'toilet.FGD211': new UtilsHWDev.FGD211(),
                 'toilet.AEONMS': new UtilsHWDev.AEONMS(),
-                'toilet.FGRGBWM441': new UtilsHWDev.FGRGBWM441(),
+                'toilet.FGRGBWM441': new UtilsHWDev.FGRGBWM441({configParams:{
+                    14: 61166    
+                }}),
                 
                 'kitchen.FGD211': new UtilsHWDev.FGD211(),
-                'kitchen.FGRGBWM441': new UtilsHWDev.FGRGBWM441(),
-                'kitchen.FGMS001': new UtilsHWDev.FGMS001(),
+                'kitchen.FGRGBWM441': new UtilsHWDev.FGRGBWM441({configParams:{
+                    14: 59534    
+                }}),
+                'kitchen.FGMS001': new UtilsHWDev.FGMS001({configParams:{
+                    42: 500
+                }}),
                 
                 'wardrobe.TZ66D': new UtilsHWDev.TZ66D(),
                 
                 'bedroom.FGD211-center': new UtilsHWDev.FGD211(),
                 'bedroom.FGD211-edge': new UtilsHWDev.FGD211(),
-                'bedroom.FGRGBWM441': new UtilsHWDev.FGRGBWM441(),
+                'bedroom.FGRGBWM441': new UtilsHWDev.FGRGBWM441({configParams:{
+                    10: 8,
+                    11: 65,
+                    14: 61166,
+                    71: 0
+                }}),
                 
                 'hall.FGD211-center': new UtilsHWDev.FGD211(),
                 'hall.FGD211-edge': new UtilsHWDev.FGD211(),
-                'hall.FGRGBWM441': new UtilsHWDev.FGRGBWM441()
+                'hall.FGRGBWM441': new UtilsHWDev.FGRGBWM441({configParams:{
+
+                }})
             }
             
             this.devs = {
@@ -111,7 +131,7 @@ define('DeviceStorage', ['AbstractModule', 'WebServer', 'UtilsVDev', 'UtilsHWDev
                 'toilet.lightSensor': { name:  [dict.toilet, dict.sensor, dict.light], type: this._deviceTypes.default, hw: this.hwDevs['toilet.AEONMS']}, //  Aeon
                 'toilet.tempSensor': { name:  [dict.toilet, dict.sensor, dict.temp], type: this._deviceTypes.default, hw: this.hwDevs['toilet.AEONMS']}, //  Aeon
                 'toilet.humSensor': { name:  [dict.toilet, dict.sensor, dict.hum], type: this._deviceTypes.default, hw: this.hwDevs['toilet.AEONMS']}, //  Aeon
-                'toilet.fan': { name:  [dict.toilet, dict.fan], type: this._deviceTypes.default, hw: this.hwDevs['bathroom.TZ66D']}, // 
+                'toilet.fan': { name:  [dict.toilet, dict.fan], type: this._deviceTypes.switchOnOff, hw: this.hwDevs['bathroom.TZ66D']}, // 
                 'toilet.door': { name:  [dict.toilet, dict.door], type: this._deviceTypes.door, hw: this.hwDevs['toilet.FGRGBWM441']}, //  FGRGBWM441  (x.3) (1110)
                 
                 'kitchen.switch220': { name:  [dict.kitchen, dict.light, dict.L220], type: this._deviceTypes.FGD211, hw: this.hwDevs['kitchen.FGD211']}, //  FGD211
@@ -123,7 +143,7 @@ define('DeviceStorage', ['AbstractModule', 'WebServer', 'UtilsVDev', 'UtilsHWDev
                 'kitchen.tabletopSwitch': { name:  [dict.kitchen, dict.switch_, dict.tabletop], type: this._deviceTypes.tabletopSwitch, hw: this.hwDevs['kitchen.FGRGBWM441']}, //  FGRGBWM441  (x.3) (0001)
                 'kitchen.door': { name: [dict.kitchen, dict.door], type: this._deviceTypes.virtualDoo, hw: this.hwDevs['kitchen.FGRGBWM441']},
                 
-                'wardrobe.switch220': { name:  [dict.wardrobe, dict.light], type: this._deviceTypes.default, hw: this.hwDevs['wardrobe.TZ66D']}, // 
+                'wardrobe.switch220': { name:  [dict.wardrobe, dict.light], type: this._deviceTypes.switchOnOff, hw: this.hwDevs['wardrobe.TZ66D']}, // 
                 'wardrobe.door': { name:  [dict.wardrobe, dict.door], type: this._deviceTypes.door, hw: this.hwDevs['hallway.FGRGBWM441']}, //  FGRGBWM441  (x.4)
                 
                 'bedroom.switch220center': { name:  [dict.bedroom, dict.light, dict.center], type: this._deviceTypes.FGD211, hw: this.hwDevs['bedroom.FGD211-center']}, //  FGD211

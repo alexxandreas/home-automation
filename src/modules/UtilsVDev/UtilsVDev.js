@@ -24,6 +24,8 @@ define('UtilsVDev', ['AbstractModule'], function(AbstractModule) {
             return new FGD211MHA(key, vDev);  
         else if (mha == 'rgb')
             return new RGBMHA(key, vDev);
+        else if (mha == 'switchOnOff')
+            return new SwitchOnOff(key, vDev);
         
             
         return new DefaultMHA(key, vDev);
@@ -546,7 +548,29 @@ define('UtilsVDev', ['AbstractModule'], function(AbstractModule) {
     }
     
 
+    /**********************************************************/
+    /*********************** SwitchOnOff **********************/
+    /**********************************************************/
+        
+    function SwitchOnOff(key, vDev) {
+        SwitchOnOff.super_.apply(this, arguments);
+    }
+
+    inherits(SwitchOnOff, DefaultMHA);
     
+    SwitchOnOff.prototype.performCommand = function(initiator, command, args) {
+        if (command == 'exaact') {
+            if (args.level > 0)
+                command = 'on';
+            else
+                command = 'off';
+        }
+        return SwitchOnOff.super_.prototype.performCommand.call(this, initiator, command);
+    }
+    
+   
+   
+   
     
     /**********************************************************/
     /************************* FGD211 *************************/

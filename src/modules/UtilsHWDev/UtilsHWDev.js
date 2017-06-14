@@ -10,34 +10,7 @@ define('UtilsHWDev', ['AbstractModule'], function(AbstractModule) {
 
     inherits(UtilsHWDev, AbstractModule);
 
-    // static
-    // UtilsHWDev.createMHA = function(key, type, vDev) {
-    //     var mha = type && type.mha;
-        
-    //     if (mha == 'door')
-    //         return new DoorMHA(key, vDev);
-    //     else if (mha == 'virtualDoor')
-    //         return new VirtualDoorMHA(key, vDev);
-    //     else if (mha == 'tabletopSwitch')
-    //         return new TabletopSwitchMHA(key, vDev);
-    //     else if (mha == 'FGD211') 
-    //         return new FGD211MHA(key, vDev);  
-    //     else if (mha == 'rgb')
-    //         return new RGBMHA(key, vDev);
-        
-            
-    //     return new DefaultMHA(key, vDev);
-    // };
-
-    // UtilsHWDev.destroyMHA = function(vDev) {
-    //     vDev.MHA && vDev.MHA.destroy && vDev.MHA.destroy();
-    // };
-
-
-    // UtilsHWDev.prototype.stop = function() {
-    //     UtilsHWDev.super_.prototype.stop.apply(this, arguments);
-    // };
-    
+   
     
     
 
@@ -62,7 +35,7 @@ define('UtilsHWDev', ['AbstractModule'], function(AbstractModule) {
                 value = this.defaultConfigParams[key].value;
             
             if (value == null) return;
-            //this.configParams[key] = value;
+            
             this.configParams.push({
                 paramId: key,
                 configValue: value
@@ -83,48 +56,30 @@ define('UtilsHWDev', ['AbstractModule'], function(AbstractModule) {
     UtilsHWDev.HWDev.prototype.getConfigParam = function(paramId, callback) {
         var self = this;
         try {
-            //var value = this._getParam(paramId);
-
-            //if (value != null) {
-            //    callback.call(self, value, true);
-            //} else {
-                zway.devices[this.id].instances[0].commandClasses[112].Get(paramId, function(){
-                    var newValue = self._getParam(paramId);
-                    callback.call(self, newValue, true);
-                }, function(){
-                    var newValue = self._getParam(paramId);
-                    callback.call(self, newValue, false);
-                })
-            //}
+            zway.devices[this.id].instances[0].commandClasses[112].Get(paramId, function(){
+                var newValue = self._getParam(paramId);
+                callback.call(self, newValue, true);
+            }, function(){
+                var newValue = self._getParam(paramId);
+                callback.call(self, newValue, false);
+            })
         } catch (err) {
             callback.call(self, null, false);  
         }
-        
     };
     
     UtilsHWDev.HWDev.prototype.setConfigParam = function(paramId, value, callback) {
         var self = this;
         try {
-            // var value = this._getParam(paramId);
-
-            // if (value != null) {
-                // callback.call(self, value);
-            // } else {
-                zway.devices[this.id].instances[0].commandClasses[112].Set(paramId, value, 0, function(){
-                    //value = self._getParam(paramId);
-                    //callback.call(self, value, true);
-                    self.getConfigParam.call(self, paramId, function(value, isError){
-                        callback.call(self, value, true);
-                    })
-                }, function(){
-                    //value = self._getParam(paramId);
-                    //callback.call(self, value, false);
-                    self.getConfigParam.call(self, paramId, function(value, isError){
-                        callback.call(self, value, false);
-                    })
+            zway.devices[this.id].instances[0].commandClasses[112].Set(paramId, value, 0, function(){
+                self.getConfigParam.call(self, paramId, function(value, isError){
+                    callback.call(self, value, true);
                 })
-                
-            // }
+            }, function(){
+                self.getConfigParam.call(self, paramId, function(value, isError){
+                    callback.call(self, value, false);
+                })
+            })
         } catch (err) {
             callback.call(self, null, false);  
         }
@@ -138,46 +93,10 @@ define('UtilsHWDev', ['AbstractModule'], function(AbstractModule) {
         }
     };
     
-    UtilsHWDev.HWDev.prototype.checkConfigParams = function(callback) {
-        var configParams = this.configParams;
-        
-        
-        var checklist = Object.keys(this.configParams).reduce(function(res, key){
-            res[key] = {
-                configValue: configParams[key],
-                passed: false,
-                paramId: key
-            };
-            return res;
-        }, {});
-        
-        Object.keys(this.configParams).forEach(function(key){
-            //this.log('checkConfigParams('+key+') start');
-            this.getConfigParam(key, (function(value) {
-                checklist[key] = {
-                    value: value,
-                    checked: true,
-                    passed: value == checklist[key].configValue
-                }
-                
-                var isAllChecked = Object.keys(checklist).every(function(key){
-                    return checklist[key].checked;
-                });
-                
-                //this.log('checkConfigParams('+key+') callback. isAllChecked = ' + isAllChecked);
-                
-                if (isAllChecked){
-                    callback(checklist);
-                }
-            }).bind(this));
-        }, this);
-    };
-    
     UtilsHWDev.HWDev.prototype.applyConfigParams = function() {
         if (this.id == null) return;
         this.log('applyConfigParams(' + this.id + ')');
         
-        //var paramsIds = Object.keys(this.configParams).sort();
         if (!this.configParams.length) return;
         
         var configParamsIndex = 0;
@@ -329,11 +248,86 @@ define('UtilsHWDev', ['AbstractModule'], function(AbstractModule) {
         
         
         this.defaultConfigParams = {
-            // 1: {
-            //     value: 0,
-            //     name: 'Activate / deactivate functions ALL ON / ALL OFF'
-            //     //def: 255,
-            // }
+            1: {
+                value: 0,
+                name: 'ALL ON / ALL OFF'
+            },
+            6: {
+                value: 0,
+                name: 'Associations command class choice'
+            },
+            8: {
+                value: 0,
+                name: 'Outputs state change mode'
+            },
+            9: {
+                value: 1,
+                name: 'Step value (relevant for MODE1)'
+            },
+            10: {
+                value: 10,
+                name: 'Time between steps (relevant for MODE1)'
+            },
+            11: {
+                value: 67,
+                name: 'Time for changing from start to end value'
+            },
+            12: {
+                value: 255,
+                name: 'Maximum brightening level'
+            },
+            13: {
+                value: 2,
+                name: 'Minimum dim level'
+            },
+            14: {
+                // value: 4369,
+                name: 'Inputs/Outputs configuration'
+            },
+            16: {
+                value: 0,
+                name: 'Memorize device status at power cut. Device will be set to status memorized before power cut'
+            },
+            30: {
+                value: 0,
+                name: 'Alarm of any type (general alarm, flood alarm, smoke alarm: CO, CO2, temperature alarm)'
+            },
+            38: {
+                value: 10,
+                name: 'Alarm sequence program'
+            },
+            39: {
+                value: 600,
+                name: 'Active PROGRAM alarm time'
+            },
+            42: {
+                value: 0,
+                name: 'Command class reporting Outputs status change'
+            },
+            43: {
+                value: 5,
+                name: 'Reporting 0-10v analog inputs change threshold'
+            },
+            44: {
+                value: 0,
+                name: 'Power load reporting frequency'
+            },
+            45: {
+                value: 0,
+                name: 'Reporting changes in energy consumed by controlled devices'
+            },
+            71: {
+                value: 1,
+                name: 'Response to BRIGHTNESS set to 0%'
+            },
+            72: {
+                value: 1,
+                name: 'Starting predefined program when device set to work in RGB/RGBW mode (parameter 14) - relevant for main controllers other than Home Center 2 only'
+            },
+            73: {
+                value: 0,
+                name: 'Triple click action'
+            }
         };
         
         UtilsHWDev.FGRGBWM441.super_.call(this, config);
@@ -351,11 +345,122 @@ define('UtilsHWDev', ['AbstractModule'], function(AbstractModule) {
         
         
         this.defaultConfigParams = {
-            // 1: {
-            //     value: 0,
-            //     name: 'Activate / deactivate functions ALL ON / ALL OFF'
-            //     //def: 255,
-            // }
+            1: {
+                value: 10,
+                name: 'SENSITIVITY'
+            },
+            2: {
+                value: 10,
+                name: 'BLIND TIME (INSENSITIVITY)'
+            },
+            3: {
+                value: 1,
+                name: 'PULSE COUNTER'
+            },
+            4: {
+                value: 2,
+                name: 'WINDOW TIME'
+            },
+            6: {
+                value: 15,
+                name: 'MOTION ALARM CANCELLATION DELAY'
+            },
+            8: {
+                value: 0,
+                name: 'PIR SENSOR OPERATING MODE'
+            },
+            9: {
+                value: 200,
+                name: 'NIGHT / DAY'
+            },
+            12: {
+                value: 0,
+                name: 'BASIC COMMAND CLASS FRAMES CONFIGURATION'
+            },
+            14: {
+                value: 255,
+                name: 'BASIC ON command frame value'
+            },
+            16: {
+                value: 0,
+                name: 'BASIC OFF command frame value'
+            },
+            20: {
+                value: 15,
+                name: 'TAMPER SENSITIVITY'
+            },
+            22: {
+                value: 30,
+                name: 'TAMPER ALARM CANCELLATION DELAY'
+            },
+            24: {
+                value: 0,
+                name: 'TAMPER OPERATING MODES'
+            },
+            25: {
+                //value: ,
+                name: 'TAMPER CANCELLATION REPORTS'
+            },
+            28: {
+                //value: 0,
+                name: 'TAMPER ALARM BROADCAST MODE - 3rd Group'
+            },
+            29: {
+                //value: ,
+                name: 'TAMPER ALARM BROADCAST MODE - 5th Group'
+            },
+            40: {
+                value: 50,
+                name: 'ILLUMINATION REPORT THRESHOLD'
+            },
+            42: {
+                value: 500,
+                name: 'ILLUMINATION REPORTS INTERVAL'
+            },
+            60: {
+                value: 5,
+                name: 'TEMPERATURE REPORT THRESHOLD'
+            },
+            62: {
+                value: 60,
+                name: 'INTERVAL OF TEMPERATURE MEASURING'
+            },
+            64: {
+                value: 300,
+                name: 'TEMPERATURE REPORTS INTERVAL'
+            },
+            66: {
+                value: 0,
+                name: 'TEMPERATURE OFFSET'
+            },
+            80: {
+                value: 10,
+                name: 'LED SIGNALING MODE'
+            },
+            81: {
+                value: 0,
+                name: 'LED BRIGHTNESS'
+            },
+            82: {
+                value: 100,
+                name: 'AMBIENT ILLUMINATION LEVEL BELOW WHICH LED BRIGHTNESS IS SET TO 1%'
+            },
+            83: {
+                value: 1000,
+                name: 'AMBIENT ILLUMINATION LEVEL ABOVE WHICH LED BRIGHTNESS IS SET TO 100%'
+            },
+            86: {
+                value: 18,
+                name: 'MINIMUM TEMPERATURE RESULTING IN BLUE LED ILLUMINATION'
+            },
+            87: {
+                value: 28,
+                name: 'MAXIMUM TEMPERATURE RESULTING IN RED LED ILLUMINATION'
+            },
+            89: {
+                value: 1,
+                name: 'LED INDICATING TAMPER ALARM'
+            }
         };
         
         UtilsHWDev.FGMS001.super_.call(this, config);
@@ -374,11 +479,78 @@ define('UtilsHWDev', ['AbstractModule'], function(AbstractModule) {
         
         
         this.defaultConfigParams = {
-            // 1: {
-            //     value: 0,
-            //     name: 'Activate / deactivate functions ALL ON / ALL OFF'
-            //     //def: 255,
-            // }
+            2: {
+                value: 1,
+                name: 'Wake up 10 minutes when batteries are inserted'
+            },
+            3: {
+                value: 15,
+                name: 'On time'
+            },
+            4: {
+                value: 1,
+                name: 'Enable motion sensor'
+            },
+            5: {
+                //value: 1,
+                name: 'Which command would be sent when the motion sensor triggered'
+            },
+            40: {
+                //value: 0,
+                name: 'Enable/disable the selective reporting only when measurements reach a certain threshold or percentage set in 41‐44 below'
+            },
+            41: {
+                //value: ,
+                name: 'Threshold change in temperature to induce an automatic report'
+            },
+            42: {
+                //value: ,
+                name: 'Threshold change in humidity to induce an automatic report'
+            },
+            43: {
+                //value: ,
+                name: 'Threshold change in luminance to induce an automatic report.'
+            },
+            44: {
+                //value: ,
+                name: 'Threshold change in battery level to induce an automatic report'
+            },
+            46: {
+                //value: 0,
+                name: 'Enable/disable to send the alarm report of low temperature(<‐15°C)'
+            },
+            101: {
+                value: 254,
+                name: 'Which report needs to be sent in Report group 1'
+            },
+            102: {
+                //value: 0,
+                name: 'Which report needs to be sent in Report group 2'
+            },
+            103: {
+                //value: 0,
+                name: 'Which report needs to be sent in Report group 3'
+            },
+            111: {
+                value: 30,
+                name: 'The interval time of sending reports in Report group 1'
+            },
+            112: {
+                value: 720,
+                name: 'The interval time of sending reports in Report group 2'
+            },
+            113: {
+                value: 720,
+                name: 'The interval time of sending reports in Report group 3'
+            },
+            252: {
+                //value: 0,
+                name: 'Enable/disable Configuration Locked'
+            },
+            255: {
+                //value: ,
+                name: 'Reset to factory default setting and removed from the z‐ wave network'
+            }
         };
         
         UtilsHWDev.AEONMS.super_.call(this, config);
