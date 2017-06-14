@@ -559,13 +559,15 @@ define('UtilsVDev', ['AbstractModule'], function(AbstractModule) {
     inherits(SwitchOnOff, DefaultMHA);
     
     SwitchOnOff.prototype.performCommand = function(initiator, command, args) {
+        var newCommand = command;
         if (command == 'exaact') {
-            if (args.level > 0)
-                command = 'on';
+            if (args && args.level > 0)
+                newCommand = 'on';
             else
-                command = 'off';
+                newCommand = 'off';
         }
-        return SwitchOnOff.super_.prototype.performCommand.call(this, initiator, command);
+        this.log('SwitchOnOff.performCommand: ' + command + ' ' + JSON.stringify(args) + ' -> ' + newCommand);
+        return SwitchOnOff.super_.prototype.performCommand.call(this, initiator, newCommand);
     }
     
    
