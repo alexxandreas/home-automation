@@ -148,7 +148,7 @@ define('AbstractBigRoom', ['AbstractRoom', 'DeviceStorage', 'UtilsRoomHelpers'],
         var col = {
           red: Math.round(Math.ceil(color[0] * (br+0.1) / 100)),
           green: Math.round(Math.ceil(color[1] * (br+0.1) / 100)),
-          blue: Math.round(Math.ceil(color[2] * (br+0.1) / 100))
+          blue: Math.round(Math.ceil(color[2] * (br+0.1) / 100)) 
         }
         this.log('onRGB(): ' + JSON.stringify(col));
         
@@ -226,10 +226,13 @@ define('AbstractBigRoom', ['AbstractRoom', 'DeviceStorage', 'UtilsRoomHelpers'],
         var lightState = this.getLightState();
         
         if (lightState.switch220center.nextLevelOnOff == 'on' && lightState.switch220edge.nextLevelOnOff == 'on'){
+            // горят оба
             this.onRGB(this.state.daylightColor, 100);
         } else if (lightState.switch220center.nextLevelOnOff == 'on' || lightState.switch220edge.nextLevelOnOff == 'on') {
+            // горит хотя бы один
             this.onRGB(this.state.daylightColor, 50);
-        } else {
+        } else if (lightState.switch220center.lastLevelChange < 2*1000 || lightState.switch220edge.lastLevelChange < 2*1000) {
+            // оба не горят, но выключились только что - выключаем RGB
             this.offRGB();
         }
     };

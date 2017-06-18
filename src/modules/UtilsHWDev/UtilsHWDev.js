@@ -43,6 +43,9 @@ define('UtilsHWDev', ['AbstractModule'], function(AbstractModule) {
         }, this);
         
         this.id = config.id
+        
+        // установка wake up interval
+        // https://zway.alexandreas.ru/ZWaveAPI/Run/devices[18].instances[0].commandClasses[0x84].Set(60,1)
     };
     
     UtilsHWDev.HWDev.prototype.log = function(data) {
@@ -342,7 +345,6 @@ define('UtilsHWDev', ['AbstractModule'], function(AbstractModule) {
     /**********************************************************/
 
     UtilsHWDev.FGMS001 = function(config){
-        
         
         this.defaultConfigParams = {
             1: {

@@ -84,6 +84,7 @@ define('DeviceStorage', ['AbstractModule', 'WebServer', 'UtilsVDev', 'UtilsHWDev
                     14: 59534    
                 }}),
                 'kitchen.FGMS001': new UtilsHWDev.FGMS001({configParams:{
+                    1: 30,
                     42: 500
                 }}),
                 

@@ -317,7 +317,9 @@ define('UtilsVDev', ['AbstractModule'], function(AbstractModule) {
 
         // var seconds = Math.floor((Date.now() - self.actions[name].startTime)/1000);
         // сколько секунд прошло с запуска
-        var seconds = Math.floor((Date.now() - this._actionObj.startTime) / 1000);
+        //var seconds = Math.floor((Date.now() - this._actionObj.startTime) / 1000);
+        var seconds = (Date.now() - this._actionObj.startTime);
+        seconds = seconds > 1000 ? Math.floor(seconds) : seconds / 1000;
 
         this._actionObj.log((seconds > 0 ? '+' + seconds + ' sec' : 'START'));
         // action.call(self);
@@ -560,7 +562,7 @@ define('UtilsVDev', ['AbstractModule'], function(AbstractModule) {
     
     SwitchOnOff.prototype.performCommand = function(initiator, command, args) {
         var newCommand = command;
-        if (command == 'exaact') {
+        if (command == 'exact') {
             if (args && args.level > 0)
                 newCommand = 'on';
             else
