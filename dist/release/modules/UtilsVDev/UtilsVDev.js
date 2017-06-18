@@ -233,7 +233,7 @@ define('UtilsVDev', ['AbstractModule'], function(AbstractModule) {
             return;
         }
 
-        log("");
+        log("INIT");
 
         
         var action;
@@ -312,44 +312,54 @@ define('UtilsVDev', ['AbstractModule'], function(AbstractModule) {
     
    
     DefaultMHA.prototype._run = function() {
-
-        //if (!self.actions[name]) return;
-
-        // var seconds = Math.floor((Date.now() - self.actions[name].startTime)/1000);
-        // сколько секунд прошло с запуска
-        //var seconds = Math.floor((Date.now() - this._actionObj.startTime) / 1000);
-        var seconds = (Date.now() - this._actionObj.startTime);
-        seconds = seconds > 1000 ? Math.floor(seconds) : seconds / 1000;
-
-        this._actionObj.log((seconds > 0 ? '+' + seconds + ' sec' : 'START'));
-        // action.call(self);
-        this._actionObj.action.call(this);
-
-        var timeout = (Math.floor(seconds / 15) + 1) * 1000;
-
-        this._actionObj.timer = setTimeout((function() {
-            // if (check.call(self)) { // проверка прошла успешно
-            if (this._actionObj.check.call(this)) { // проверка прошла успешно
-                this._actionObj.log('OK');
-                //self.log(name + ' OK');
-                //delete self.actions[name];
-                delete this._actionObj;
-                delete this._pendingLevel;
-                return;
+        
+        try {
+            //if (!self.actions[name]) return;
+    
+            // var seconds = Math.floor((Date.now() - self.actions[name].startTime)/1000);
+            // сколько секунд прошло с запуска
+            //var seconds = Math.floor((Date.now() - this._actionObj.startTime) / 1000);
+            var seconds = (Date.now() - this._actionObj.startTime) / 1000;
+            
+            // seconds = seconds > 1000 ? Math.floor(seconds) : seconds / 1000;
+            seconds = seconds > 1 ? Math.floor(seconds) : (seconds > 0.5 ? seconds : 0);
+    
+            this._actionObj.log((seconds > 0 ? '+' + seconds + ' sec' : 'START'));
+            // action.call(self);
+            this._actionObj.action.call(this);
+    
+            var timeout = (Math.floor(seconds / 15) + 1) * 1000;
+    
+            this._actionObj.timer = setTimeout((function() {
+                // if (check.call(self)) { // проверка прошла успешно
+                if (this._actionObj.check.call(this)) { // проверка прошла успешно
+                    this._actionObj.log('OK');
+                    //self.log(name + ' OK');
+                    //delete self.actions[name];
+                    delete this._actionObj;
+                    delete this._pendingLevel;
+                    return;
+                }
+                //counter++;
+                //if (counter > maxRestartCount){
+                if (seconds > 60 * 10) {
+                    this._actionObj.log('ERROR');
+                    //delete self.actions[name];
+                    delete this._actionObj;
+                    delete this._pendingLevel;
+                    return;
+                }
+    
+                this._run();
+            }).bind(this), timeout);
+            
+        } catch (err) {
+            if (this._actionObj && this._actionObj.log){
+                this._actionObj.log('Error in run(): ' + err.toString + "\n" + err.stack);
+            } else {
+                this.log('Error in run(): ' + err.toString + "\n" + err.stack)
             }
-            //counter++;
-            //if (counter > maxRestartCount){
-            if (seconds > 60 * 10) {
-                this._actionObj.log('ERROR');
-                //delete self.actions[name];
-                delete this._actionObj;
-                delete this._pendingLevel;
-                return;
-            }
-
-            this._run();
-        }).bind(this), timeout);
-
+        }
     };
 
     DefaultMHA.prototype.destroy = function() {
