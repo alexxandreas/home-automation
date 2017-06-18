@@ -331,37 +331,39 @@ define('UtilsVDev', ['AbstractModule'], function(AbstractModule) {
     
             var timeout = (Math.floor(seconds / 15) + 1) * 1000;
     
-            this._actionObj.timer = setTimeout((function() {
-                try {
-                
-                    if (this._actionObj.check.call(this)) { // проверка прошла успешно
-                        this._actionObj.log('OK');
-                        //self.log(name + ' OK');
-                        //delete self.actions[name];
-                        delete this._actionObj;
-                        delete this._pendingLevel;
-                        return;
-                    }
-                    //counter++;
-                    //if (counter > maxRestartCount){
-                    if (seconds > 60 * 10) {
-                        this._actionObj.log('ERROR');
-                        //delete self.actions[name];
-                        delete this._actionObj;
-                        delete this._pendingLevel;
-                        return;
-                    }
-                } catch (err) {
-                    log('Error in run.handler(): ' + err.toString + "\n" + err.stack);
-                }
-                
-                this._run();
-            }).bind(this), timeout);
+            this._actionObj.timer = setTimeout(this._runOnTimeout.bind(this), timeout);
             
         } catch (err) {
-            log('Error in run(): ' + err.toString + "\n" + err.stack);
+            log('Error in run(): key = ' + this.key + ', ' + err.toString() + "\n" + err.stack);
         }
     };
+    
+    DefaultMHA.prototype._runOnTimeout = function(){
+        var log = this._actionObj && this._actionObj.log || this.log;
+        
+        try {
+                
+            if (this._actionObj.check.call(this)) { // проверка прошла успешно
+                this._actionObj.log('OK');
+                delete this._actionObj;
+                delete this._pendingLevel;
+                return;
+            }
+            
+            var seconds =  (Date.now() - this._actionObj.startTime) / 1000;
+            if (seconds > 60 * 10) {
+                this._actionObj.log('ERROR');
+                delete this._actionObj;
+                delete this._pendingLevel;
+                return;
+            }
+            
+            this._run();
+            
+        } catch (err) {
+            log('Error in runOnTimeout(): key = ' + this.key + ', ' + err.toString() + "\n" + err.stack);
+        }
+    }
 
     DefaultMHA.prototype.destroy = function() {
         controller.devices.off(this.vDev.id, 'change:metrics:level', this._baseLevelChangeHandler);
