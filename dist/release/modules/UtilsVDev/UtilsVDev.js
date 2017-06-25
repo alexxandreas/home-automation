@@ -640,9 +640,11 @@ define('UtilsVDev', ['AbstractModule', 'UtilsTimers'], function(AbstractModule, 
             return 'off';
         }
         
-        this.log('VirtualDoorMHA._getLevel: ' + 'close (sensor)');
+        
         
         if (!this._closeTime) {
+            this.log('VirtualDoorMHA._getLevel: ' + 'close (sensor)');
+            
             this._closeTime = Date.now();
             
             this.closeDoorTimeout = setTimeout(
