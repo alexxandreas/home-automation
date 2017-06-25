@@ -91,7 +91,8 @@
             return !!module.created;
         };
         
-        $scope.update = function(){
+        
+        $scope.sysUpdate = function(){
             $scope.showWait();
             ControlPanelSrv
                 .sysUpdate()
@@ -104,7 +105,7 @@
                 })
         };
         
-        $scope.reload = function(){
+        $scope.sysReload = function(){
             $scope.showWait();
             ControlPanelSrv
                 .sysReload()
@@ -123,7 +124,7 @@
                 })
         };
         
-        $scope.updateReload = function(){
+        $scope.sysUpdateReload = function(){
             $scope.showWait();
             ControlPanelSrv
                 .sysUpdateReload()

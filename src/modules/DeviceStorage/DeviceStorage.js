@@ -143,7 +143,7 @@ define('DeviceStorage', ['AbstractModule', 'WebServer', 'UtilsVDev', 'UtilsHWDev
                 'kitchen.tempSensor': { name:  [dict.kitchen, dict.sensor, dict.temp], type: this._deviceTypes.default, hw: this.hwDevs['kitchen.FGMS001']}, //  FGMS001
                 'kitchen.tabletopLight': { name:  [dict.kitchen, dict.light, dict.tabletop], type: this._deviceTypes.default, hw: this.hwDevs['kitchen.FGRGBWM441']}, //  FGRGBWM441  (x.5)
                 'kitchen.tabletopSwitch': { name:  [dict.kitchen, dict.switch_, dict.tabletop], type: this._deviceTypes.tabletopSwitch, hw: this.hwDevs['kitchen.FGRGBWM441']}, //  FGRGBWM441  (x.3) (0001)
-                'kitchen.door': { name: [dict.kitchen, dict.door], type: this._deviceTypes.virtualDoo, hw: this.hwDevs['kitchen.FGRGBWM441']},
+                'kitchen.door': { name: [dict.kitchen, dict.door], type: this._deviceTypes.virtualDoor, hw: this.hwDevs['kitchen.FGRGBWM441']},
                 
                 'wardrobe.switch220': { name:  [dict.wardrobe, dict.light], type: this._deviceTypes.switchOnOff, hw: this.hwDevs['wardrobe.TZ66D']}, // 
                 'wardrobe.door': { name:  [dict.wardrobe, dict.door], type: this._deviceTypes.door, hw: this.hwDevs['hallway.FGRGBWM441']}, //  FGRGBWM441  (x.4)

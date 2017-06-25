@@ -72,6 +72,7 @@
             stop: stop,
             restart: restart,
             sysUpdate: sysUpdate,
+            sysReload: sysReload, 
             sysUpdateReload: sysUpdateReload
         };
         
