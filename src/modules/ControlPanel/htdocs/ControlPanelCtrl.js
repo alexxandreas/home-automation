@@ -104,6 +104,25 @@
                 })
         };
         
+        $scope.reload = function(){
+            $scope.showWait();
+            ControlPanelSrv
+                .sysReload()
+                .then(function(data){
+                    $scope.hideWait();
+                    console.log(data);
+                    
+                    $scope.showAlert('Перезапуск', data.reloadResult)
+                    .then(function(){
+                        $scope.showWait();
+                        $window.location.reload();
+                    });
+                    
+                }, function(response){
+                    $scope.hideWait();
+                })
+        };
+        
         $scope.updateReload = function(){
             $scope.showWait();
             ControlPanelSrv
@@ -115,8 +134,8 @@
                     $scope.showAlert('Обновление', 
                         'Обновление:\n' + 
                         data.updateResult[1] + 
-                        '\n\nПерезагруженные модули:\n' + 
-                        data.reloadResult.join(', ')
+                        '\n\nПерезапуск:\n' + 
+                        data.reloadResult
                     )
                     .then(function(){
                         $scope.showWait();

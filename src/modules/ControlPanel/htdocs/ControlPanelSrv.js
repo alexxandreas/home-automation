@@ -54,6 +54,12 @@
             });
         }
         
+        function sysReload(){
+            return $http.get('modules/ControlPanel/api/reload').then(function(response){
+                return response.data;
+            });
+        }
+        
         function sysUpdateReload(){
             return $http.get('modules/ControlPanel/api/updateReload').then(function(response){
                 return response.data;

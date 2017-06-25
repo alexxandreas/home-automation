@@ -30,12 +30,19 @@ define('UtilsTimers', ['AbstractModule'], function(AbstractModule){
             var timeout = sec * 1000;
         }
         
+        // создаем уникальный id для проверки в таймере, актуален он или нет
+        // (если таймер вызовется еще раз - то id изменится)
+        var unique = Math.random();
         var self = this;
+        
         this._timers[name] = {
             offTime: Date.now() + timeout,
+            unique: unique,
             timer: setTimeout(function(){
                 // иногда после stopTimer все равно вызывается callback (если время до вызова меньше секунды)
-                if (!self._timers[name]) return; 
+                if (!self._timers[name]) return;
+                if (self._timers[name].unique != unique) return;
+                
                 delete self._timers[name];
                 callback.call(scope);
             }, timeout)

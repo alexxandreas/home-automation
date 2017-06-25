@@ -141,6 +141,25 @@ angular
                 })
         };
         
+        $scope.reload = function(){
+            $scope.showWait();
+            ControlPanelSrv
+                .sysReload()
+                .then(function(data){
+                    $scope.hideWait();
+                    console.log(data);
+                    
+                    $scope.showAlert('Перезапуск', data.reloadResult)
+                    .then(function(){
+                        $scope.showWait();
+                        $window.location.reload();
+                    });
+                    
+                }, function(response){
+                    $scope.hideWait();
+                })
+        };
+        
         $scope.updateReload = function(){
             $scope.showWait();
             ControlPanelSrv
@@ -152,8 +171,8 @@ angular
                     $scope.showAlert('Обновление', 
                         'Обновление:\n' + 
                         data.updateResult[1] + 
-                        '\n\nПерезагруженные модули:\n' + 
-                        data.reloadResult.join(', ')
+                        '\n\nПерезапуск:\n' + 
+                        data.reloadResult
                     )
                     .then(function(){
                         $scope.showWait();
@@ -281,6 +300,12 @@ angular
             });
         }
         
+        function sysReload(){
+            return $http.get('modules/ControlPanel/api/reload').then(function(response){
+                return response.data;
+            });
+        }
+        
         function sysUpdateReload(){
             return $http.get('modules/ControlPanel/api/updateReload').then(function(response){
                 return response.data;
@@ -391,6 +416,99 @@ angular
                 return response.data;
             });
         }
+        
+        var me = {
+            reload: reload
+        };
+        
+        return me;
+    }
+}());
+(function () {
+    "use strict";
+    angular.module('WebApp')
+        .controller('LoggerCtrl', LoggerCtrl);
+
+    LoggerCtrl.$inject = [
+        '$scope',
+        '$rootScope',
+        '$http',
+        '$timeout',
+        '$window',
+        '$sce',
+        '$mdDialog',
+        'LoggerSrv'
+    ];
+
+    function LoggerCtrl(
+        $scope,
+        $rootScope,
+        $http,
+        $timeout,
+        $window,
+        $sce,
+        $mdDialog,
+        LoggerSrv
+    ) {
+        
+        $scope.logData = "";
+        reload();
+
+        var reloadTimeout;
+        function reload(){
+            LoggerSrv.reload().then(function(data){
+                //data.forEach(function(dev){                });
+                $scope.logData = data.map(function(item){
+                    var date = new Date(item.time);
+                    return '[' + date.toLocaleDateString() + ' ' + date.toLocaleTimeString() + '] ' + item.data;
+                }).join('\n');
+            }).finally(function(){
+                if (!$scope.$$destroyed) 
+                    reloadTimeout = $timeout(reload, 2000);
+            })
+        }
+
+        $scope.$on("$destroy", function() {
+            if (reloadTimeout) {
+                $timeout.cancel(reloadTimeout);
+            }
+        });
+        
+    }
+
+}());
+(function () {
+    "use strict";
+    angular.module('WebApp')
+        .factory('LoggerSrv', LoggerSrv);
+
+
+    // инициализируем сервис
+    //angular.module('WebApp').run(['LoggerSrv', function(ApiSrv) {  }]);
+    
+    LoggerSrv.$inject = [
+        '$http',
+        'PanelsSrv'
+    ];
+    
+    function LoggerSrv(
+        $http,
+        PanelsSrv
+    ) {
+        
+        var lastTime = 0;
+        var logArray = [];
+        
+        function reload(){
+            return $http.get('modules/Logger/api/getLog/' + lastTime).then(function(response){
+                var arr = response.data;
+                logArray = logArray.concat(arr).slice(-1000);
+                lastTime = logArray[logArray.length-1].time;
+                return logArray;
+            });
+        }
+        
+        
         
         var me = {
             reload: reload
@@ -675,99 +793,6 @@ angular
         
         // return me;
         return null;
-    }
-}());
-(function () {
-    "use strict";
-    angular.module('WebApp')
-        .controller('LoggerCtrl', LoggerCtrl);
-
-    LoggerCtrl.$inject = [
-        '$scope',
-        '$rootScope',
-        '$http',
-        '$timeout',
-        '$window',
-        '$sce',
-        '$mdDialog',
-        'LoggerSrv'
-    ];
-
-    function LoggerCtrl(
-        $scope,
-        $rootScope,
-        $http,
-        $timeout,
-        $window,
-        $sce,
-        $mdDialog,
-        LoggerSrv
-    ) {
-        
-        $scope.logData = "";
-        reload();
-
-        var reloadTimeout;
-        function reload(){
-            LoggerSrv.reload().then(function(data){
-                //data.forEach(function(dev){                });
-                $scope.logData = data.map(function(item){
-                    var date = new Date(item.time);
-                    return '[' + date.toLocaleDateString() + ' ' + date.toLocaleTimeString() + '] ' + item.data;
-                }).join('\n');
-            }).finally(function(){
-                if (!$scope.$$destroyed) 
-                    reloadTimeout = $timeout(reload, 2000);
-            })
-        }
-
-        $scope.$on("$destroy", function() {
-            if (reloadTimeout) {
-                $timeout.cancel(reloadTimeout);
-            }
-        });
-        
-    }
-
-}());
-(function () {
-    "use strict";
-    angular.module('WebApp')
-        .factory('LoggerSrv', LoggerSrv);
-
-
-    // инициализируем сервис
-    //angular.module('WebApp').run(['LoggerSrv', function(ApiSrv) {  }]);
-    
-    LoggerSrv.$inject = [
-        '$http',
-        'PanelsSrv'
-    ];
-    
-    function LoggerSrv(
-        $http,
-        PanelsSrv
-    ) {
-        
-        var lastTime = 0;
-        var logArray = [];
-        
-        function reload(){
-            return $http.get('modules/Logger/api/getLog/' + lastTime).then(function(response){
-                var arr = response.data;
-                logArray = logArray.concat(arr).slice(-1000);
-                lastTime = logArray[logArray.length-1].time;
-                return logArray;
-            });
-        }
-        
-        
-        
-        var me = {
-            reload: reload
-        };
-        
-        return me;
     }
 }());
 (function () {

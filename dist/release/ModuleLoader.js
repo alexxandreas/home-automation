@@ -22,7 +22,12 @@
     function ModuleLoader(config) {
         this.name = 'ModuleLoader';
 
+        this.start();
+    }
 
+    ModuleLoader.prototype.start = function start() {
+        this.log('start');
+        
         // список модулей в ФС
         //this.modulesFS = {}; 
         this.loadModulesList();
@@ -258,6 +263,12 @@
     ModuleLoader.prototype.restartModule = function restartModule(name) {
         var deps = this._unloadModule(name, true);
         return deps;
+    };
+    
+    ModuleLoader.prototype.restart = function() {
+       this.log('restart');
+       this.stop();
+       this.start();
     };
 
 
