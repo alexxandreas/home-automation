@@ -81,7 +81,8 @@ define('DeviceStorage', ['AbstractModule', 'WebServer', 'UtilsVDev', 'UtilsHWDev
                 
                 'kitchen.FGD211': new UtilsHWDev.FGD211(),
                 'kitchen.FGRGBWM441': new UtilsHWDev.FGRGBWM441({configParams:{
-                    14: 59534    
+                    14: 59534,
+                    43: 20
                 }}),
                 'kitchen.FGMS001': new UtilsHWDev.FGMS001({configParams:{
                     1: 20,
