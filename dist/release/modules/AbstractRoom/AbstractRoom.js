@@ -248,9 +248,10 @@ define('AbstractRoom', [
             conf.switch220.forEach(function(interval){
                 var date = new Date();
                 var now = formatTime(date.getHours(), date.getMinutes());
-                if (interval.start <= now && interval.end >= now)
-                this.log('getSuitableLight: 220 (время = ' + now + ' попало в дневной интервал [' + interval.start + ', ' + interval.end + '])');
-                result = '220';
+                if (interval.start <= now && interval.end >= now) {
+                    this.log('getSuitableLight: 220 (время = ' + now + ' попало в дневной интервал [' + interval.start + ', ' + interval.end + '])');
+                    result = '220';
+                }
             }, this);
         } 
         
@@ -265,9 +266,10 @@ define('AbstractRoom', [
         //     }
         // }
         
-        if (result)
+        if (result){
             return result;
-
+        }
+        
         if (conf.minIlluminationLevel != undefined) {
             var illuminationLevel = this.getIlluminationState();
             if (!illuminationLevel.deviceNotExists && conf.minIlluminationLevel < illuminationLevel.level) {
