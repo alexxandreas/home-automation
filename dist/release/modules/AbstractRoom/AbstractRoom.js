@@ -100,8 +100,8 @@ define('AbstractRoom', [
         this.suitableLightConfig = {
             switch220: [{
                start: 6.00,
-               //end: 23.59
-               end: 15.59
+               end: 23.59
+            //   end: 15.59
             }],
             dayInterval: {
                 hStart: 6,
