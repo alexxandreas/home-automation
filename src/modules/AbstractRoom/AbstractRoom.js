@@ -100,7 +100,8 @@ define('AbstractRoom', [
         this.suitableLightConfig = {
             switch220: [{
                start: 6.00,
-               end: 23.59
+               //end: 23.59
+               end: 15.59
             }],
             dayInterval: {
                 hStart: 6,
@@ -460,6 +461,7 @@ define('AbstractRoom', [
             //     var light = this.getSuitableLight();
             // }
             else {
+                this.log('switchLight(on): getSuitableLight()');
                 var light = this.getSuitableLight();
                 this.log('switchLight(on): getSuitableLight() => ' + light + ' on');
                 if (light == '12'){
