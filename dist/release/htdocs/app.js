@@ -150,7 +150,7 @@ angular
                     $scope.hideWait();
                     console.log(data);
                     
-                    $scope.showAlert('Перезапуск', data.reloadResult)
+                    $scope.showAlert('Перезапуск', data)
                     .then(function(){
                         $scope.showWait();
                         $window.location.reload();

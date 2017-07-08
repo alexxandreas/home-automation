@@ -118,7 +118,7 @@ define('Toilet', ['AbstractRoom'], function(AbstractRoom){
         if (this.getExtRoomsDoorsState().summary.levelOnOff === 'on')
             return; // при открытой двери вентилятор не включаем
         
-        if (this.getFanState().level === 'on') return;
+        // if (this.getFanState().level === 'on') return;
         
         this.timers.startTimer(
             'fanStartTimer',
@@ -136,7 +136,6 @@ define('Toilet', ['AbstractRoom'], function(AbstractRoom){
         if (this.getFanState().level === 'on'){
             this.timers.startTimer(
                 'fanStopTimer', 
-                // Math.min((Date.now()-this.state.fanModeTimeout)/1000, this.settings.fanMaxTimeout*60), 
                 Math.min(this.getFanState().lastLevelChange/1000, this.settings.fanMaxTimeout*60), 
                 this.onFanStopTimer,
                 this
@@ -150,10 +149,10 @@ define('Toilet', ['AbstractRoom'], function(AbstractRoom){
         Toilet.super_.prototype.onExtRoomDoorOpen.apply(this, arguments);
         
         this.timers.stopTimer('fanStartTimer');
+        
         if (this.getFanState().level === 'on'){
-            this.startTimer(
+            this.timers.startTimer(
                 'fanStopTimer', 
-                //Math.min((Date.now()-this.state.fanModeTimeout)/1000, this.settings.fanMaxTimeout*60), 
                 Math.min(this.getFanState().lastLevelChange/1000, this.settings.fanMaxTimeout*60), 
                 this.onFanStopTimer,
                 this
@@ -168,8 +167,8 @@ define('Toilet', ['AbstractRoom'], function(AbstractRoom){
         this.timers.stopTimer('fanStopTimer');
         if (this.getLightState().summary.levelOnOff === 'off') 
             return; // при выключенном свете вентилятор не включаем
-        if (this.getFanState().level === 'on')
-            return;
+        //if (this.getFanState().level === 'on')
+        //    return;
             
         this.timers.startTimer(
             'fanStartTimer', 

@@ -103,18 +103,27 @@ define('Bathroom', ['AbstractRoom', 'DeviceStorage'], function(AbstractRoom, Dev
         if (!extRoomsHumLevels.count) return;
         var extRoomsHumLevel = extRoomsHumLevels.sumLevels / extRoomsHumLevels.count;
         
-        
-        if (this.getFanState().level == 'on') {
-            if (event.level - extRoomsHumLevel < this.settings.humidityOffDelta) {
-                this.switchFan('off');
-                this.timers.stopTimer('fanStopTimer');
-            }
-        } else { // вентилятор выключен
+        if (event.level - extRoomsHumLevel > this.settings.humidityOnDelta) {
+            // превышен уровень влажности
             if (this.getLightState().summary.levelOnOff === 'off') return;
-            if(event.level - extRoomsHumLevel > this.settings.humidityOnDelta) {
-                this.switchFan('on');
-            }
+            this.switchFan('on');
+        } else {
+            this.switchFan('off');
+            this.timers.stopTimer('fanStopTimer');
         }
+        
+        
+        // if (this.getFanState().level == 'on') {
+        //     if (event.level - extRoomsHumLevel < this.settings.humidityOffDelta) {
+        //         this.switchFan('off');
+        //         this.timers.stopTimer('fanStopTimer');
+        //     }
+        // } else { // вентилятор выключен
+        //     if (this.getLightState().summary.levelOnOff === 'off') return;
+        //     if(event.level - extRoomsHumLevel > this.settings.humidityOnDelta) {
+        //         this.switchFan('on');
+        //     }
+        // }
         
     };
   

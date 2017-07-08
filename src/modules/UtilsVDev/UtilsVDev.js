@@ -224,8 +224,9 @@ define('UtilsVDev', ['AbstractModule', 'UtilsTimers'], function(AbstractModule, 
                 ') ' + data);
         }
 
-        var timers = this.getTimers();
-        timers.stopTimer('actionTimer');
+        this._timers && this._timers.stopTimer('actionTimer');
+        // var timers = this.getTimers();
+        // timers.stopTimer('actionTimer');
         
         //var isPrevAction = !!this._actionObj;
         // останавливаем предыдущее

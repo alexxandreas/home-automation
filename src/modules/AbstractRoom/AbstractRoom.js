@@ -84,7 +84,7 @@ define('AbstractRoom', [
         // this.extRooms = [{
         //     switch220:      'bathroom.switch220',
         //     motionSensor:   'bathroom.motionSensor',
-        //     motionIgnore:   false/true
+        //     motionIgnore:   false/true, // влияет только на то, будет ли обрабатываться событие окончания движения во внешней комнате
         //     door:           'bathroom.door',
 
         // }]
@@ -402,21 +402,26 @@ define('AbstractRoom', [
             //     newLightState[options.light] = 'on';
             // }
             if (options.light == '220') {
+                this.log('switchLight(on): options.light == 220 => 220 on');
                 lightConfig.switch220.command = 'on';
             } 
             else if (options.light == '12') {
+                this.log('switchLight(on): options.light == 12 => 12 on');
                 lightConfig.light12.command = 'on';
             }
 
             // учитываем userMode
             else if (this.state.userMode == '220') {
+                this.log('switchLight(on): state.userMode == 220 => 220 on');
                 lightConfig.switch220.command = 'on';
                 //newLightState[this.state.userMode] = 'on';
             }
             else if (this.state.userMode == '12') {
+                this.log('switchLight(on): state.userMode == 12 => 12 on');
                 lightConfig.light12.command = 'on';
             }
             else if (this.state.userMode == 'on') {
+                this.log('switchLight(on): state.userMode == on => 220 on, 12 on');
                 // newLightState['220'] = 'on';
                 // newLightState['12'] = 'on';
                 lightConfig.switch220.command = 'on';
@@ -428,20 +433,24 @@ define('AbstractRoom', [
             //     newLightState[this.state.lastLight] = 'on';
             // }
             else if (this.state.lastLight == '220') {
+                this.log('switchLight(on): state.lastLight == 220 => 220 on');
                 lightConfig.switch220.command = 'on';
             }
             else if (this.state.lastLight == '12') {
+                this.log('switchLight(on): state.lastLight == 12 => 12 on');
                 lightConfig.light12.command = 'on';
             }
             
             // если в соседней комнате горит 220 - тоже включаем 220
             else if (this.getExtRooms220State().summary.levelOnOff == 'on') {
+                this.log('switchLight(on): getExtRooms220State().summary.levelOnOff == on => 220 on');
                 //newLightState['220'] = 'on';
                 lightConfig.switch220.command = 'on';
             } 
             
             // свет 220 в соседней комнате был выключен менее 10 секунд назад
             else if (this.getExtRooms220State().summary.lastLevelChange < 10*1000) {
+                this.log('switchLight(on): getExtRooms220State().summary.lastLevelChange < 10*1000 => 220 on');
                 // newLightState['220'] = 'on';
                 lightConfig.switch220.command = 'on';
             }
@@ -452,6 +461,7 @@ define('AbstractRoom', [
             // }
             else {
                 var light = this.getSuitableLight();
+                this.log('switchLight(on): getSuitableLight() => ' + light + ' on');
                 if (light == '12'){
                     lightConfig.light12.command = 'on';
                 } else {
@@ -592,7 +602,8 @@ define('AbstractRoom', [
                 room.motionIgnore = false;
         }, this);
 
-        if (this.state.userMode != 'off' && this.getLightState().summary.levelOnOff == 'off')
+        // if (this.state.userMode != 'off' && this.getLightState().summary.levelOnOff == 'off')
+        if (this.state.userMode != 'off')
             this.switchLight({
                 mode: 'on'
             });

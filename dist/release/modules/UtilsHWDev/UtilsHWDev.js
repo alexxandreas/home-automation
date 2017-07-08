@@ -108,21 +108,24 @@ define('UtilsHWDev', ['AbstractModule'], function(AbstractModule) {
         applyNext.call(this);
         
         function applyNext(){
-            if (configParamsIndex >= this.configParams.length) return;
+            if (configParamsIndex >= this.configParams.length) {
+                this.log('applyConfigParams(' + this.id + ') completed');
+                return;
+            }
             currentParam = this.configParams[configParamsIndex]
             configParamsIndex++;
-            this.log('applyNext(' + currentParam.paramId + '): value -> ' + currentParam.configValue);
+            // this.log('applyNext(' + currentParam.paramId + '): value -> ' + currentParam.configValue);
             this.getConfigParam(currentParam.paramId, getCallback);
         }
         
         function getCallback(value, isError) {
             if (value == currentParam.configValue) {
                 // проверка прошла - проверяем дальше
-                this.log('getCallback(' + currentParam.paramId + '): value ' + value + ' success');
+                // this.log('getCallback(' + currentParam.paramId + '): currentValue ' + value + ' success');
                 applyNext.call(this);
             } else {
                 // проверка не прошла
-                this.log('getCallback(' + currentParam.paramId + '): value ' + value + ', configValue ' + currentParam.configValue + (isError ? ' error' : ''));
+                this.log('getCallback(' + currentParam.paramId + '): currentValue ' + value + ', configValue ' + currentParam.configValue + (isError ? ' error' : ''));
                 this.setConfigParam(currentParam.paramId, currentParam.configValue, setCallback);
             }
         }
@@ -130,11 +133,11 @@ define('UtilsHWDev', ['AbstractModule'], function(AbstractModule) {
         function setCallback(value, isError) {
             if (value == currentParam.configValue) {
                 // проверка прошла - проверяем дальше
-                this.log('setCallback(' + currentParam.paramId + '): value ' + value + ' success');
+                // this.log('setCallback(' + currentParam.paramId + '): currentValue ' + value + ' success');
                 applyNext.call(this);
             } else {
                 // проверка не прошла
-                this.log('setCallback(' + currentParam.paramId + '): value ' + value + ', configValue ' + currentParam.configValue + (isError ? ' error' : ''));
+                this.log('setCallback(' + currentParam.paramId + '): currentValue ' + value + ', configValue ' + currentParam.configValue + (isError ? ' error' : ''));
                 setTimeout(applyNext.bind(this), 1000);
                 //applyNext.call(this);
             }
