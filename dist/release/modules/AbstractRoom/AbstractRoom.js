@@ -554,6 +554,7 @@ define('AbstractRoom', [
     AbstractRoom.prototype.switchFan = function(mode){
         var devFan = DeviceStorage.getDevice(this.devices.fan);
         devFan && devFan.MHA.performCommand(this.name, mode);
+        this.state.fanMode = mode;
     };
 
 

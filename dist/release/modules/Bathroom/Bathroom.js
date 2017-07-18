@@ -75,8 +75,8 @@ define('Bathroom', ['AbstractRoom', 'DeviceStorage'], function(AbstractRoom, Dev
         this.settings.lightOffTimeout = 15; // таймаут обязательного выключения света (когда не срабатывает датчик движения)
         this.settings.lastLightTimeout = 3; // таймаут сброса последнего света (12 или 220). Последний свет запоминается и включается при новом движении
         
-        this.settings.humidityOnDelta = 30, // разница во влажности для ВКЛЮЧЕНИЯ вентилятора
-        this.settings.humidityOffDelta = 20, // разница во влажности для ВЫКЛЮЧЕНИЯ вентилятора
+        this.settings.humidityOnDelta = 35, // разница во влажности для ВКЛЮЧЕНИЯ вентилятора
+        this.settings.humidityOffDelta = 25, // разница во влажности для ВЫКЛЮЧЕНИЯ вентилятора
         this.settings.fanMaxTimeout = 5     // максимальная продолжинельность работы вентилятора после выключения света, мин
 
         this.init();
@@ -103,13 +103,16 @@ define('Bathroom', ['AbstractRoom', 'DeviceStorage'], function(AbstractRoom, Dev
         if (!extRoomsHumLevels.count) return;
         var extRoomsHumLevel = extRoomsHumLevels.sumLevels / extRoomsHumLevels.count;
         
+        
         if (event.level - extRoomsHumLevel > this.settings.humidityOnDelta) {
             // превышен уровень влажности
             if (this.getLightState().summary.levelOnOff === 'off') return;
+            if (this.state.fanMode == 'on') return;
             this.switchFan('on');
-        } else {
-            this.switchFan('off');
+        } else if (event.level - extRoomsHumLevel < this.settings.humidityOffDelta){
             this.timers.stopTimer('fanStopTimer');
+            if (this.state.fanMode == 'off') return;
+            this.switchFan('off');
         }
         
         
@@ -129,7 +132,8 @@ define('Bathroom', ['AbstractRoom', 'DeviceStorage'], function(AbstractRoom, Dev
   
     Bathroom.prototype.onSwitch220Off = function(){
         Bathroom.super_.prototype.onSwitch220Off.apply(this, arguments);
-        if (this.getFanState().level == 'on') {
+        //if (this.getFanState().level == 'on') {
+        if (this.state.fanMode == 'on') {
             this.timers.startTimer(
                 'fanStopTimer', 
                 this.settings.fanMaxTimeout*60, 
@@ -141,12 +145,13 @@ define('Bathroom', ['AbstractRoom', 'DeviceStorage'], function(AbstractRoom, Dev
     Bathroom.prototype.onSwitch220On = function(){
         Bathroom.super_.prototype.onSwitch220On.apply(this, arguments);
         this.timers.stopTimer('fanStopTimer');
-        if (this.getFanState().level == 'off') {
+        //if (this.getFanState().level == 'off') {
+        //if (this.state.fanMode == 'off') {
             var devHum = DeviceStorage.getDevice(this.devices.humSensor);
             var currentHum = devHum && devHum.MHA.getLevel();
             if (currentHum)
                 this.onHumSensorEvent({level:currentHum});
-        }
+        //}
     };
     
     Bathroom.prototype.onFanStopTimer = function(){ // сработал таймер ВЫКЛЮЧЕНИЯ вентилятора

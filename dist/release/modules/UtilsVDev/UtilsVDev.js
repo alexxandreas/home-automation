@@ -280,43 +280,30 @@ define('UtilsVDev', ['AbstractModule', 'UtilsTimers'], function(AbstractModule, 
 
 
     DefaultMHA.prototype._run = function(actionObj) {
-        //var log = this._actionObj && this._actionObj.log || this.log;
-        
         try {
-            //if (!self.actions[name]) return;
-    
-            // var seconds = Math.floor((Date.now() - self.actions[name].startTime)/1000);
             // сколько секунд прошло с запуска
-            //var seconds = Math.floor((Date.now() - this._actionObj.startTime) / 1000);
             var seconds = (Date.now() - actionObj.startTime) / 1000;
             
-            // seconds = seconds > 1000 ? Math.floor(seconds) : seconds / 1000;
             seconds = seconds > 1 ? Math.floor(seconds) : (seconds > 0.5 ? seconds : 0);
     
             actionObj.log((seconds > 0 ? '+' + seconds + ' sec' : 'START'));
-            // action.call(self);
+            
             actionObj.action();
     
-            var timeout = (Math.floor(seconds / 15) + 1); // * 1000;
-    
-            //this._actionObj.timer = setTimeout(this._runOnTimeout.bind(this), timeout);
+            var timeout = (Math.floor(seconds / 15) + 1); 
             
             var timers = this.getTimers();
             timers.startTimer('actionTimer', timeout, runOnTimeout, this);
-            //timers.startTimer('userMode', this.settings.userModeTimeout * 60, this.onUserModeTimer, this);
         
         } catch (err) {
             actionObj.log('Error in run(): key = ' + this.key + ', ' + err.toString() + "\n" + err.stack);
         }
         
         function runOnTimeout() {
-            //var log = this._actionObj && this._actionObj.log || this.log;
-            
             try {
                     
                 if (actionObj.check()) { // проверка прошла успешно
                     actionObj.log('OK');
-                    // delete this._actionObj;
                     delete this._pendingLevel;
                     return;
                 }
@@ -324,7 +311,6 @@ define('UtilsVDev', ['AbstractModule', 'UtilsTimers'], function(AbstractModule, 
                 var seconds =  (Date.now() - actionObj.startTime) / 1000;
                 if (seconds > 60 * 10) {
                     actionObj.log('ERROR');
-                    // delete this._actionObj;
                     delete this._pendingLevel;
                     return;
                 }
@@ -336,70 +322,6 @@ define('UtilsVDev', ['AbstractModule', 'UtilsTimers'], function(AbstractModule, 
             }
         }
     };
-    
-    
-    
-    // DefaultMHA.prototype._action_old = function(command, args) {
-    //     // оборачиваем логгер
-
-    //     var log = (function(data) {
-    //         return this.log(
-    //             'action(' +
-    //             (command ? command : '') +
-    //             (args ? ', ' + JSON.stringify(args) : '') +
-    //             ') ' + data);
-    //     }).bind(this);
-
-
-    //     var isPrevAction = !!this._actionObj;
-    //     // останавливаем предыдущее
-    //     if (isPrevAction) {
-    //         this._actionObj.timer && clearTimeout(this._actionObj.timer);
-    //         log('STOP PREV');
-    //     }
-        
-    //     delete this._actionObj;
-    //     delete this._pendingLevel;
-
-    //     // если команда пустая - значит это команда отмены любого действия - выходим
-    //     if (!command) {
-    //         return;
-    //     }
-
-    //     log("INIT");
-
-        
-    //     var action;
-    //     var check;
-
-    //     var actionCommand;
-
-    //     if (command == 'on') {
-    //         actionCommand = this._getOnCommand();
-    //     }
-    //     else if (command == 'off') {
-    //         actionCommand = this._getOffCommand();
-    //     }
-    //     else if (command == 'exact') {
-    //         actionCommand = this._getExactCommand(args);
-    //     }
-        
-
-    //     if (!isPrevAction && actionCommand.check.call(this)) { // если проверка проходит сразу и небыло предыдущего действия - не запускаем 
-    //         return;
-    //     }
-        
-    //     this._pendingLevel = actionCommand.pendingLevel;
-
-    //     this._actionObj = {
-    //         action: actionCommand.action,
-    //         check: actionCommand.check,
-    //         startTime: Date.now(),
-    //         log: log
-    //     };
-
-    //     this._run();
-    // };
     
     
     DefaultMHA.prototype._getOnCommand = function(){
