@@ -1,7 +1,3 @@
-.ControlPanel {
-    
-}
-
 .DeviceStorage {
     
     
@@ -18,6 +14,10 @@
 .DeviceStorage .greenButon {
     background-color: green;
 }
+.ControlPanel {
+    
+}
+
 .Logger {
     
 }

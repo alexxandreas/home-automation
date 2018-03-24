@@ -126,8 +126,9 @@ define('UtilsVDev', ['AbstractModule', 'UtilsTimers', 'UtilsJSON'], function(Abs
 
         this._actionObj = undefined;
         
-         // текущее значение
-        this._lastLevel = this.getLevel();
+        // текущее значение
+        // устанавливается в initDevice
+        this._lastLevel = undefined;
         
         this._pendingLevel = undefined;
         
@@ -161,6 +162,9 @@ define('UtilsVDev', ['AbstractModule', 'UtilsTimers', 'UtilsJSON'], function(Abs
         this.vDev.MHA = this;
         var realId = getRealId(this.vDev.id);
         realId && this.hwDev.setId(realId);
+        
+        // текущее значение
+        this._lastLevel = this.getLevel();
         
         controller.devices.on(this.vDev.id, 'change:metrics:level', this._baseLevelChangeHandler);
         
