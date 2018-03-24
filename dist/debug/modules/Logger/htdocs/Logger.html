@@ -1,0 +1,13 @@
+<div layout="column" layout-align="start stretch"
+ng-controller="LoggerCtrl"
+class="Logger" flex>
+
+  <div layout="row" layout-align="start center" flex="none">
+    <!--<md-button class="md-raised md-primary" ng-click="update()">Обновить без перезагрузки модулей</md-button>-->
+    <!--<md-button class="md-raised md-primary" ng-click="updateReload()">Обновить с перезагрузкой всех модулей</md-button>-->
+  </div>
+  
+  <div flex layout="column" layout-align="start stretch">
+    <textarea id="logData" class="logData" ng-model="logData" ></textarea>
+  </div>
+</div>

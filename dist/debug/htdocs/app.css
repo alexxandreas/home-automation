@@ -1,0 +1,221 @@
+.ControlPanel {
+    
+}
+
+.DeviceStorage {
+    
+    
+}
+
+.DeviceStorage .redButon {
+    background-color: red;
+}
+
+.DeviceStorage .yellowButon {
+    background-color: yellow;
+}
+
+.DeviceStorage .greenButon {
+    background-color: green;
+}
+.Logger {
+    
+}
+
+.Logger textarea {
+    height:100%; 
+    /*width:100%; */
+    margin: 5px;
+    font-family: monospace; 
+    font-size: 12px; 
+    /*font-weight: bold;*/
+    outline: none;
+} 
+.RemoteConsole {
+    
+}
+
+.RemoteConsole .inputText1 {
+    height:5in; 
+    width:100%; 
+    font-family: monospace; 
+    font-size: 16; 
+    font-weight: bold;
+}
+
+
+.RemoteConsole .outputText1 {
+    height:5in; 
+    width:100%; 
+    font-family: monospace; 
+    font-size: 16; 
+    font-weight: bold;
+}
+
+.RemoteConsole textarea {
+    height:100%; 
+    /*width:100%; */
+    margin: 5px;
+    font-family: monospace; 
+    font-size: 14px; 
+    /*font-weight: bold;*/
+    outline: none;
+}
+
+
+.Status {
+    
+}
+
+.Status textarea {
+    height:100%; 
+    /*width:100%; */
+    margin: 5px;
+    font-family: monospace; 
+    font-size: 12px; 
+    /*font-weight: bold;*/
+    outline: none;
+} 
+
+.Status iframe {
+    width: 100%;
+    height: 100%;
+}
+
+.Status .map-container {
+    width: 100%;
+    height: 200px;
+}
+
+.Status .map {
+    /*background-image: url(../modules/Status/htdocs/plan_100_new.png); */
+    position: relative;
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+.Status .map-image {
+    width: 100%;
+    /*visibility: hidden;*/
+}
+
+.Status .map-controls {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.Status .map-control-container {
+    top: 30%;
+    left: 79%;
+    position: absolute;
+    
+    width: 0px;
+    height: 0px;
+    /*background-color: red;*/
+    font-size: 3vw;
+    
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+.Status .map-control {
+    
+}
+html, body {
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	-webkit-text-size-adjust: none;
+	-webkit-font-smoothing: antialiased !important;
+	-webkit-backface-visibility: hidden;
+	-moz-backface-visibility: hidden;
+	-ms-backface-visibility: hidden;
+
+	/*font:12px Open Sans, Calibri, Arial, Helvetica, sans-serif;*/
+}
+
+.body {
+	overflow: hidden;
+	position: absolute;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+}
+
+
+@font-face {
+  font-family: 'Material Icons';
+  font-style: normal;
+  font-weight: 400;
+  src: url(../modules/WebServer/htdocs/iconfont/MaterialIcons-Regular.eot); /* For IE6-8 */
+  src: local('Material Icons'),
+       local('MaterialIcons-Regular'),
+       url(../modules/WebServer/htdocs/static/app/iconfont/MaterialIcons-Regular.woff2) format('woff2'),
+       url(../modules/WebServer/htdocs/static/app/iconfont/MaterialIcons-Regular.woff) format('woff'),
+       url(../modules/WebServer/htdocs/static/app/iconfont/MaterialIcons-Regular.ttf) format('truetype');
+}
+
+
+.material-icons {
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;  /* Preferred icon size */
+  display: inline-block;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+
+  /* Support for all WebKit browsers. */
+  -webkit-font-smoothing: antialiased;
+  /* Support for Safari and Chrome. */
+  text-rendering: optimizeLegibility;
+
+  /* Support for Firefox. */
+  -moz-osx-font-smoothing: grayscale;
+
+  /* Support for IE. */
+  font-feature-settings: 'liga';
+}
+
+/* Rules for sizing the icon. */
+.material-icons.md-18 { font-size: 18px; }
+.material-icons.md-24 { font-size: 24px; }
+.material-icons.md-36 { font-size: 36px; }
+.material-icons.md-48 { font-size: 48px; }
+
+/* Rules for using icons as black on a light background. */
+.material-icons.md-dark { color: rgba(0, 0, 0, 0.54); }
+.material-icons.md-dark.md-inactive { color: rgba(0, 0, 0, 0.26); }
+
+/* Rules for using icons as white on a dark background. */
+.material-icons.md-light { color: rgba(255, 255, 255, 1); }
+.material-icons.md-light.md-inactive { color: rgba(255, 255, 255, 0.3); }
+
+
+pre {
+  white-space: pre-wrap;
+  white-space: -moz-pre-wrap;
+  white-space: -o-pre-wrap;
+  word-wrap: break-word;
+  margin: 0;
+  line-height: normal;
+}
+
+code {
+  font-family: Courier, 'New Courier', monospace;
+  font-size: 12px;
+}

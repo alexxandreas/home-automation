@@ -4,55 +4,6 @@ global config, inherits, controller, MHA
 
 define('UtilsVDev', ['AbstractModule', 'UtilsTimers'], function(AbstractModule, UtilsTimers) {
 
-
-    /** Поиск vDev по заданному названию
-        parts = [part, part, ...]
-        parts = [part, [subPart, subPart, ...], ...]
-        part - строки, объединяются условием И
-        subPart - строки, объединяются условием ИЛИ
-        поиск регистронезависимый
-        ex: (['Кухня', 'свет'])
-        ex: ([
-            ['Кухня', 'Kitchen'],
-            ['свет', 'light']
-        ])
-        возвращает массив подходящих vDev        
-    */
-    function getDevicesByName(parts) {
-        //this.log('getDevicesByName ' + JSON.stringify(parts));
-        //var self = this;
-
-        var devices = [];
-        controller.devices.forEach(function(vDev) {
-            var devName = vDev.get('metrics:title') || '';
-            devName = devName.toLowerCase();
-            //self.log(devName);
-            if (parts.every(function(part) {
-                    if (part instanceof Array) {
-                        return part.some(function(subPart) {
-                            return devName.indexOf(subPart.toLowerCase()) >= 0;
-                        });
-                    }
-                    else {
-                        return devName.indexOf(part.toLowerCase()) >= 0;
-                    }
-                })) {
-                devices.push(vDev);
-            }
-        }, this);
-        return devices;
-    };
-    
-    /** Получение id физического устройства */
-    function getRealId(vDevId) {
-        //var id = vDev.id;
-        //var id = this.vDev.id;
-        var res = vDevId.match(/\D*(\d*).*/); // все не-числа (число) все-остальное
-        if (res.length >= 2) return res[1];
-        return null;
-    };
-
-
     function UtilsVDev(config) {
         UtilsVDev.super_.call(this, config);
     }
@@ -60,29 +11,29 @@ define('UtilsVDev', ['AbstractModule', 'UtilsTimers'], function(AbstractModule, 
     inherits(UtilsVDev, AbstractModule);
 
     // static
-    // UtilsVDev.createMHA = function(key, type, vDev) {
-    //     var mha = type && type.mha;
+    UtilsVDev.createMHA = function(key, type, vDev) {
+        var mha = type && type.mha;
         
-    //     if (mha == 'door')
-    //         return new Door(key, vDev);
-    //     else if (mha == 'virtualDoor')
-    //         return new VirtualDoor(key, vDev);
-    //     else if (mha == 'tabletopSwitch')
-    //         return new TabletopSwitch(key, vDev);
-    //     else if (mha == 'FGD211') 
-    //         return new FGD211(key, vDev);  
-    //     else if (mha == 'rgb')
-    //         return new RGB(key, vDev);
-    //     else if (mha == 'switchOnOff')
-    //         return new SwitchOnOff(key, vDev);
+        if (mha == 'door')
+            return new DoorMHA(key, vDev);
+        else if (mha == 'virtualDoor')
+            return new VirtualDoorMHA(key, vDev);
+        else if (mha == 'tabletopSwitch')
+            return new TabletopSwitchMHA(key, vDev);
+        else if (mha == 'FGD211') 
+            return new FGD211MHA(key, vDev);  
+        else if (mha == 'rgb')
+            return new RGBMHA(key, vDev);
+        else if (mha == 'switchOnOff')
+            return new SwitchOnOff(key, vDev);
         
             
-    //     return new DefaultDevice(key, vDev);
-    // };
+        return new DefaultMHA(key, vDev);
+    };
 
-    // UtilsVDev.destroyMHA = function(vDev) {
-    //     vDev.MHA && vDev.MHA.destroy && vDev.MHA.destroy();
-    // };
+    UtilsVDev.destroyMHA = function(vDev) {
+        vDev.MHA && vDev.MHA.destroy && vDev.MHA.destroy();
+    };
 
 
     UtilsVDev.prototype.stop = function() {
@@ -96,25 +47,15 @@ define('UtilsVDev', ['AbstractModule', 'UtilsTimers'], function(AbstractModule, 
     /************************ Default *************************/
     /**********************************************************/
 
-    // function DefaultDevice(key, vDev) {
-    function DefaultDevice(config) {
-        
-        // this.key = key;
-        // this.vDev = vDev;
-        // vDev.MHA = this; 
-        this.config = config;
-        
-        this.inited = false;
-        // this.realId = null; // id физического устройства
-        this.hwDev = null;
-        
-        //this._initDevice();
+    function DefaultMHA(key, vDev) {
+        this.key = key;
+        this.vDev = vDev;
+        vDev.MHA = this;   
 
         // время последнего изменения значения
         this._lastLevelChange = Date.now();
 
         this._eventHandlers = [];   
-
 
         // массив модулей, которые используют девайс в текущий момент
         // когда модуль включает девайс - он добавляется в этот массив
@@ -132,61 +73,19 @@ define('UtilsVDev', ['AbstractModule', 'UtilsTimers'], function(AbstractModule, 
         
         this._baseLevelChangeHandler = this.getLevel.bind(this);
 
+        controller.devices.on(vDev.id, 'change:metrics:level', this._baseLevelChangeHandler);
     }
-    
-    UtilsVDev.DefaultDevice = DefaultDevice;
-    
-    DefaultDevice.prototype.initDevice = function() {
-        
-        var vDevs = getDevicesByName(this.config.name);
-        if (vDevs.length == 0) {
-            this.log('Error: initDevice(' + '): not found: ' + JSON.stringify(this.config.name));
-            return;
-        }
-        else if (vDevs.length > 1) {
-            var text = vDevs.map(function(vDev) {
-                return vDev.id + '(' + vDev.get('metrics:title') + ')';
-            }).join(', ');
-            this.log('Error: initDevice(' + '): found ' + vDevs.length + 'devices: ' + text);
-            return;
-        }
-        
-        this.vDev = vDevs[0];
-        this.vDev.MHA = this;
-        var realId = getRealId(this.vDev.id);
-        realId && this.hwDev.setId(realId);
-        
-        controller.devices.on(this.vDev.id, 'change:metrics:level', this._baseLevelChangeHandler);
-        
-        this.inited = true;
-        
-        
-        // this.devices[key] = vDev;
-        // UtilsVDev.createMHA(key, type, vDev);
-        // try {
-        //     this.initHWDev(key);
-        // } catch (err) {
-        //     this.log("Error: Unable to init hardware device: " + key + "\n" + err.stack);
-        // }
-        // 
-        //     this._pushDevice(key, this.devs[key].type, vDevs[0]);
-        // 
-    };
-    
-    
-    
-    
 
-    DefaultDevice.prototype.log = function(data) {
+    DefaultMHA.prototype.log = function(data) {
         return MHA.prefixLog('UtilsVDev(' + this.key + ')', data);
     };
     
-    DefaultDevice.prototype.getTimers = function() {
+    DefaultMHA.prototype.getTimers = function() {
         this._timers = this._timers || new UtilsTimers(); 
         return this._timers;
     };
 
-    DefaultDevice.prototype.getLevel = function() {
+    DefaultMHA.prototype.getLevel = function() {
         var newLevel = this._getLevel();
         if (newLevel != this._lastLevel) {
             // обновляем значение 
@@ -215,18 +114,18 @@ define('UtilsVDev', ['AbstractModule', 'UtilsTimers'], function(AbstractModule, 
      * Возвращает уровень, который должен быть установлен для 
      * устройства, но пока еще не установился по причине затупа сети
      */
-    DefaultDevice.prototype.getPendingLevel = function(){
+    DefaultMHA.prototype.getPendingLevel = function(){
         //if (this._pendingLevel !== undefined)
             return this._pendingLevel;
         //else 
         //    return this.getLevel();
     }
 
-    DefaultDevice.prototype._getLevel = function() {
+    DefaultMHA.prototype._getLevel = function() {
         return this.vDev.get("metrics:level");
     }
 
-    DefaultDevice.prototype.lastLevelChange = function(delta) {
+    DefaultMHA.prototype.lastLevelChange = function(delta) {
         if (delta)
             return Date.now() - this._lastLevelChange;
         else
@@ -235,7 +134,7 @@ define('UtilsVDev', ['AbstractModule', 'UtilsTimers'], function(AbstractModule, 
 
     
 
-    DefaultDevice.prototype.onEvent = function(handler, scope) {
+    DefaultMHA.prototype.onEvent = function(handler, scope) {
         this._eventHandlers.push({
             handler: handler,
             scope: scope
@@ -243,12 +142,12 @@ define('UtilsVDev', ['AbstractModule', 'UtilsTimers'], function(AbstractModule, 
     };
     
     // подписка на событие изменения значения
-    // DefaultDevice.prototype._baseLevelChangeHandler = function() {
+    // DefaultMHA.prototype._baseLevelChangeHandler = function() {
     //     this.getLevel();
     // };
 
     // отписка от события изменения значения
-    DefaultDevice.prototype.offEvent = function(handler, scope) {
+    DefaultMHA.prototype.offEvent = function(handler, scope) {
         this._eventHandlers = this._eventHandlers.filter(function(obj) {
             return (obj.handler != handler);
         });
@@ -266,7 +165,7 @@ define('UtilsVDev', ['AbstractModule', 'UtilsTimers'], function(AbstractModule, 
      *      args = {level: 44} - установить уровень 44, по умолчанию - 0
      *      args = {red: 12, green: 33, blue: 44} - установить уровни для RGB
      */
-    DefaultDevice.prototype.performCommand = function(initiator, command, args) {
+    DefaultMHA.prototype.performCommand = function(initiator, command, args) {
         if (command == 'off') {
             delete this._usedBy[initiator];
             if (args && args.force) { // принудительно выключаем
@@ -290,7 +189,7 @@ define('UtilsVDev', ['AbstractModule', 'UtilsTimers'], function(AbstractModule, 
     };
 
     // вызывает обновление состояние устройства в соответствии с текущими _usedBy
-    DefaultDevice.prototype._updateState = function() {
+    DefaultMHA.prototype._updateState = function() {
         var initiators = Object.keys(this._usedBy);
 
         var command = 'off';
@@ -314,7 +213,7 @@ define('UtilsVDev', ['AbstractModule', 'UtilsTimers'], function(AbstractModule, 
 
 
 
-    DefaultDevice.prototype._action = function(command, args) {
+    DefaultMHA.prototype._action = function(command, args) {
         // оборачиваем логгер
 
         var log = function(data) {
@@ -380,7 +279,7 @@ define('UtilsVDev', ['AbstractModule', 'UtilsTimers'], function(AbstractModule, 
     };
 
 
-    DefaultDevice.prototype._run = function(actionObj) {
+    DefaultMHA.prototype._run = function(actionObj) {
         try {
             // сколько секунд прошло с запуска
             var seconds = (Date.now() - actionObj.startTime) / 1000;
@@ -425,7 +324,7 @@ define('UtilsVDev', ['AbstractModule', 'UtilsTimers'], function(AbstractModule, 
     };
     
     
-    DefaultDevice.prototype._getOnCommand = function(){
+    DefaultMHA.prototype._getOnCommand = function(){
         return {
             action:function() {
                 this.vDev.performCommand('on');
@@ -437,7 +336,7 @@ define('UtilsVDev', ['AbstractModule', 'UtilsTimers'], function(AbstractModule, 
         }
     };
     
-    DefaultDevice.prototype._getOffCommand = function(){
+    DefaultMHA.prototype._getOffCommand = function(){
         return {
             action: function() {
                 this.vDev.performCommand('off');
@@ -449,7 +348,7 @@ define('UtilsVDev', ['AbstractModule', 'UtilsTimers'], function(AbstractModule, 
         }
     };
     
-    DefaultDevice.prototype._getExactCommand = function(args){
+    DefaultMHA.prototype._getExactCommand = function(args){
         return {
             action: function() {
                 this.vDev.performCommand('exact', args);
@@ -467,7 +366,7 @@ define('UtilsVDev', ['AbstractModule', 'UtilsTimers'], function(AbstractModule, 
     };
     
    
-    // DefaultDevice.prototype._run = function() {
+    // DefaultMHA.prototype._run = function() {
     //     var log = this._actionObj && this._actionObj.log || this.log;
         
     //     try {
@@ -494,7 +393,7 @@ define('UtilsVDev', ['AbstractModule', 'UtilsTimers'], function(AbstractModule, 
     //     }
     // };
     
-    // DefaultDevice.prototype._runOnTimeout = function(){
+    // DefaultMHA.prototype._runOnTimeout = function(){
     //     var log = this._actionObj && this._actionObj.log || this.log;
         
     //     try {
@@ -521,7 +420,7 @@ define('UtilsVDev', ['AbstractModule', 'UtilsTimers'], function(AbstractModule, 
     //     }
     // }
 
-    DefaultDevice.prototype.destroy = function() {
+    DefaultMHA.prototype.destroy = function() {
         controller.devices.off(this.vDev.id, 'change:metrics:level', this._baseLevelChangeHandler);
         this._action(); // останавливаем action
         this._timers && this._timers.stop();
@@ -542,22 +441,21 @@ define('UtilsVDev', ['AbstractModule', 'UtilsTimers'], function(AbstractModule, 
     /************************** RGB ***************************/
     /**********************************************************/
     
-    function RGB() {
-        RGB.super_.apply(this, arguments);
+    function RGBMHA(key, vDev) {
+        RGBMHA.super_.apply(this, arguments);
     }
 
-    inherits(RGB, DefaultDevice);
-    UtilsVDev.RGB = RGB;
+    inherits(RGBMHA, DefaultMHA);
     
     /**
      *  Возвращает установленный цвет в формате {"r": 90, "g": 45, "b": 45}
      */
-    RGB.prototype.getColor = function() {
+    RGBMHA.prototype.getColor = function() {
         return this.vDev.get("metrics:color");
     }
     
     // вызывает обновление состояние устройства в соответствии с текущими _usedBy
-    DefaultDevice.prototype._updateState = function() {
+    DefaultMHA.prototype._updateState = function() {
         var initiators = Object.keys(this._usedBy);
 
         var command = 'off';
@@ -585,7 +483,7 @@ define('UtilsVDev', ['AbstractModule', 'UtilsTimers'], function(AbstractModule, 
         this._action(command, args);
     };
     
-    RGB.prototype._getExactCommand = function(args){
+    RGBMHA.prototype._getExactCommand = function(args){
         return {
             action: function() {
                 this.vDev.performCommand('exact', args);
@@ -615,14 +513,13 @@ define('UtilsVDev', ['AbstractModule', 'UtilsTimers'], function(AbstractModule, 
     /************************** DOOR **************************/
     /**********************************************************/
         
-    function Door() {
-        Door.super_.apply(this, arguments);
+    function DoorMHA(key, vDev) {
+        DoorMHA.super_.apply(this, arguments);
     }
 
-    inherits(Door, DefaultDevice);
-    UtilsVDev.Door = Door;
+    inherits(DoorMHA, DefaultMHA);
     
-    Door.prototype._getLevel = function() {
+    DoorMHA.prototype._getLevel = function() {
         var level = this.vDev.get("metrics:level");
         if (level == 'on' || level > 50) {
             return 'off'; // закрыта
@@ -639,16 +536,15 @@ define('UtilsVDev', ['AbstractModule', 'UtilsTimers'], function(AbstractModule, 
     /********************** VIRTUAL DOOR **********************/
     /**********************************************************/
         
-    function VirtualDoor() {
-        VirtualDoor.super_.apply(this, arguments);
+    function VirtualDoorMHA(key, vDev) {
+        VirtualDoorMHA.super_.apply(this, arguments);
         
         this.closeTime = 5*1000; // время в мс, через которое дверь будет закрыта
     }
 
-    inherits(VirtualDoor, DefaultDevice);
-    UtilsVDev.VirtualDoor = VirtualDoor;
+    inherits(VirtualDoorMHA, DefaultMHA);
     
-    VirtualDoor.prototype._getLevel = function() {
+    VirtualDoorMHA.prototype._getLevel = function() {
         var level = this.vDev.get("metrics:level");
         var mode = level > 50 ? 'off' : 'on';
         
@@ -657,7 +553,7 @@ define('UtilsVDev', ['AbstractModule', 'UtilsTimers'], function(AbstractModule, 
         // если дверь открылась - сразу возвращаем результат
         if (mode == 'on') {
             if (this._lastLevel != 'on')
-                this.log('VirtualDoor._getLevel: ' + 'open');
+                this.log('VirtualDoorMHA._getLevel: ' + 'open');
             this._closeTime = null;
             return 'on';
         }
@@ -670,7 +566,7 @@ define('UtilsVDev', ['AbstractModule', 'UtilsTimers'], function(AbstractModule, 
         
         
         if (!this._closeTime) {
-            this.log('VirtualDoor._getLevel: ' + 'close (sensor)');
+            this.log('VirtualDoorMHA._getLevel: ' + 'close (sensor)');
             
             this._closeTime = Date.now();
             
@@ -682,7 +578,7 @@ define('UtilsVDev', ['AbstractModule', 'UtilsTimers'], function(AbstractModule, 
             var timeFromClose = Date.now() - this._closeTime;
             if (timeFromClose > this.closeTime){
                 this._closeTime = null;
-                this.log('VirtualDoor._getLevel: ' + 'close (timeout ' + this.closeTime/1000 + ' sec)');
+                this.log('VirtualDoorMHA._getLevel: ' + 'close (timeout ' + this.closeTime/1000 + ' sec)');
                 return 'off';
             } else {
                 this.closeDoorTimeout = setTimeout(
@@ -695,19 +591,19 @@ define('UtilsVDev', ['AbstractModule', 'UtilsTimers'], function(AbstractModule, 
         return 'on';
     }
     
-    VirtualDoor.prototype.onCloseDoorTimer = function(){
+    VirtualDoorMHA.prototype.onCloseDoorTimer = function(){
         this.clearCloseDoorTimer();
         this.getLevel();
     }
     
-    VirtualDoor.prototype.clearCloseDoorTimer = function(){
+    VirtualDoorMHA.prototype.clearCloseDoorTimer = function(){
         this.closeDoorTimeout && clearTimeout(this.closeDoorTimeout);
         this.closeDoorTimeout = null;
     }
     
-    VirtualDoor.prototype.destroy = function() {
+    VirtualDoorMHA.prototype.destroy = function() {
         this.clearCloseDoorTimer();
-        VirtualDoor.super_.prototype.destroy.apply(this, arguments);
+        VirtualDoorMHA.super_.prototype.destroy.apply(this, arguments);
     }
     
     
@@ -718,14 +614,13 @@ define('UtilsVDev', ['AbstractModule', 'UtilsTimers'], function(AbstractModule, 
     /********************* TabletopSwitch *********************/
     /**********************************************************/
         
-    function TabletopSwitch() {
-        TabletopSwitch.super_.apply(this, arguments);
+    function TabletopSwitchMHA(key, vDev) {
+        TabletopSwitchMHA.super_.apply(this, arguments);
     }
 
-    inherits(TabletopSwitch, DefaultDevice);
-    UtilsVDev.TabletopSwitch = TabletopSwitch;
+    inherits(TabletopSwitchMHA, DefaultMHA);
     
-    TabletopSwitch.prototype._getLevel = function() {
+    TabletopSwitchMHA.prototype._getLevel = function() {
         var level = this.vDev.get("metrics:level");
         var mode = level > 70 ? 'off' : level > 35 ? 'half' : 'on';
         return mode;
@@ -736,12 +631,11 @@ define('UtilsVDev', ['AbstractModule', 'UtilsTimers'], function(AbstractModule, 
     /*********************** SwitchOnOff **********************/
     /**********************************************************/
         
-    function SwitchOnOff() {
+    function SwitchOnOff(key, vDev) {
         SwitchOnOff.super_.apply(this, arguments);
     }
 
-    inherits(SwitchOnOff, DefaultDevice);
-    UtilsVDev.SwitchOnOff = SwitchOnOff;
+    inherits(SwitchOnOff, DefaultMHA);
     
     SwitchOnOff.prototype.performCommand = function(initiator, command, args) {
         var newCommand = command;
@@ -763,8 +657,8 @@ define('UtilsVDev', ['AbstractModule', 'UtilsTimers'], function(AbstractModule, 
     /************************* FGD211 *************************/
     /**********************************************************/
         
-    function FGD211() {
-        FGD211.super_.apply(this, arguments);
+    function FGD211MHA(key, vDev) {
+        FGD211MHA.super_.apply(this, arguments);
         
         this._scenes = {
             '10': {name: "UpClick"}, //"Switch from off to on",
@@ -788,16 +682,15 @@ define('UtilsVDev', ['AbstractModule', 'UtilsTimers'], function(AbstractModule, 
         this._initScenes();
     }
 
-    inherits(FGD211, DefaultDevice);
-    UtilsVDev.FGD211 = FGD211;
+    inherits(FGD211MHA, DefaultMHA);
     
-    FGD211.prototype._initScenes = function() {
+    FGD211MHA.prototype._initScenes = function() {
         Object.keys(this._scenes).forEach(function(sceneId) {
             this._initScene(sceneId);
         }, this); 
     }
     
-    FGD211.prototype._initScene = function(sceneId) {
+    FGD211MHA.prototype._initScene = function(sceneId) {
         //this.log('initScene(' + sceneId + ': ' + this._scenes[sceneId].name + ')')
         var realId = this._getRealId();
         if (realId == null) return;
@@ -821,7 +714,7 @@ define('UtilsVDev', ['AbstractModule', 'UtilsTimers'], function(AbstractModule, 
         
     };
     
-    FGD211.prototype._baseSceneHandler = function(sceneId){
+    FGD211MHA.prototype._baseSceneHandler = function(sceneId){
         this._eventHandlers.forEach(function(obj) {
             var event = {
                 type: 'scene',
@@ -839,7 +732,7 @@ define('UtilsVDev', ['AbstractModule', 'UtilsTimers'], function(AbstractModule, 
     }
     
     /** Получение id физического устройства */
-    FGD211.prototype._getRealId = function(vDevId) {
+    FGD211MHA.prototype._getRealId = function(vDevId) {
         //var id = vDev.id;
         var id = this.vDev.id;
         var res = id.match(/\D*(\d*).*/); // все не-числа (число) все-остальное
@@ -847,13 +740,13 @@ define('UtilsVDev', ['AbstractModule', 'UtilsTimers'], function(AbstractModule, 
         return null;
     };
     
-    FGD211.prototype.destroy = function() {
+    FGD211MHA.prototype.destroy = function() {
         Object.keys(this._scenes).forEach(function(sceneId) {
             if (this._scenes[sceneId].handler)
                 controller.devices.off(this._scenes[sceneId].sceneName, 'change:metrics:level', this._scenes[sceneId].handler);
         }, this); 
         
-        FGD211.super_.prototype.destroy.apply(this, arguments);
+        FGD211MHA.super_.prototype.destroy.apply(this, arguments);
     }
    
     

@@ -1,10 +1,10 @@
-config = {
+/*config = {
    modules: [{
        name: 'AbstractModule'
    },{
        name: 'WebServer'
    },{
-       name: 'WebApp'
+       name: 'DeviceStorage'
    },{
        name: 'TestModule', 
        // module: сюда запишется ссылка на экземпляр модуля
@@ -13,5 +13,5 @@ config = {
            param2: 'bbb'
        }
    }]
-};
+};*/
 

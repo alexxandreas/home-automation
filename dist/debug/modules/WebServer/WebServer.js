@@ -1,5 +1,5 @@
-module = (function(){
-    
+define('WebServer', ['AbstractModule'], function(AbstractModule){
+
     /**
      * 
      * 
@@ -12,17 +12,29 @@ module = (function(){
         this.name = 'WebServer';
         this.log('construcror');
         
+        this.panels = [];
+        
         //this.log(JSON.stringify(config, '', 4));
         this._startWebServer();
     }
     
   
-    inherits(WebServer, MHA.modules.AbstractModule);
+    inherits(WebServer, AbstractModule);
     
     WebServer.prototype.stop = function(){
         this._stopWebServer();
         WebServer.super_.prototype.stop.apply(this, arguments);
     }
+    
+    WebServer.prototype.addPanel = function(panel){
+        this.panels.push(panel);
+    };
+    
+    WebServer.prototype.removePanel = function(key){
+      this.panels = this.panels.filter(function(panel){
+          return panel.key != key;
+      });
+    };
     
     /**
      * route - строка, из которой потом сформируется RegExp 
@@ -34,7 +46,7 @@ module = (function(){
      */
     WebServer.prototype.addRoute = function(route, handler, scope){
         var obj = {
-            pattern: new RegExp('^'+route.replace(/:\w+/g, '(.+)')+'$'),
+            pattern: new RegExp('^' + route.replace(/:\w+/g, '([\\s\\S]+)') + '$'),
             callback: scope ? handler.bind(scope) : handler
         } 
         this.routes.push(obj);
@@ -47,7 +59,7 @@ module = (function(){
     	
         // define global handler for HTTP requests
         mha = (function(url, request) {
-            this.log('request: ' + url);
+            //this.log('request: ' + url);
             
         	var i = this.routes.length;
             while( i-- ){
@@ -57,7 +69,7 @@ module = (function(){
                }
             }
         	
-        	this.log('route not found');
+        	this.log('request: ' + url +' route not found');
 		    return {
     		    status: 404
     		}
@@ -66,46 +78,52 @@ module = (function(){
         ws.allowExternalAccess("mha", controller.auth.ROLE.ANONYMOUS); // login required
     	
     	//this.addDefaultRoutes();
-    	this._addModulesRoutes();
+    	this._initRoutes();
     };
     
-    WebServer.prototype._addModulesRoutes = function(){
-        this.addRoute('/modules/:module/htdocs/:path', function(args){
-            return this.sendFile('modules/' + args[0] + '/htdocs/' + args[1]);
-            //return this._sendStatic(args[0], args[1]);
-        }, this);
-        
-        this.addRoute('/htdocs/:path', function(args){
+    WebServer.prototype._initRoutes = function(){
+        // index
+        this.addRoute('/', rootHandler, this);
+    	this.addRoute('/index.html', rootHandler, this);
+    	
+    	function rootHandler(params){
+    		this.log('get index: ' + JSON.stringify(params));
+    		//return this.sendFile('modules/WebServer/htdocs/index.html');
+    		return this.sendFile('htdocs/index.html');
+    	}
+    	
+    	// root htdocs
+    	this.addRoute('/htdocs/:path', function(args){
             return this.sendFile('htdocs/' + args[0]);
-            //return this._sendStatic(args[0], args[1]);
         }, this);
+        
+        // module htdocs
+    	this.addRoute('/modules/:module/htdocs/:path', function(args){
+            return this.sendFile('modules/' + args[0] + '/htdocs/' + args[1]);
+        }, this);
+        
+        // WebServer Panels
+        this.addRoute('/modules/'+this.name+'/api/panels', function(args){
+    	    return this.sendJSON(this.panels);
+    	   
+    	}, this);
+        
         
     };
     
-    // WebServer.prototype.addDefaultRoutes = function(){
-    // 	this.addRoute('/', rootHandler, this);
-    // 	this.addRoute('/index.html', rootHandler, this);
-    	
-    // 	function rootHandler(params){
-    // 		this.log('get index: ' + JSON.stringify(params));
-    // 		return this.sendFile('modules/WebServer/htdocs/index.html');
-    // 	}
-    	
-    // };
-    	
-    // WebServer.prototype._sendStatic = function(moduleName, path){
-    //     return this.sendFile('modules/' + moduleName + '/htdocs/' + path);
-    // }	
+    
+   
 
     WebServer.prototype._getMimeType = function(path){
         var ext = path.split("/").pop().split(".").pop();
         return this._mimeTypes[ext] || 'application/octet-stream';
     }
     	
+    	
     WebServer.prototype.sendFile = function(path){
         var root = MHA.fsRoot; //  'modules/MyHomeAutomation/';
         
-        this.log('sendFile: ' + root + path);
+        //this.log('sendFile: ' + root + path);
 
         try {
         
@@ -113,7 +131,9 @@ module = (function(){
             
             var data = fs.load(root + path);
             
+            try{
             data = decodeURIComponent(escape(data));
+            } catch(err) {}
             
             var result = {
                 status: 200,
@@ -126,26 +146,40 @@ module = (function(){
             return result;
         
         } catch(err) {
-            this.log('sendFile Error: ' + err.toString() + "\n" + err.stack);
-            
-            return {
-                status: 500,
-                headers: {
-                    "Content-Type": "text/plain",
-                    "Connection": "keep-alive"
-                },
-                body: err.toString() + "\n" + err.stack
-            }
+            this.log('sendFile Error (' + path + '): ' + err.toString());
+            return this.sendError(500, err.toString() + "\n" + err.stack);
         }
         
     };
+    
+    WebServer.prototype.sendError = function(status, body){
+        return {
+            status: status,
+            headers: {
+                "Content-Type": "text/plain",
+                "Connection": "keep-alive"
+            },
+            body: body
+        }
+    };
+    
+    WebServer.prototype.sendJSON = function(data){
+        return {
+            status: 200,
+            headers: {
+                "Content-Type": 'application/json',
+		        "Connection": "keep-alive"
+            },
+            body: data
+        }
+    };
     	
-    
-    
     WebServer.prototype._stopWebServer = function (){
     	ws.revokeExternalAccess("mha");
         mha = null;
     };
+    
+    
     
     WebServer.prototype._mimeTypes = {
         "ez": "application/andrew-inset",
@@ -729,5 +763,5 @@ module = (function(){
     
     return new WebServer(config);
     
-})()
+});
 
