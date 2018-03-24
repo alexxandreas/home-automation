@@ -108,6 +108,7 @@ define('UtilsVDev', ['AbstractModule', 'UtilsTimers', 'UtilsJSON'], function(Abs
         // this.realId = null; // id физического устройства
         this.hwDev = null;
         
+        // инициализируется из hwDev путем вызова setHWDev
         //this._initDevice();
 
         // время последнего изменения значения
@@ -135,6 +136,11 @@ define('UtilsVDev', ['AbstractModule', 'UtilsTimers', 'UtilsJSON'], function(Abs
     }
     
     UtilsVDev.DefaultDevice = DefaultDevice;
+    
+    DefaultDevice.prototype.setHWDev = function(hwDev) {
+        this.hwDev = hwDev;
+        this.initDevice();
+    };
     
     DefaultDevice.prototype.initDevice = function() {
         
