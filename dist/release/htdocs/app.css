@@ -31,38 +31,6 @@
     /*font-weight: bold;*/
     outline: none;
 } 
-.RemoteConsole {
-    
-}
-
-.RemoteConsole .inputText1 {
-    height:5in; 
-    width:100%; 
-    font-family: monospace; 
-    font-size: 16; 
-    font-weight: bold;
-}
-
-
-.RemoteConsole .outputText1 {
-    height:5in; 
-    width:100%; 
-    font-family: monospace; 
-    font-size: 16; 
-    font-weight: bold;
-}
-
-.RemoteConsole textarea {
-    height:100%; 
-    /*width:100%; */
-    margin: 5px;
-    font-family: monospace; 
-    font-size: 14px; 
-    /*font-weight: bold;*/
-    outline: none;
-}
-
-
 .Status {
     
 }
@@ -126,6 +94,38 @@
 .Status .map-control {
     
 }
+.RemoteConsole {
+    
+}
+
+.RemoteConsole .inputText1 {
+    height:5in; 
+    width:100%; 
+    font-family: monospace; 
+    font-size: 16; 
+    font-weight: bold;
+}
+
+
+.RemoteConsole .outputText1 {
+    height:5in; 
+    width:100%; 
+    font-family: monospace; 
+    font-size: 16; 
+    font-weight: bold;
+}
+
+.RemoteConsole textarea {
+    height:100%; 
+    /*width:100%; */
+    margin: 5px;
+    font-family: monospace; 
+    font-size: 14px; 
+    /*font-weight: bold;*/
+    outline: none;
+}
+
+
 html, body {
 	width: 100%;
 	height: 100%;

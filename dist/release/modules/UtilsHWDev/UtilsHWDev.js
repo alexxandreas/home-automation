@@ -42,7 +42,10 @@ define('UtilsHWDev', ['AbstractModule'], function(AbstractModule) {
             })
         }, this);
         
-        this.id = config.id
+        this.id = config.id;
+        
+        this.devs = config.devs;
+        
         
         // установка wake up interval
         // https://zway.alexandreas.ru/ZWaveAPI/Run/devices[18].instances[0].commandClasses[0x84].Set(60,1)
@@ -53,7 +56,11 @@ define('UtilsHWDev', ['AbstractModule'], function(AbstractModule) {
     };
     
     UtilsHWDev.HWDev.prototype.setId = function(id) {
+        if (this.id) return;
         this.id = id;
+        if (!this.id) return;
+        
+        setTimeout(this.applyConfigParams.bind(this), 5*1000);
     };
     
     UtilsHWDev.HWDev.prototype.getConfigParam = function(paramId, callback) {
@@ -97,7 +104,7 @@ define('UtilsHWDev', ['AbstractModule'], function(AbstractModule) {
     };
     
     UtilsHWDev.HWDev.prototype.applyConfigParams = function() {
-        if (this.id == null) return;
+        
         this.log('applyConfigParams(' + this.id + ')');
         
         if (!this.configParams.length) return;
@@ -146,7 +153,9 @@ define('UtilsHWDev', ['AbstractModule'], function(AbstractModule) {
     };
     
     
-    
+    UtilsHWDev.HWDev.prototype.destroy = function(){
+          
+    };
     
 
     /**********************************************************/
