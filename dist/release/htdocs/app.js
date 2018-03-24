@@ -329,47 +329,63 @@ angular
 (function () {
     "use strict";
     angular.module('WebApp')
-        .controller('LoggerCtrl', LoggerCtrl);
+        .controller('DeviceStorageCtrl', DeviceStorageCtrl);
 
-    LoggerCtrl.$inject = [
+    DeviceStorageCtrl.$inject = [
         '$scope',
-        '$rootScope',
         '$http',
         '$timeout',
-        '$window',
-        '$sce',
-        '$mdDialog',
-        'LoggerSrv'
+        'DeviceStorageSrv'
     ];
 
-    function LoggerCtrl(
+    function DeviceStorageCtrl(
         $scope,
-        $rootScope,
         $http,
         $timeout,
-        $window,
-        $sce,
-        $mdDialog,
-        LoggerSrv
+        DeviceStorageSrv
     ) {
+        $scope.allDevices = {};
         
-        $scope.logData = "";
+        $scope.devices = {};
+        //$interval(reload, 1000);
         reload();
-
+        
+        
         var reloadTimeout;
         function reload(){
-            LoggerSrv.reload().then(function(data){
-                //data.forEach(function(dev){                });
-                $scope.logData = data.map(function(item){
-                    var date = new Date(item.time);
-                    return '[' + date.toLocaleDateString() + ' ' + date.toLocaleTimeString() + '] ' + item.data;
-                }).join('\n');
+            DeviceStorageSrv.reload().then(function(data){
+                data.forEach(function(dev){
+                    $scope.allDevices[dev.key] = $scope.allDevices[dev.key] || {};
+                    angular.extend($scope.allDevices[dev.key], dev);
+                });
+                $scope.devices = $scope.allDevices;
             }).finally(function(){
                 if (!$scope.$$destroyed) 
-                    reloadTimeout = $timeout(reload, 2000);
+                    reloadTimeout = $timeout(reload, 1000);
             })
         }
-
+        
+        $scope.getValueButtonClass = function(device){
+            if (device.level === 0 || device.level.toString().toLowerCase() === 'off')
+                return 'redButon';
+            else if (device.level === 99 || device.level.toString().toLowerCase() === 'on')
+                return 'greenButon';
+            return 'yellowButon';
+        }
+        
+        $scope.formatTime = function(ms){
+            var sec = Math.round(ms/1000);
+            var min = Math.trunc(sec / 60);
+            var hour = Math.trunc(min / 60);
+            var day = Math.trunc(hour / 24);
+            var text = '';
+            if (day > 0 || text) text += day + 'd ';
+            if (hour > 0 || text) text += (hour % 24) + 'h ';
+            if (min > 0 || text) text += (min % 60) + 'm ';
+            if (sec > 0 || text) text += (sec % 60) + 's';
+            return text;
+        }
+        
         $scope.$on("$destroy", function() {
             if (reloadTimeout) {
                 $timeout.cancel(reloadTimeout);
@@ -382,41 +398,114 @@ angular
 (function () {
     "use strict";
     angular.module('WebApp')
-        .factory('LoggerSrv', LoggerSrv);
+        .factory('DeviceStorageSrv', DeviceStorageSrv);
 
 
     // инициализируем сервис
-    //angular.module('WebApp').run(['LoggerSrv', function(ApiSrv) {  }]);
+    //angular.module('WebApp').run(['DeviceStorageSrv', function(ApiSrv) {  }]);
     
-    LoggerSrv.$inject = [
+    DeviceStorageSrv.$inject = [
         '$http',
-        'PanelsSrv'
     ];
     
-    function LoggerSrv(
-        $http,
-        PanelsSrv
+    function DeviceStorageSrv(
+        $http
     ) {
         
-        var lastTime = 0;
-        var logArray = [];
         
         function reload(){
-            return $http.get('modules/Logger/api/getLog/' + lastTime).then(function(response){
-                var arr = response.data;
-                logArray = logArray.concat(arr).slice(-1000);
-                lastTime = logArray[logArray.length-1].time;
-                return logArray;
+            return $http.get('modules/DeviceStorage/api/state').then(function(response){
+                return response.data;
             });
         }
-        
-        
         
         var me = {
             reload: reload
         };
         
         return me;
+    }
+}());
+(function () {
+    "use strict";
+    angular.module('WebApp')
+        .controller('StatusCtrl', StatusCtrl);
+
+    StatusCtrl.$inject = [
+        '$scope',
+        '$rootScope',
+        '$http',
+        '$timeout',
+        '$window',
+        '$sce',
+        '$mdDialog'
+        //'StatusSrv'
+    ];
+
+    function StatusCtrl(
+        $scope,
+        $rootScope,
+        $http,
+        $timeout,
+        $window,
+        $sce,
+        $mdDialog
+        //StatusSrv
+    ) {
+        // $scope.statusData = "";
+        // reload();
+
+        // var reloadTimeout;
+        // function reload(){
+        //     StatusSrv.reload().then(function(data){ 
+        //         $scope.statusData = JSON.stringify(data, null, '  ');
+        //     }).finally(function(){
+        //         if (!$scope.$$destroyed) 
+        //             reloadTimeout = $timeout(reload, 1000);
+        //     })
+        // }
+
+        // $scope.$on("$destroy", function() {
+        //     if (reloadTimeout) {
+        //         $timeout.cancel(reloadTimeout);
+        //     }
+        // });
+        
+        
+    }
+
+}());
+(function () {
+    "use strict";
+    angular.module('WebApp')
+        .factory('StatusSrv', StatusSrv);
+
+
+    // инициализируем сервис
+    //angular.module('WebApp').run(['StatusSrv', function(ApiSrv) {  }]);
+    
+    StatusSrv.$inject = [
+        '$http'
+    ];
+    
+    function StatusSrv(
+        $http
+    ) {
+        
+        
+        // function reload(){
+        //     return $http.get('modules/Status/api/status').then(function(response){
+        //         return response.data;
+        //     });
+        // }
+        
+        
+        // var me = {
+        //     reload: reload
+        // }
+        
+        // return me;
+        return null;
     }
 }());
 (function () {
@@ -618,145 +707,47 @@ angular
 (function () {
     "use strict";
     angular.module('WebApp')
-        .controller('StatusCtrl', StatusCtrl);
+        .controller('LoggerCtrl', LoggerCtrl);
 
-    StatusCtrl.$inject = [
+    LoggerCtrl.$inject = [
         '$scope',
         '$rootScope',
         '$http',
         '$timeout',
         '$window',
         '$sce',
-        '$mdDialog'
-        //'StatusSrv'
+        '$mdDialog',
+        'LoggerSrv'
     ];
 
-    function StatusCtrl(
+    function LoggerCtrl(
         $scope,
         $rootScope,
         $http,
         $timeout,
         $window,
         $sce,
-        $mdDialog
-        //StatusSrv
-    ) {
-        // $scope.statusData = "";
-        // reload();
-
-        // var reloadTimeout;
-        // function reload(){
-        //     StatusSrv.reload().then(function(data){ 
-        //         $scope.statusData = JSON.stringify(data, null, '  ');
-        //     }).finally(function(){
-        //         if (!$scope.$$destroyed) 
-        //             reloadTimeout = $timeout(reload, 1000);
-        //     })
-        // }
-
-        // $scope.$on("$destroy", function() {
-        //     if (reloadTimeout) {
-        //         $timeout.cancel(reloadTimeout);
-        //     }
-        // });
-        
-        
-    }
-
-}());
-(function () {
-    "use strict";
-    angular.module('WebApp')
-        .factory('StatusSrv', StatusSrv);
-
-
-    // инициализируем сервис
-    //angular.module('WebApp').run(['StatusSrv', function(ApiSrv) {  }]);
-    
-    StatusSrv.$inject = [
-        '$http'
-    ];
-    
-    function StatusSrv(
-        $http
+        $mdDialog,
+        LoggerSrv
     ) {
         
-        
-        // function reload(){
-        //     return $http.get('modules/Status/api/status').then(function(response){
-        //         return response.data;
-        //     });
-        // }
-        
-        
-        // var me = {
-        //     reload: reload
-        // }
-        
-        // return me;
-        return null;
-    }
-}());
-(function () {
-    "use strict";
-    angular.module('WebApp')
-        .controller('DeviceStorageCtrl', DeviceStorageCtrl);
-
-    DeviceStorageCtrl.$inject = [
-        '$scope',
-        '$http',
-        '$timeout',
-        'DeviceStorageSrv'
-    ];
-
-    function DeviceStorageCtrl(
-        $scope,
-        $http,
-        $timeout,
-        DeviceStorageSrv
-    ) {
-        $scope.allDevices = {};
-        
-        $scope.devices = {};
-        //$interval(reload, 1000);
+        $scope.logData = "";
         reload();
-        
-        
+
         var reloadTimeout;
         function reload(){
-            DeviceStorageSrv.reload().then(function(data){
-                data.forEach(function(dev){
-                    $scope.allDevices[dev.key] = $scope.allDevices[dev.key] || {};
-                    angular.extend($scope.allDevices[dev.key], dev);
-                });
-                $scope.devices = $scope.allDevices;
+            LoggerSrv.reload().then(function(data){
+                //data.forEach(function(dev){                });
+                $scope.logData = data.map(function(item){
+                    var date = new Date(item.time);
+                    return '[' + date.toLocaleDateString() + ' ' + date.toLocaleTimeString() + '] ' + item.data;
+                }).join('\n');
             }).finally(function(){
                 if (!$scope.$$destroyed) 
-                    reloadTimeout = $timeout(reload, 1000);
+                    reloadTimeout = $timeout(reload, 2000);
             })
         }
-        
-        $scope.getValueButtonClass = function(device){
-            if (device.level === 0 || device.level.toString().toLowerCase() === 'off')
-                return 'redButon';
-            else if (device.level === 99 || device.level.toString().toLowerCase() === 'on')
-                return 'greenButon';
-            return 'yellowButon';
-        }
-        
-        $scope.formatTime = function(ms){
-            var sec = Math.round(ms/1000);
-            var min = Math.trunc(sec / 60);
-            var hour = Math.trunc(min / 60);
-            var day = Math.trunc(hour / 24);
-            var text = '';
-            if (day > 0 || text) text += day + 'd ';
-            if (hour > 0 || text) text += (hour % 24) + 'h ';
-            if (min > 0 || text) text += (min % 60) + 'm ';
-            if (sec > 0 || text) text += (sec % 60) + 's';
-            return text;
-        }
-        
+
         $scope.$on("$destroy", function() {
             if (reloadTimeout) {
                 $timeout.cancel(reloadTimeout);
@@ -769,26 +760,35 @@ angular
 (function () {
     "use strict";
     angular.module('WebApp')
-        .factory('DeviceStorageSrv', DeviceStorageSrv);
+        .factory('LoggerSrv', LoggerSrv);
 
 
     // инициализируем сервис
-    //angular.module('WebApp').run(['DeviceStorageSrv', function(ApiSrv) {  }]);
+    //angular.module('WebApp').run(['LoggerSrv', function(ApiSrv) {  }]);
     
-    DeviceStorageSrv.$inject = [
+    LoggerSrv.$inject = [
         '$http',
+        'PanelsSrv'
     ];
     
-    function DeviceStorageSrv(
-        $http
+    function LoggerSrv(
+        $http,
+        PanelsSrv
     ) {
         
+        var lastTime = 0;
+        var logArray = [];
         
         function reload(){
-            return $http.get('modules/DeviceStorage/api/state').then(function(response){
-                return response.data;
+            return $http.get('modules/Logger/api/getLog/' + lastTime).then(function(response){
+                var arr = response.data;
+                logArray = logArray.concat(arr).slice(-1000);
+                lastTime = logArray[logArray.length-1].time;
+                return logArray;
             });
         }
+        
+        
         
         var me = {
             reload: reload

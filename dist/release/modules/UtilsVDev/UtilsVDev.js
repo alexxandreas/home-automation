@@ -794,12 +794,19 @@ define('UtilsVDev', ['AbstractModule', 'UtilsTimers', 'UtilsJSON'], function(Abs
             
         };
         
-        
-        this._initScenes();
     }
 
     inherits(FGD211, DefaultDevice);
     UtilsVDev.FGD211 = FGD211;
+    
+    
+    FGD211.prototype.initDevice = function() {
+        FGD211.super_.prototype.initDevice.apply(this, arguments);
+        
+        if (!this.inited) return;
+        
+        this._initScenes();
+    }
     
     FGD211.prototype._initScenes = function() {
         Object.keys(this._scenes).forEach(function(sceneId) {
