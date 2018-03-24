@@ -54,7 +54,7 @@ define('DeviceStorage', ['AbstractModule', 'WebServer', 'UtilsVDev', 'UtilsHWDev
                 'rgb': 'rgb'
             };
             
-            this.log('UtilsVDev.FGD211 ' + UtilsVDev.FGD211);
+            //this.log('UtilsVDev.FGD211 ' + UtilsVDev.FGD211);
             
             this.hwDevs = {
                 'hallway.FGD211': new UtilsHWDev.FGD211({
