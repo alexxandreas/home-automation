@@ -102,16 +102,16 @@
 		    position: absolute;
 		}
 		
-		.roomDevices {
+		/*.roomDevices {
 			display: flex;
 		    flex-direction: row;
 		    flex-wrap: wrap;
 		    justify-content: start;
 		    align-items: center;
-		}
+		}*/
 		
 		.lightIconWrapper {
-			position: relative;
+			position: absolute;
 		}
 		
 		.lightIcon {
@@ -200,29 +200,65 @@
     		
     		$scope.positions = {
     			Hallway: {
-		    		x: 55,
-		    		y: 33,
-		    		data: 'data.Hallway'
+    				switch220: {x: 55, y: 33},
+    				light12: {x: 57, y: 33},
+    				door: {x: 55, y: 33},
+    				motionSensor: {x: 55, y: 33},
+    				tempSensor: {x: 55, y: 33},
+    				lightSensor: {x: 55, y: 33},
+		    		// x: 55,
+		    		// y: 33,
+		    		// data: 'data.Hallway'
 	    		},
 	    		Bathroom: {
-		    		x: 66,
-		    		y: 16,
-		    		data: 'data.Bathroom'
+	    			switch220: {x: 66, y: 16},
+    				light12: {x: 68, y: 16},
+    				door: {x: 66, y: 16},
+    				fan: {x: 66, y: 16},
+    				motionSensor: {x: 66, y: 16},
+    				tempSensor: {x: 66, y: 16},
+    				lightSensor: {x: 66, y: 16},
+    				humSensor: {x: 66, y: 16},
+		    		// x: 66,
+		    		// y: 16,
+		    		// data: 'data.Bathroom'
 	    		},
 	    		Toilet: {
-		    		x: 65,
-		    		y: 33,
-		    		data: 'data.Toilet'
+	    			switch220: {x: 65, y: 33},
+    				light12: {x: 67, y: 33},
+    				door: {x: 65, y: 33},
+    				fan: {x: 65, y: 33},
+    				motionSensor: {x: 65, y: 33},
+    				tempSensor: {x: 65, y: 33},
+    				lightSensor: {x: 65, y: 33},
+    				humSensor: {x: 65, y: 33},
+		    		// x: 65,
+		    		// y: 33,
+		    		// data: 'data.Toilet'
 	    		},
 	    		Corridor: {
-		    		x: 52,
-		    		y: 61,
-		    		data: 'data.Corridor'
+	    			switch220: {x: 52, y: 61},
+    				light12: {x: 54, y: 61},
+    				door: {x: 52, y: 61},
+    				motionSensor: {x: 52, y: 61},
+    				tempSensor: {x: 52, y: 61},
+    				lightSensor: {x: 52, y: 61},
+		    		// x: 52,
+		    		// y: 61,
+		    		// data: 'data.Corridor'
 	    		},
 	    		Kitchen: {
-		    		x: 80,
-		    		y: 27,
-		    		data: 'data.Kitchen'
+	    			switch220: {x: 80, y: 27},
+    				light12: {x: 82, y: 27},
+    				door: {x: 80, y: 27},
+    				motionSensor: {x: 80, y: 27},
+    				tempSensor: {x: 80, y: 27},
+    				lightSensor: {x: 80, y: 27},
+    				tabletopSwitch: {x: 80, y: 27},
+    				tabletopLight: {x: 80, y: 27},
+		    		// x: 80,
+		    		// y: 27,
+		    		// data: 'data.Kitchen'
 	    		}
     		};
 	    	
@@ -290,59 +326,51 @@
 	    			var html = [];
 	    			
 	    			res[roomName] = {
-	    				x: position.x,
-	    				y: position.y
+	    				// x: position.x,
+	    				// y: position.y
 	    			};
 	    			
-	    			html.push('<div class="roomDevices">');
+	    			// html.push('<div class="roomDevices">');
 	    			
 	    			var room = data[roomName];
 	    			
 	    			if (room.devices && room.devices.switch220) 
-	    				html.push(prepareLight(room, 'switch220', '220'));
+	    				html.push(prepareLight(room, 'switch220', position.switch220));
 	    			if (room.devices && room.devices.light12) 
-	    				html.push(prepareLight(room, 'light12', '12'));
+	    				html.push(prepareLight(room, 'light12', position.light12));
 	    			
-	    			html.push('</div>');
+	    			// html.push('</div>');
 	    			
 	    			res[roomName].html = html.join('');
 	    		});
 	    		
 	    		
 	    		
-	    		function prepareLight(item, light, name){
+	    		function prepareLight(item, light, position){
     				var text = [];
-    				text.push('<div class="lightIconWrapper">'); // обертка
+    				text.push('<div class="lightIconWrapper" style="{left: '+position.x+'%; top: '+posision.y+'%;">'); // обертка
     				
     				var dev = item.devices[light];
     				
     				var iconClass = light + (dev.nextLevel == 'on' || dev.nextLevel > 0 ? 'On' : 'Off'); 
-    				text.push('<div class="lightIcon '+iconClass+'" ></div>'); // иконка
+    				text.push('<div class="lightIcon '+iconClass+'" >'); // иконка
     				
     				text.push('<div class="lightIconText">'); // подпись
     				
     				if (dev.pendingLevel)
-    					text.push('!&nbsp;');
-    					// text.push('<span style="color:red">!</span>&nbsp;');
-    				// var deviceColor = (dev.nextLevel == 'on' || dev.nextLevel > 0) ? 'green' : 'red';
-    				
-    				
-    				
-					// text.push('<span style="color:'+deviceColor+'">'+name+':</span>&nbsp;');
-						
+    					text.push('!');
+    
     				if (item.timers && item.timers.offTimer){
     					var time = parseTime(item.timers.offTimer.timeout);
     					text.push('↓' + time);
-    					// text.push('<span style="color:red">-'+parseTime(time)+'</span>&nbsp;');
     				} else {
     					var time = parseTime(dev.lastLevelChange);
     					text.push(time);
-    					// text.push('<span style="color:'+deviceColor+'">'+parseTime(time)+'</span>&nbsp;');
     				}
     				
-    				text.push('</div></div>'); // подпись + обертка
+    				text.push('</div></div></div>'); // подпись + иконка + обертка
     				return text.join('');
-    				// res[key].push(text.join(''));	
+
     			}
 	    		
 	    		return res;
@@ -421,8 +449,7 @@
 	        </div>-->
 	        
 	        
-	        <div class="map-control2-container" ng-repeat="room in rooms"
-	        	ng-style="{'left': room.x+'%', 'top': room.y+'%'}">
+	        <div class="map-control2-container" ng-repeat="room in rooms">
 	        	<div ng-bind-html="room.html"></div>
 	        </div>
 	        
