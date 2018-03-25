@@ -176,15 +176,37 @@
 		}
 		
 		.fan {
-			
+			display: flex;
+			align-items: center;
+			height: 24px;
 		}
 		
+		.fanIcon {
+		    background-size: contain;
+		    background-repeat: no-repeat;
+		    background-position: center;
+			width: 2vw;
+    		height: 2vw;
+		}
 		.fanOn {
 			background-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/PjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB2ZXJzaW9uPSIxLjEiIGlkPSJDYXBhXzEiIHg9IjBweCIgeT0iMHB4IiB2aWV3Qm94PSIwIDAgMjk1LjE4MiAyOTUuMTgyIiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCAyOTUuMTgyIDI5NS4xODI7IiB4bWw6c3BhY2U9InByZXNlcnZlIiB3aWR0aD0iNTEycHgiIGhlaWdodD0iNTEycHgiPjxwYXRoIGlkPSJYTUxJRF8zXyIgZD0iTTIwMC40OTksMTI0LjRjNy45Ny0yLjc5NywxNi4zMTgtMS40NzQsMjUuMjU4LDAuNDljNS45MDEsMS4zLDEyLjAwNiwyLjY0OCwxOC44NTQsMi42NDggIGM5LjE2NSwwLDE3Ljc0NS0yLjUxLDI2LjIzMi03LjY2OWMxMy4wODEtNy45NTQsMjIuMDMtMjIuMTgzLDIzLjk0LTM4LjA2MWMyLjE3OC0xOC4xNDMtNC42MTktMzYuMTQyLTE5LjE0Ni01MC42NjcgIGMtMTQuNDItMTQuNDItMzMuNjctMjIuMzU3LTU0LjIwMy0yMi4zNTdjLTIwLjk1NSwwLTQwLjcxNSw4LjIyLTU1LjY0MiwyMy4xNDNjLTE4LjY1NiwxOC42NTctMzAuNzkzLDQ4LjQwMy0zMS4wMDMsNzUuNjg0ICBjLTQuNDM5LTMuMjMxLTguMzctNy4xODktMTAuMzg5LTEyLjkyOWMtMy4xMjUtOC44NzctMS40NDktMTYuNDY5LDAuNDg4LTI1LjI1OWMyLjY1OC0xMi4wNCw1Ljk2LTI3LjAyNS01LjAxOS00NS4wODcgIEMxMTAuNzQzLDkuMzM0LDkzLjY1NywwLjAxMSw3NS4yNzQsMC4wMTFjLTE1Ljg1OCwwLTMxLjUzLDYuOTM4LTQ0LjEzMSwxOS41MzRDMS4wNzYsNDkuNjIyLDEuNDM2LDk4Ljg5OCwzMS45MzQsMTI5LjM5ICBjMTguNDExLDE4LjQxNiw0OC42NjUsMzAuODE2LDc1LjYwMSwzMS4xMTljLTMuMjIxLDQuMzk1LTcuMTU5LDguMjY2LTEyLjg1MSwxMC4yNzJjLTcuOTU3LDIuODA4LTE2LjMwNiwxLjQ5My0yNS4yNjEtMC40ODkgIGMtNS44OTktMS4yOTktMTIuMDA0LTIuNjQ5LTE4Ljg1Ni0yLjY0OWMtOS4xNjEsMC0xNy43NDIsMi41MDgtMjYuMjI4LDcuNjY3Yy0xMy4wODEsNy45NTYtMjIuMDMsMjIuMTg0LTIzLjk0LDM4LjA2MyAgYy0yLjE3OSwxOC4xNDMsNC42MjIsMzYuMTQzLDE5LjE0NSw1MC42NjZjMTQuNDE5LDE0LjQyLDMzLjY3MSwyMi4zNTYsNTQuMjA1LDIyLjM1NmMyMC45NTQsMCw0MC43MTYtOC4yMiw1NS42NDItMjMuMTQyICBjMTguNjU2LTE4LjY1NywzMC43OTItNDguNDAyLDMxLjAwNC03NS42ODNjNC40MzYsMy4yMyw4LjM2Nyw3LjE4OSwxMC4zODksMTIuOTI3YzMuMTI0LDguODc3LDEuNDQ5LDE2LjQ2OS0wLjQ5LDI1LjI2ICBjLTIuNjU4LDEyLjAzOS01Ljk2LDI3LjAyNSw1LjAyLDQ1LjA4N2M5LjEyNiwxNS4wMDQsMjYuMjEzLDI0LjMyNyw0NC41OTYsMjQuMzI3YzE1Ljg1OSwwLDMxLjUzMS02LjkzOSw0NC4xMzItMTkuNTM0ICBjMzAuMDYxLTMwLjA3MSwyOS43MDgtNzkuMzQ3LTAuNzkyLTEwOS44NDVjLTE4LjQxMS0xOC40MTgtNDguNjY2LTMwLjgxNy03NS41OTktMzEuMTE4ICBDMTkwLjg2OSwxMzAuMjc3LDE5NC44MDksMTI2LjQwNiwyMDAuNDk5LDEyNC40eiBNMTYwLjE4NywxNjAuMTg3Yy02LjcyNyw2LjcyNy0xOC40NjUsNi43MjctMjUuMTkyLDAgIGMtNi45NDMtNi45NDgtNi45NDMtMTguMjQ0LDAtMjUuMTkyYzMuMzYzLTMuMzYzLDcuODM2LTUuMjE1LDEyLjU5Ni01LjIxNWM0Ljc2MSwwLDkuMjMyLDEuODUyLDEyLjU5Nyw1LjIxNSAgQzE2Ny4xMjksMTQxLjk0MywxNjcuMTI5LDE1My4yMzksMTYwLjE4NywxNjAuMTg3eiIgZmlsbD0iIzAwZmYwMCIvPjwvc3ZnPg==);
 		}
 		
 		.fanOff {
 			background-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/PjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB2ZXJzaW9uPSIxLjEiIGlkPSJDYXBhXzEiIHg9IjBweCIgeT0iMHB4IiB2aWV3Qm94PSIwIDAgMjk1LjE4MiAyOTUuMTgyIiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCAyOTUuMTgyIDI5NS4xODI7IiB4bWw6c3BhY2U9InByZXNlcnZlIiB3aWR0aD0iNTEycHgiIGhlaWdodD0iNTEycHgiPjxwYXRoIGlkPSJYTUxJRF8zXyIgZD0iTTIwMC40OTksMTI0LjRjNy45Ny0yLjc5NywxNi4zMTgtMS40NzQsMjUuMjU4LDAuNDljNS45MDEsMS4zLDEyLjAwNiwyLjY0OCwxOC44NTQsMi42NDggIGM5LjE2NSwwLDE3Ljc0NS0yLjUxLDI2LjIzMi03LjY2OWMxMy4wODEtNy45NTQsMjIuMDMtMjIuMTgzLDIzLjk0LTM4LjA2MWMyLjE3OC0xOC4xNDMtNC42MTktMzYuMTQyLTE5LjE0Ni01MC42NjcgIGMtMTQuNDItMTQuNDItMzMuNjctMjIuMzU3LTU0LjIwMy0yMi4zNTdjLTIwLjk1NSwwLTQwLjcxNSw4LjIyLTU1LjY0MiwyMy4xNDNjLTE4LjY1NiwxOC42NTctMzAuNzkzLDQ4LjQwMy0zMS4wMDMsNzUuNjg0ICBjLTQuNDM5LTMuMjMxLTguMzctNy4xODktMTAuMzg5LTEyLjkyOWMtMy4xMjUtOC44NzctMS40NDktMTYuNDY5LDAuNDg4LTI1LjI1OWMyLjY1OC0xMi4wNCw1Ljk2LTI3LjAyNS01LjAxOS00NS4wODcgIEMxMTAuNzQzLDkuMzM0LDkzLjY1NywwLjAxMSw3NS4yNzQsMC4wMTFjLTE1Ljg1OCwwLTMxLjUzLDYuOTM4LTQ0LjEzMSwxOS41MzRDMS4wNzYsNDkuNjIyLDEuNDM2LDk4Ljg5OCwzMS45MzQsMTI5LjM5ICBjMTguNDExLDE4LjQxNiw0OC42NjUsMzAuODE2LDc1LjYwMSwzMS4xMTljLTMuMjIxLDQuMzk1LTcuMTU5LDguMjY2LTEyLjg1MSwxMC4yNzJjLTcuOTU3LDIuODA4LTE2LjMwNiwxLjQ5My0yNS4yNjEtMC40ODkgIGMtNS44OTktMS4yOTktMTIuMDA0LTIuNjQ5LTE4Ljg1Ni0yLjY0OWMtOS4xNjEsMC0xNy43NDIsMi41MDgtMjYuMjI4LDcuNjY3Yy0xMy4wODEsNy45NTYtMjIuMDMsMjIuMTg0LTIzLjk0LDM4LjA2MyAgYy0yLjE3OSwxOC4xNDMsNC42MjIsMzYuMTQzLDE5LjE0NSw1MC42NjZjMTQuNDE5LDE0LjQyLDMzLjY3MSwyMi4zNTYsNTQuMjA1LDIyLjM1NmMyMC45NTQsMCw0MC43MTYtOC4yMiw1NS42NDItMjMuMTQyICBjMTguNjU2LTE4LjY1NywzMC43OTItNDguNDAyLDMxLjAwNC03NS42ODNjNC40MzYsMy4yMyw4LjM2Nyw3LjE4OSwxMC4zODksMTIuOTI3YzMuMTI0LDguODc3LDEuNDQ5LDE2LjQ2OS0wLjQ5LDI1LjI2ICBjLTIuNjU4LDEyLjAzOS01Ljk2LDI3LjAyNSw1LjAyLDQ1LjA4N2M5LjEyNiwxNS4wMDQsMjYuMjEzLDI0LjMyNyw0NC41OTYsMjQuMzI3YzE1Ljg1OSwwLDMxLjUzMS02LjkzOSw0NC4xMzItMTkuNTM0ICBjMzAuMDYxLTMwLjA3MSwyOS43MDgtNzkuMzQ3LTAuNzkyLTEwOS44NDVjLTE4LjQxMS0xOC40MTgtNDguNjY2LTMwLjgxNy03NS41OTktMzEuMTE4ICBDMTkwLjg2OSwxMzAuMjc3LDE5NC44MDksMTI2LjQwNiwyMDAuNDk5LDEyNC40eiBNMTYwLjE4NywxNjAuMTg3Yy02LjcyNyw2LjcyNy0xOC40NjUsNi43MjctMjUuMTkyLDAgIGMtNi45NDMtNi45NDgtNi45NDMtMTguMjQ0LDAtMjUuMTkyYzMuMzYzLTMuMzYzLDcuODM2LTUuMjE1LDEyLjU5Ni01LjIxNWM0Ljc2MSwwLDkuMjMyLDEuODUyLDEyLjU5Nyw1LjIxNSAgQzE2Ny4xMjksMTQxLjk0MywxNjcuMTI5LDE1My4yMzksMTYwLjE4NywxNjAuMTg3eiIgZmlsbD0iIzVmNjA1ZiIvPjwvc3ZnPg==);
+		}
+		
+		.fanText {
+			font-size: 1vw;
+	        font-family: Arial;
+		}
+		
+		.tempIcon {
+			background-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/PjxzdmcgZmlsbD0ibm9uZSIgaGVpZ2h0PSIyNCIgc3Ryb2tlPSIjMDAwIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS13aWR0aD0iMiIgdmlld0JveD0iMCAwIDI0IDI0IiB3aWR0aD0iMjQiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiIHN0cm9rZT0iIzAwMDAwMCIvPjwvc3ZnPg==);
+		}
+		
+		.tempErrorIcon {
+			background-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/PjxzdmcgZmlsbD0ibm9uZSIgaGVpZ2h0PSIyNCIgc3Ryb2tlPSIjMDAwIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS13aWR0aD0iMiIgdmlld0JveD0iMCAwIDI0IDI0IiB3aWR0aD0iMjQiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiIHN0cm9rZT0iI0ZGMDAwMCIvPjwvc3ZnPg==);
 		}
 		
 	</style>
@@ -390,8 +412,13 @@
 	    				html.push(prepareDoor(room, position.door));
 	    			if (room.devices.motionSensor)
 	    				html.push(prepareMotion(room, position.motionSensor));
+	    			if (room.devices.tempSensor)
+	    				html.push(prepareTemp(room, position.tempSensor));
+	    			if (room.devices.humSensor)
+	    				html.push(prepareHum(room, position.humSensor));
 	    			if (room.devices.fan)
 	    				html.push(prepareFan(room, position.fan));
+	    			
 	    			
 	    			// html.push('</div>');
 	    			
@@ -399,7 +426,41 @@
 	    		});
 	    		
 	    		
-	    		
+	    		function prepareTemp(room, position){
+    				var text = [];
+    				text.push('<div class="lightIconWrapper" style="left: '+position.x+'%; top: '+position.y+'%;">'); // обертка
+    				
+    				var dev = room.devices.tempSensor;
+    				
+    				var iconClass = (dev.lastLevelChange > 10*60*1000 ? 'tempErrorIcon' : 'tempIcon'); 
+    				
+    				text.push('<div class="lightIcon '+iconClass+'" >'); // иконка
+    				
+    				text.push('<div class="lightIconText">'); // подпись
+    				
+    				text.push('T:'+dev.level);
+    				
+    				text.push('</div></div></div>'); // подпись + иконка + обертка
+    				return text.join('');
+    			}
+    			
+    			function prepareHum(room, position){
+    				var text = [];
+    				text.push('<div class="lightIconWrapper" style="left: '+position.x+'%; top: '+position.y+'%;">'); // обертка
+    				
+    				var dev = room.devices.humSensor;
+    				
+    				var iconClass = (dev.lastLevelChange > 10*60*1000 ? 'tempErrorIcon' : 'tempIcon'); 
+    				
+    				text.push('<div class="lightIcon '+iconClass+'" >'); // иконка
+    				
+    				text.push('<div class="lightIconText">'); // подпись
+    				
+    				text.push('H:'+dev.level);
+    				
+    				text.push('</div></div></div>'); // подпись + иконка + обертка
+    				return text.join('');
+    			}
 	    		
 	    		function prepareMotion(room, position) {
 	    			var text = [];
@@ -424,7 +485,7 @@
 	    			
 	    			var dev = room.devices.fan;
 	    			
-    				text.push('<div class="fan"');
+    				text.push('<div class="fan">');
     				
     				text.push('<div class="lightIcon '+(dev.levelOnOff === 'off' ? 'fanOff' : 'fanOn')+'"> </div>');
     				
