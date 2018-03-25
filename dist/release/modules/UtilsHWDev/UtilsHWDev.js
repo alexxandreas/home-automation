@@ -47,6 +47,14 @@ define('UtilsHWDev', ['AbstractModule'], function(AbstractModule) {
         this.devs = config.devs;
         
         
+        // запускаем инициализацию виртуальных девайсов
+        Object.keys(this.devs).forEach(function(key){
+            var dev = this.devs[key];
+            dev.setHWDev(this);
+        });
+        
+        
+        
         // установка wake up interval
         // https://zway.alexandreas.ru/ZWaveAPI/Run/devices[18].instances[0].commandClasses[0x84].Set(60,1)
     };
