@@ -177,8 +177,10 @@
 		
 		.fan {
 			display: flex;
+			justify-content: center;
 			align-items: center;
 			height: 24px;
+		    width: 24px;
 		}
 		
 		.fanIcon {
@@ -487,7 +489,7 @@
 	    			
     				text.push('<div class="fan">');
     				
-    				text.push('<div class="lightIcon '+(dev.levelOnOff === 'off' ? 'fanOff' : 'fanOn')+'">');
+    				text.push('<div class="lightIcon fanIcon '+(dev.levelOnOff === 'off' ? 'fanOff' : 'fanOn')+'">');
     				
 	    			text.push('<div class="fanText">');
 	    			
