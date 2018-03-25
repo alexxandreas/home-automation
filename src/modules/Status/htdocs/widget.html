@@ -485,9 +485,9 @@
 	    			
 	    			var dev = room.devices.fan;
 	    			
-    				text.push('<div class="fan">');
+    				// text.push('<div class="fan">');
     				
-    				text.push('<div class="lightIcon '+(dev.levelOnOff === 'off' ? 'fanOff' : 'fanOn')+'"> </div>');
+    				text.push('<div class="lightIcon '+(dev.levelOnOff === 'off' ? 'fanOff' : 'fanOn')+'">');
     				
 	    			text.push('<div class="fanText">');
 	    			
@@ -504,7 +504,7 @@
     				
 	    			text.push('</div>'); // title
 	    			
-	    			text.push('</div>'); // fan
+	    			text.push('</div>'); // icon
 	    		
 	    			text.push('</div>'); // wrapper
 	    			return text.join('');
