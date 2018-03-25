@@ -148,6 +148,23 @@
 		}
 		
 		
+		.door {
+			width: 3vw;
+		    height: 0.4vw;
+		    
+		}
+		.door-opened {
+			background-color: green;
+		}
+		.door-closed {
+			background-color: red;
+		}
+		
+		.doorText {
+			font-size: 1vw;
+	        font-family: Arial;
+		}
+		
 	</style>
 	
 	<script type="text/javascript">
@@ -200,65 +217,68 @@
     		
     		$scope.positions = {
     			Hallway: {
-    				switch220: {x: 55, y: 33},
-    				light12: {x: 57, y: 33},
-    				door: {x: 55, y: 33},
-    				motionSensor: {x: 55, y: 33},
-    				tempSensor: {x: 55, y: 33},
+    				switch220: {x: 52, y: 28},
+    				light12: {x: 54.5, y: 28},
+    				motionSensor: {x: 52, y: 33},
+    				tempSensor: {x: 54.5, y: 33},
+    				door: {x: 54.2, y: 14, r: 0},
+    				
     				lightSensor: {x: 55, y: 33},
 		    		// x: 55,
 		    		// y: 33,
 		    		// data: 'data.Hallway'
 	    		},
 	    		Bathroom: {
-	    			switch220: {x: 66, y: 16},
-    				light12: {x: 68, y: 16},
-    				door: {x: 66, y: 16},
-    				fan: {x: 66, y: 16},
-    				motionSensor: {x: 66, y: 16},
-    				tempSensor: {x: 66, y: 16},
-    				lightSensor: {x: 66, y: 16},
-    				humSensor: {x: 66, y: 16},
-		    		// x: 66,
-		    		// y: 16,
-		    		// data: 'data.Bathroom'
+	    			switch220: {x: 62, y: 11},
+    				light12: {x: 64.5, y: 11},
+    				fan: {x: 67, y: 11},
+    				motionSensor: {x: 62, y: 16},
+    				tempSensor: {x: 64.5, y: 16},
+    				humSensor: {x: 67, y: 16},
+    				
+					door: {x: 58.9, y: 22.7, r: 90},
+					lightSensor: {x: 66, y: 16},
 	    		},
 	    		Toilet: {
-	    			switch220: {x: 65, y: 33},
-    				light12: {x: 67, y: 33},
-    				door: {x: 65, y: 33},
-    				fan: {x: 65, y: 33},
-    				motionSensor: {x: 65, y: 33},
-    				tempSensor: {x: 65, y: 33},
+	    			switch220: {x: 61, y: 28},
+    				light12: {x: 63.5, y: 28},
+    				fan: {x: 66, y: 28},
+    				motionSensor: {x: 61, y: 33},
+    				tempSensor: {x: 63.5, y: 33},
+    				humSensor: {x: 66, y: 33},
+    				door: {x: 58.9, y: 33, r: 90},
+    				
     				lightSensor: {x: 65, y: 33},
-    				humSensor: {x: 65, y: 33},
-		    		// x: 65,
-		    		// y: 33,
-		    		// data: 'data.Toilet'
 	    		},
 	    		Corridor: {
-	    			switch220: {x: 52, y: 61},
-    				light12: {x: 54, y: 61},
-    				door: {x: 52, y: 61},
+	    			switch220: {x: 52, y: 56},
+    				light12: {x: 54.5, y: 56},
     				motionSensor: {x: 52, y: 61},
-    				tempSensor: {x: 52, y: 61},
+    				tempSensor: {x: 54.5, y: 61},
+    				
+    				// door: {x: 52, y: 61},
     				lightSensor: {x: 52, y: 61},
 		    		// x: 52,
 		    		// y: 61,
 		    		// data: 'data.Corridor'
 	    		},
 	    		Kitchen: {
-	    			switch220: {x: 80, y: 27},
-    				light12: {x: 82, y: 27},
-    				door: {x: 80, y: 27},
-    				motionSensor: {x: 80, y: 27},
-    				tempSensor: {x: 80, y: 27},
+	    			switch220: {x: 76, y: 28},
+    				light12: {x: 78.5, y: 28},
+    				tabletopSwitch: {x: 81, y: 28},
+    				
+    				motionSensor: {x: 76, y: 33},
+    				tempSensor: {x: 78.5, y: 33},
+    				tabletopLight: {x: 81, y: 33},
+    				
+    				door: {x: 67.5, y: 44.5, r: 90},
     				lightSensor: {x: 80, y: 27},
-    				tabletopSwitch: {x: 80, y: 27},
-    				tabletopLight: {x: 80, y: 27},
 		    		// x: 80,
 		    		// y: 27,
 		    		// data: 'data.Kitchen'
+	    		},
+	    		Wardrobe: {
+	    			door: {x: 54, y: 67.8, r: 0},
 	    		}
     		};
 	    	
@@ -321,8 +341,12 @@
 	    		var res = {};
 	    		
 	    		Object.keys(data).forEach(function(roomName){
+	    			var room = data[roomName];
+	    			if (!room || !room.devices) return;
+	    			
 	    			var position = $scope.positions[roomName];
 	    			if (!position) return;
+	    			
 	    			var html = [];
 	    			
 	    			res[roomName] = {
@@ -332,12 +356,14 @@
 	    			
 	    			// html.push('<div class="roomDevices">');
 	    			
-	    			var room = data[roomName];
 	    			
-	    			if (room.devices && room.devices.switch220) 
+	    			
+	    			if (room.devices.switch220) 
 	    				html.push(prepareLight(room, 'switch220', position.switch220));
-	    			if (room.devices && room.devices.light12) 
+	    			if (room.devices.light12) 
 	    				html.push(prepareLight(room, 'light12', position.light12));
+	    			if (root.devices.door)
+	    				html.push(prepareDoor(room, position.door));
 	    			
 	    			// html.push('</div>');
 	    			
@@ -345,6 +371,21 @@
 	    		});
 	    		
 	    		
+	    		function prepareDoor(room, position) {
+	    			var text = [];
+	    			text.push('<div class="lightIconWrapper" style="left: '+position.x+'%; top: '+position.y+'%; translate: rotate('+position.r+'deg);">'); // обертка
+	    			
+	    			var dev = room.devices.door;
+	    			
+    				text.push('<div class="door '+(dev.levelOnOff === 'off' ? 'door-closed' : 'door-opened')+'"> </div>');
+    				
+	    			text.push('<div class="doorText">');
+	    			text.push(parseTime(dev.lastLevelChange));
+	    			text.push('</div>');
+	    		
+	    			text.push('</div>'); // wrapper
+	    			return text.join('');
+	    		}
 	    		
 	    		function prepareLight(item, light, position){
     				var text = [];
@@ -370,7 +411,6 @@
     				
     				text.push('</div></div></div>'); // подпись + иконка + обертка
     				return text.join('');
-
     			}
 	    		
 	    		return res;
