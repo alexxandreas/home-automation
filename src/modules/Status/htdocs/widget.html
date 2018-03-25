@@ -143,7 +143,7 @@
 		}
 		
 		.lightIconText {
-			font-size: 1vw;
+			font-size: 0.9vw;
 	        font-family: Arial;
 		}
 		
@@ -161,7 +161,7 @@
 		}
 		
 		.doorText {
-			font-size: 1vw;
+			font-size: 0.9vw;
 	        font-family: Arial;
 	        text-align: center;
 		}
@@ -197,7 +197,7 @@
 		}
 		
 		.fanText {
-			font-size: 1vw;
+			font-size: 0.9vw;
 	        font-family: Arial;
 		}
 		
@@ -438,7 +438,7 @@
     				
     				text.push('<div class="lightIconText">'); // подпись
     				
-    				text.push('T:'+dev.level);
+    				text.push('T:'+Math.round(dev.level));
     				
     				text.push('</div></div></div>'); // подпись + иконка + обертка
     				return text.join('');
@@ -456,7 +456,7 @@
     				
     				text.push('<div class="lightIconText">'); // подпись
     				
-    				text.push('H:'+dev.level);
+    				text.push('H:'+Math.round(dev.level));
     				
     				text.push('</div></div></div>'); // подпись + иконка + обертка
     				return text.join('');
